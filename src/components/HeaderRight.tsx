@@ -63,7 +63,7 @@ export default function HeaderRight() {
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: "row", alignItems: "center", gap: 14 },
+  container: { flexDirection: "row", alignItems: "center", gap: 14, paddingRight: 16 },
   flag: { fontSize: 20 },
   actionText: { fontWeight: "700", fontSize: 13 },
 });
