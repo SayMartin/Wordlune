@@ -27,7 +27,8 @@ function glyphFor(ch: string) {
 export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6, word }: Props) {
   const { colors } = useTheme();
   const wordLen = (word && word.length) || 5;
-  const tileSize = wordLen <= 5 ? 44 : wordLen <= 7 ? 38 : wordLen <= 9 ? 32 : wordLen <= 12 ? 26 : 20;
+  const tileSize = wordLen <= 5 ? 30 : wordLen <= 7 ? 26 : wordLen <= 9 ? 22 : wordLen <= 12 ? 18 : 14;
+  const fontSize = tileSize <= 18 ? 11 : tileSize <= 22 ? 13 : 15;
 
   return (
     <View style={styles.container}>
@@ -60,7 +61,7 @@ export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6
                   <Text
                     style={[
                       styles.tileText,
-                      { color: tileColors ? "#ffffff" : colors.text },
+                      { fontSize, color: tileColors ? "#ffffff" : colors.text },
                     ]}
                   >
                     {isCharFromGuess ? glyphFor(ch) : ""}
@@ -76,13 +77,13 @@ export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6
 }
 
 const styles = StyleSheet.create({
-  container: { alignItems: "center", gap: 6 },
-  row: { flexDirection: "row", gap: 6 },
+  container: { alignItems: "center", gap: 4 },
+  row: { flexDirection: "row", gap: 4 },
   tile: {
-    borderWidth: 2,
-    borderRadius: 6,
+    borderWidth: 1.5,
+    borderRadius: 4,
     alignItems: "center",
     justifyContent: "center",
   },
-  tileText: { fontWeight: "700", fontSize: 16, textTransform: "uppercase" },
+  tileText: { fontWeight: "700", textTransform: "uppercase" },
 });

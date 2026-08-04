@@ -65,9 +65,7 @@ export default function LetterSlider({
           maximumTrackTintColor={colors.border}
           onValueChange={(v) => onChange(Math.min(v, value - 1), value)}
         />
-      </View>
-      <View style={styles.sliderRow}>
-        <Text style={[styles.sliderCaption, { color: colors.textMuted }]}>Max</Text>
+        <Text style={[styles.sliderCaption, styles.sliderCaptionRight, { color: colors.textMuted }]}>Max</Text>
         <Slider
           style={styles.slider}
           minimumValue={min}
@@ -105,8 +103,9 @@ export default function LetterSlider({
 const styles = StyleSheet.create({
   container: { gap: 8 },
   summary: { fontSize: 14, fontWeight: "600" },
-  sliderRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  sliderCaption: { width: 32, fontSize: 12 },
+  sliderRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  sliderCaption: { width: 26, fontSize: 12 },
+  sliderCaptionRight: { textAlign: "right" },
   slider: { flex: 1, height: 32 },
   toggles: { flexDirection: "row", gap: 20, marginTop: 4 },
 });
