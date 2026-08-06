@@ -1,0 +1,11 @@
+{
+  "gradle.autoDetect": "off",
+  "gradle.nestedProjects": false,
+  "java.import.exclusions": [
+    "**/node_modules/**",
+    "**/.metadata/**",
+    "**/archetype-resources/**",
+    "**/META-INF/maven/**",
+    "**/dist/**"
+  ]
+}
