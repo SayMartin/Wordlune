@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import DuelDashboardHeader from "./DuelDashboardHeader";
@@ -26,6 +26,12 @@ interface Props {
   // Competitive-only: overrides the main button's idle-state label
   // ("Start Challenge" instead of "Start Game").
   startLabel?: string;
+  // Duel-only: when set, the timer switches to a red/pulsing countdown to
+  // this timestamp instead of the normal elapsed-time display.
+  suddenDeathEndTime?: number;
+  // Extension slot for extra controls next to the exit button (e.g. a hint
+  // toggle), matching the web version's `children` prop.
+  children?: React.ReactNode;
 }
 
 export default function ControlDashboard({
@@ -46,17 +52,33 @@ export default function ControlDashboard({
   language,
   isHintEnabled,
   startLabel,
+  suddenDeathEndTime,
+  children,
 }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [internalElapsed, setInternalElapsed] = useState(0);
   const [running, setRunning] = useState(false);
+  const [suddenDeathRemaining, setSuddenDeathRemaining] = useState<number | null>(null);
 
   const displayElapsed = elapsedTime !== undefined ? elapsedTime : internalElapsed;
 
   useEffect(() => {
     setInternalElapsed(0);
   }, [secret]);
+
+  useEffect(() => {
+    if (!suddenDeathEndTime) {
+      setSuddenDeathRemaining(null);
+      return;
+    }
+    const updateRemaining = () => {
+      setSuddenDeathRemaining(Math.max(0, Math.ceil((suddenDeathEndTime - Date.now()) / 1000)));
+    };
+    updateRemaining();
+    const interval = setInterval(updateRemaining, 1000);
+    return () => clearInterval(interval);
+  }, [suddenDeathEndTime]);
 
   useEffect(() => {
     setRunning(status === "playing");
@@ -123,7 +145,11 @@ export default function ControlDashboard({
               onPress={handleMainAction}
               disabled={disabled}
             >
-              <Text style={styles.mainButtonText}>{mainLabel}</Text>
+              {poolLoading ? (
+                <ActivityIndicator color="#ffffff" />
+              ) : (
+                <Text style={styles.mainButtonText}>{mainLabel}</Text>
+              )}
             </Pressable>
           )}
 
@@ -140,15 +166,31 @@ export default function ControlDashboard({
             </Pressable>
           )}
 
-          <Text style={[styles.timer, { color: "#4f46e5" }]}>{formatTime(displayElapsed)}</Text>
+          <Text
+            style={[
+              styles.timer,
+              suddenDeathRemaining !== null
+                ? styles.suddenDeathTimer
+                : { color: "#4f46e5" },
+            ]}
+          >
+            {suddenDeathRemaining !== null ? formatTime(suddenDeathRemaining) : formatTime(displayElapsed)}
+          </Text>
         </View>
 
-        {onExit && (
-          <Pressable style={styles.exitButton} onPress={onExit}>
-            <Text style={styles.exitButtonText}>{t("quit_game", { defaultValue: "Quit" })}</Text>
-          </Pressable>
-        )}
+        <View style={styles.cluster}>
+          {children}
+          {onExit && (
+            <Pressable style={styles.exitButton} onPress={onExit}>
+              <Text style={styles.exitButtonText}>{t("quit_game", { defaultValue: "Quit" })}</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
+
+      {!hasSelection && (
+        <Text style={styles.hint}>{t("select_subcategories_to_enable", { defaultValue: "Select subcategories to enable game" })}</Text>
+      )}
     </View>
   );
 }
@@ -170,6 +212,8 @@ const styles = StyleSheet.create({
   resetButton: { borderWidth: 1, borderRadius: 8, paddingVertical: 10, paddingHorizontal: 12 },
   disabledIcon: { opacity: 0.4 },
   timer: { fontWeight: "700", fontSize: 16, fontVariant: ["tabular-nums"] },
+  suddenDeathTimer: { color: "#dc2626", fontSize: 20 },
+  hint: { textAlign: "center", color: "#ef4444", fontWeight: "600", fontSize: 13 },
   exitButton: {
     backgroundColor: "#fed7aa",
     borderRadius: 8,

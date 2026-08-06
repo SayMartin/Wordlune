@@ -1,0 +1,2 @@
+ALTER TABLE duel_matches
+ADD COLUMN is_hint_enabled BOOLEAN DEFAULT FALSE;

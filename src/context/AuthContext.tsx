@@ -5,6 +5,7 @@ import {
   ReactNode,
   useEffect,
 } from "react";
+import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../supabaseClient";
 import {
@@ -12,11 +13,18 @@ import {
   PlayerProfile,
 } from "../supabase/players-repository";
 
-// Custom URL scheme for the email-confirmation deep link. Requires native
-// config (iOS: CFBundleURLTypes in Info.plist, Android: intent-filter in
-// AndroidManifest.xml) that isn't set up yet — signup with email
-// confirmation won't complete the redirect until that's added.
-const AUTH_REDIRECT_URL = "wordsenative://auth-callback";
+// On web, redirect back to the page the user signed up from — matches the
+// original Wordse web app's `emailRedirectTo: window.location.origin`, and
+// Supabase's redirect allow-list is already scoped to
+// https://wordse.appfinningar.se. On native, a custom URL scheme is needed
+// instead, which requires native config (iOS: CFBundleURLTypes in
+// Info.plist, Android: intent-filter in AndroidManifest.xml) that isn't set
+// up yet — signup with email confirmation won't complete the redirect on
+// native until that's added.
+const AUTH_REDIRECT_URL =
+  Platform.OS === "web" && (globalThis as any).window
+    ? (globalThis as any).window.location.origin
+    : "wordsenative://auth-callback";
 
 export type AuthState = "visitor" | "guest" | "registered";
 

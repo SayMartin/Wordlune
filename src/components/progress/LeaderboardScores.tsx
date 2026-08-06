@@ -52,7 +52,14 @@ export default function LeaderboardScores() {
                 <Text style={{ color: colors.textMuted, fontSize: 11 }}>{entry.challenge_name}</Text>
               )}
             </View>
-            <Text style={[styles.score, { color: "#2563eb" }]}>{entry.score}</Text>
+            <View style={styles.rowEnd}>
+              <Text style={[styles.score, { color: "#2563eb" }]}>{entry.score}</Text>
+              {entry.completed_at && (
+                <Text style={[styles.date, { color: colors.textMuted }]}>
+                  {new Date(entry.completed_at).toLocaleDateString()}
+                </Text>
+              )}
+            </View>
           </View>
         ))
       )}
@@ -69,5 +76,7 @@ const styles = StyleSheet.create({
   avatar: { width: 32, height: 32, borderRadius: 16, backgroundColor: "#e5e7eb" },
   rowMain: { flex: 1 },
   name: { fontWeight: "600" },
+  rowEnd: { alignItems: "flex-end" },
   score: { fontWeight: "800" },
+  date: { fontSize: 10, marginTop: 2 },
 });

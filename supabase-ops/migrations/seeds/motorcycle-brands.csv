@@ -1,0 +1,44 @@
+word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
+honda,Honda,Honda,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+yamaha,Yamaha,Yamaha,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+suzuki,Suzuki,Suzuki,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+kawasaki,Kawasaki,Kawasaki,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+ducati,Ducati,Ducati,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+bmw,BMW,BMW,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+triumph,Triumph,Triumph,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+ktm,KTM,KTM,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+harley_davidson,Harley-Davidson,Harley-Davidson,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+indian,Indian,Indian,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+royal_enfield,Royal Enfield,Royal Enfield,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+aprilia,Aprilia,Aprilia,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+mv_agusta,MV Agusta,MV Agusta,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+husqvarna,Husqvarna,Husqvarna,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+gasgas,GasGas,GasGas,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+benelli,Benelli,Benelli,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+moto_guzzi,Moto Guzzi,Moto Guzzi,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+piaggio,Piaggio,Piaggio,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+vespa,Vespa,Vespa,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+cagiva,Cagiva,Cagiva,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+bsa,BSA,BSA,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+norton,Norton,Norton,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+ajs,AJS,AJS,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+velocette,Velocette,Velocette,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+bimota,Bimota,Bimota,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+derbi,Derbi,Derbi,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+keeway,Keeway,Keeway,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+kymco,Kymco,Kymco,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+sym,SYM,SYM,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+hyosung,Hyosung,Hyosung,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+lifan,Lifan,Lifan,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+qianjiang,Qianjiang,Qianjiang,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+zongshen,Zongshen,Zongshen,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+cfmoto,CFMoto,CFMoto,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+royal_apache,Royal Enfield (Apache),Royal Apache,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+zongshen_rx,Zontes,Zontes,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+lexmoto,Lexmoto,Lexmoto,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+jonway,Jonway,Jonway,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+hyundai_motorbikes,Hyundai Motorbikes,Hyundai Motorbikes,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+sunra,Sunra,Sunra,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+zero_motorcycles,Zero Motorcycles,Zero Motorcycles,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+energica,Energica,Energica,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,1,seed,,true
+rimac,Rimac,Rimac,vehicles,Vehicles,Fordon,motorcycle_brands,Motorcycle Brands,Motorcykelmärken,2,seed,,true

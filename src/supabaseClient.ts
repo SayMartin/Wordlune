@@ -1,4 +1,5 @@
 import "react-native-url-polyfill/auto";
+import { Platform } from "react-native";
 import { createClient } from "@supabase/supabase-js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL || "";
@@ -50,7 +51,10 @@ export const supabase: any =
           storage: AsyncStorage,
           autoRefreshToken: true,
           persistSession: true,
-          detectSessionInUrl: false,
+          // Web needs this true so the session from an email-confirmation /
+          // magic-link redirect is picked up from the URL on page load;
+          // native handles the redirect via a custom URL scheme instead.
+          detectSessionInUrl: Platform.OS === "web",
         },
         realtime: { params: { eventsPerSecond: 10 } },
       })

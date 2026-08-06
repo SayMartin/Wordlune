@@ -1,0 +1,56 @@
+word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
+algeria,Algeria,Algeriet,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+angola,Angola,Angola,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+benin,Benin,Benin,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+botswana,Botswana,Botswana,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+burkina-faso,Burkina Faso,Burkina Faso,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+burundi,Burundi,Burundi,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+cabo-verde,Cabo Verde,Kap Verde,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+cameroon,Cameroon,Kamerun,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+central-african-republic,Central African Republic,Centralafrikanska republiken,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+chad,Chad,Tchad,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+comoros,Comoros,Komorerna,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+congo,Republic of the Congo,Kongo-Brazzaville,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+democratic-republic-of-the-congo,Democratic Republic of the Congo,Demokratiska republiken Kongo,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+cote-divoire,Côte d'Ivoire,Elfenbenskusten,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+djibouti,Djibouti,Djibouti,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+egypt,Egypt,Egypten,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+equatorial-guinea,Equatorial Guinea,Ekvatorialguinea,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+eritrea,Eritrea,Eritrea,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+eswatini,Eswatini,Eswatini,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+ethiopia,Ethiopia,Etiopien,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+gabon,Gabon,Gabon,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+gambia,Gambia,Gambia,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+ghana,Ghana,Ghana,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+guinea,Guinea,Guinea,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+guinea-bissau,Guinea-Bissau,Guinea-Bissau,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+kenya,Kenya,Kenya,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+lesotho,Lesotho,Lesotho,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+liberia,Liberia,Liberia,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+libya,Libya,Libyen,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+madagascar,Madagascar,Madagaskar,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+malawi,Malawi,Malawi,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+mali,Mali,Mali,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+mauritania,Mauritania,Mauretanien,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+mauritius,Mauritius,Mauritius,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+morocco,Morocco,Marocko,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+mozambique,Mozambique,Moçambique,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+namibia,Namibia,Namibia,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+niger,Niger,Niger,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+nigeria,Nigeria,Nigeria,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+rwanda,Rwanda,Rwanda,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+sao-tome-and-principe,São Tomé and Príncipe,São Tomé och Príncipe,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+senegal,Senegal,Senegal,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+seychelles,Seychelles,Seychellerna,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+sierra-leone,Sierra Leone,Sierra Leone,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+somalia,Somalia,Somalia,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+south-africa,South Africa,Sydafrika,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+south-sudan,South Sudan,Sydsudan,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+sudan,Sudan,Sudan,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+tanzania,Tanzania,Tanzania,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+togo,Togo,Togo,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+tunisia,Tunisia,Tunisien,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+uganda,Uganda,Uganda,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+zambia,Zambia,Zambia,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+zimbabwe,Zimbabwe,Zimbabwe,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true
+western-sahara,Western Sahara,Västsahara,geography,Geography,Geografi,countries-africa,Countries in Africa,Länder i Afrika,1,seed,,true

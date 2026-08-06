@@ -2,8 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
+import type { AppParamList } from "../navigation/types";
 import {
   updatePlayerProfile,
   updatePlayerSettings,
@@ -16,10 +19,13 @@ import ProfileSettingsSection from "./ProfileSettingsSection";
 
 const REDUCE_MOTION_KEY = "wordse:reduceMotion";
 
+type Nav = NativeStackNavigationProp<AppParamList>;
+
 export default function MyProfile() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { profile, session, isAuthenticated, authState, refreshProfile, loadingInitial } = useAuth();
+  const navigation = useNavigation<Nav>();
 
   const [isEditing, setIsEditing] = useState(false);
   const [showGuestHint, setShowGuestHint] = useState(false);
@@ -245,6 +251,10 @@ export default function MyProfile() {
           </Text>
         </View>
         <View style={styles.statRow}>
+          <Text style={styles.statLabel}>{t("level", { defaultValue: "Level" })}</Text>
+          <Text style={styles.statValue}>{profile.metadata?.level || 1}</Text>
+        </View>
+        <View style={styles.statRow}>
           <Text style={styles.statLabel}>{t("joined", { defaultValue: "Joined" })}</Text>
           <Text style={styles.statValue}>{profile.created_at ? new Date(profile.created_at).toLocaleDateString() : "-"}</Text>
         </View>
@@ -289,9 +299,14 @@ export default function MyProfile() {
           <Text style={styles.guestMessage}>
             {t("guest_limitation_msg", { defaultValue: "You need to be a registered user to edit your profile." })}
           </Text>
-          <Pressable style={styles.linkButton} onPress={() => setShowGuestHint(false)}>
-            <Text style={styles.link}>{t("close", { defaultValue: "Close" })}</Text>
-          </Pressable>
+          <View style={styles.row}>
+            <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Signup")}>
+              <Text style={styles.primaryButtonText}>{t("register_now", { defaultValue: "Register Now" })}</Text>
+            </Pressable>
+            <Pressable style={styles.linkButton} onPress={() => setShowGuestHint(false)}>
+              <Text style={styles.link}>{t("close", { defaultValue: "Close" })}</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </View>

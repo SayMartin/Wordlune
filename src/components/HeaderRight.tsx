@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
 import { updatePlayerSettings } from "../supabase/players-repository";
+import WavingHand from "./WavingHand";
 import type { AppParamList } from "../navigation/types";
 
 // Rendered as headerRight both inside MainTabs (nested) and directly on
@@ -35,8 +36,22 @@ export default function HeaderRight() {
     }
   };
 
+  const greetingLabel =
+    authState === "registered"
+      ? profile?.display_name || t("player", { defaultValue: "Player" })
+      : authState === "guest"
+        ? `${t("guest", { defaultValue: "Guest" })}: ${profile?.display_name || t("guest", { defaultValue: "Guest" })}`
+        : t("visitor", { defaultValue: "Visitor" });
+
   return (
     <View style={styles.container}>
+      <View style={styles.greetingRow}>
+        <WavingHand />
+        <Text style={[styles.greeting, { color: colors.text }]} numberOfLines={1}>
+          {greetingLabel}
+        </Text>
+      </View>
+
       <Pressable
         onPress={toggleLanguage}
         accessibilityLabel={t("toggle_language", { defaultValue: "Switch Language" })}
@@ -64,6 +79,8 @@ export default function HeaderRight() {
 
 const styles = StyleSheet.create({
   container: { flexDirection: "row", alignItems: "center", gap: 14, paddingRight: 16 },
+  greetingRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+  greeting: { fontWeight: "600", fontSize: 13, maxWidth: 100 },
   flag: { fontSize: 20 },
   actionText: { fontWeight: "700", fontSize: 13 },
 });

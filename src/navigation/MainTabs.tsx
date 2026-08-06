@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTranslation } from "react-i18next";
 import HomeScreen from "../screens/HomeScreen";
@@ -8,8 +8,49 @@ import ProgressScreen from "../screens/ProgressScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AboutScreen from "../screens/AboutScreen";
 import HeaderRight from "../components/HeaderRight";
+import SessionGate from "../components/SessionGate";
+import WebTopNav from "../components/WebTopNav";
+import WebFooter from "../components/WebFooter";
+import WebCentered from "../components/WebCentered";
 import { useTheme } from "../theme/ThemeProvider";
 import type { MainTabParamList } from "./types";
+
+const isWeb = Platform.OS === "web";
+
+// Matches Wordse's router.jsx: /game, /progress, and /profile are wrapped in
+// SessionRequiredRoute (at least a guest session required); /home and
+// /about are open to visitors.
+const GatedHomeScreen = () => (
+  <WebCentered>
+    <HomeScreen />
+  </WebCentered>
+);
+const GatedGameScreen = () => (
+  <WebCentered>
+    <SessionGate>
+      <GameScreen />
+    </SessionGate>
+  </WebCentered>
+);
+const GatedProgressScreen = () => (
+  <WebCentered>
+    <SessionGate>
+      <ProgressScreen />
+    </SessionGate>
+  </WebCentered>
+);
+const GatedProfileScreen = () => (
+  <WebCentered>
+    <SessionGate>
+      <ProfileScreen />
+    </SessionGate>
+  </WebCentered>
+);
+const GatedAboutScreen = () => (
+  <WebCentered>
+    <AboutScreen />
+  </WebCentered>
+);
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -21,13 +62,20 @@ const ICONS: Record<keyof MainTabParamList, string> = {
   About: "ℹ️",
 };
 
-export default function MainTabs() {
+function TabNavigator() {
   const { t } = useTranslation();
   const { colors } = useTheme();
 
   return (
     <Tab.Navigator
+      // On web, WebTopNav (rendered via `tabBar`) replaces both the bottom
+      // tab bar and each screen's per-page header — a single persistent top
+      // nav, mirroring Wordse's HeaderCopy.tsx, instead of native's bottom
+      // tabs + per-screen header.
+      tabBar={isWeb ? (props) => <WebTopNav {...props} /> : undefined}
       screenOptions={({ route }) => ({
+        headerShown: !isWeb,
+        tabBarPosition: isWeb ? "top" : "bottom",
         headerRight: () => <HeaderRight />,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textMuted,
@@ -39,11 +87,32 @@ export default function MainTabs() {
         ),
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
-      <Tab.Screen name="Game" component={GameScreen} options={{ title: t("game", { defaultValue: "Game" }) }} />
-      <Tab.Screen name="Progress" component={ProgressScreen} options={{ title: t("progress", { defaultValue: "Progress" }) }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: t("my_profile", { defaultValue: "Profile" }) }} />
-      <Tab.Screen name="About" component={AboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
+      <Tab.Screen name="Home" component={GatedHomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
+      <Tab.Screen name="Game" component={GatedGameScreen} options={{ title: t("game", { defaultValue: "Game" }) }} />
+      <Tab.Screen name="Progress" component={GatedProgressScreen} options={{ title: t("progress", { defaultValue: "Progress" }) }} />
+      <Tab.Screen name="Profile" component={GatedProfileScreen} options={{ title: t("my_profile", { defaultValue: "Profile" }) }} />
+      <Tab.Screen name="About" component={GatedAboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
     </Tab.Navigator>
   );
 }
+
+export default function MainTabs() {
+  const { colors } = useTheme();
+
+  if (!isWeb) {
+    return <TabNavigator />;
+  }
+
+  // Web: WebTopNav spans full width (each screen's own content is centered
+  // via WebCentered above); WebFooter matches Wordse's persistent page footer.
+  return (
+    <View style={[styles.webPage, { backgroundColor: colors.background }]}>
+      <TabNavigator />
+      <WebFooter />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  webPage: { flex: 1 },
+});

@@ -10,7 +10,6 @@ export type MainTabParamList = {
 
 export type RootStackParamList = {
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
-  Multiplayer: undefined;
   Settings: undefined;
   Signup: undefined;
   Signin: undefined;

@@ -1,0 +1,1 @@
+ALTER TABLE challenge_attempts ADD COLUMN IF NOT EXISTS total_guesses INTEGER DEFAULT 0;

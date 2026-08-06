@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, type RouteProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -114,6 +114,8 @@ export default function GameScreen() {
     hasDuelStarted,
     opponentWon,
     opponentLost,
+    suddenDeathEndTime,
+    setSuddenDeathEndTime,
   } = useDuelMode({
     gameMode,
     activeMatch,
@@ -157,6 +159,7 @@ export default function GameScreen() {
 
   const [competitiveConfirm, setCompetitiveConfirm] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
   const [duelResult, setDuelResult] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
+  const [suddenDeathNotice, setSuddenDeathNotice] = useState<{ title: string; message: string } | null>(null);
 
   const backToLobby = useCallback(() => {
     setDuelResult(null);
@@ -177,6 +180,16 @@ export default function GameScreen() {
 
     if (opponentWon && status === "playing") {
       giveUpWord();
+    }
+
+    if (opponentLost && status === "playing" && !suddenDeathEndTime) {
+      setSuddenDeathEndTime(Date.now() + 60000);
+      setSuddenDeathNotice({
+        title: t("sudden_death_title", { defaultValue: "Sudden Death!" }),
+        message: t("sudden_death_msg", {
+          defaultValue: "Opponent failed to find the word! You have 60 seconds to find it and win!",
+        }),
+      });
     }
 
     if (status === "won") {
@@ -231,7 +244,7 @@ export default function GameScreen() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opponentSurrendered, opponentWon, opponentLost, opponentPreStartExit, status, activeMatch, gameMode]);
+  }, [opponentSurrendered, opponentWon, opponentLost, opponentPreStartExit, status, activeMatch, gameMode, suddenDeathEndTime, setSuddenDeathEndTime, t]);
 
   useEffect(() => {
     setShowResultOverlay(status === "won" || status === "lost");
@@ -328,6 +341,50 @@ export default function GameScreen() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.mode]);
+
+  // Physical/computer keyboard support (web only — matches Wordse's Game.tsx
+  // `onKey` handler). addLetter/deleteLetter/submitGuess already no-op when
+  // the game isn't in a playable state, so no extra gating is needed here.
+  useEffect(() => {
+    if (Platform.OS !== "web") return;
+    const win = (globalThis as any).window;
+    if (!win) return;
+
+    function onKey(e: any) {
+      const k = e.key;
+      if (k === "Enter") {
+        e.preventDefault();
+        submitGuess();
+        return;
+      }
+      if (k === "Backspace") {
+        e.preventDefault();
+        deleteLetter();
+        return;
+      }
+      if (k === " ") {
+        e.preventDefault();
+        addLetter("␣");
+        return;
+      }
+      if (k === "-") {
+        e.preventDefault();
+        addLetter("‑");
+        return;
+      }
+
+      if (k.length !== 1) return;
+
+      const lang = i18n.language || "en";
+      const swedishLetters = /[A-Za-zÅÄÖåäö]/;
+      const basicLetters = /[A-Za-z]/;
+      const isLetter = lang.startsWith("sv") ? swedishLetters.test(k) : basicLetters.test(k);
+      if (isLetter) addLetter(k.toUpperCase());
+    }
+
+    win.addEventListener("keydown", onKey);
+    return () => win.removeEventListener("keydown", onKey);
+  }, [addLetter, deleteLetter, submitGuess, i18n.language]);
 
   const handleDuelForfeit = () => {
     if (!activeMatch) return;
@@ -483,6 +540,7 @@ export default function GameScreen() {
               isHintEnabled={gameMode === "duel" ? activeMatch?.is_hint_enabled : isPracticeHintEnabled}
               hideRestart={gameMode === "duel" || gameMode === "competitive"}
               startLabel={gameMode === "competitive" ? t("start_challenge", { defaultValue: "Start Challenge" }) : undefined}
+              suddenDeathEndTime={gameMode === "duel" ? suddenDeathEndTime : undefined}
             />
 
             {gameMode === "duel" ? (
@@ -583,6 +641,15 @@ export default function GameScreen() {
           message={competitiveConfirm.message}
           onConfirm={competitiveConfirm.onConfirm}
           onCancel={() => setCompetitiveConfirm(null)}
+          variant="warning"
+        />
+      )}
+
+      {suddenDeathNotice && (
+        <ConfirmationOverlay
+          title={suddenDeathNotice.title}
+          message={suddenDeathNotice.message}
+          onConfirm={() => setSuddenDeathNotice(null)}
           variant="warning"
         />
       )}
