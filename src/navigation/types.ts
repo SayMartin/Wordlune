@@ -14,6 +14,7 @@ export type RootStackParamList = {
   Signup: undefined;
   Signin: undefined;
   Signout: undefined;
+  NotFound: undefined;
 };
 
 // Screens nested inside the tab navigator need to reach both tab siblings

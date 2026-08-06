@@ -5,6 +5,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import SignupScreen from "../screens/SignupScreen";
 import SigninScreen from "../screens/SigninScreen";
 import SignoutScreen from "../screens/SignoutScreen";
+import NotFoundScreen from "../screens/NotFoundScreen";
 import WebCentered from "../components/WebCentered";
 import type { RootStackParamList } from "./types";
 
@@ -34,6 +35,11 @@ const CenteredSignoutScreen = () => (
     <SignoutScreen />
   </WebCentered>
 );
+const CenteredNotFoundScreen = () => (
+  <WebCentered>
+    <NotFoundScreen />
+  </WebCentered>
+);
 
 // Mirrors Wordse's src/router.jsx route tree. Home/Game/Progress/Profile/
 // About live in the bottom-tab navigator (MainTabs), matching the web's
@@ -42,7 +48,10 @@ const CenteredSignoutScreen = () => (
 // Profile like the web router). Real Duel mode lives inside GameScreen —
 // there is no standalone Multiplayer route (the old prototype was removed).
 // Session gating for Game/Progress/Profile (SessionGate, mirroring the web's
-// SessionRequiredRoute) is wired up in MainTabs.tsx, not here.
+// SessionRequiredRoute) is wired up in MainTabs.tsx, not here. NotFound mirrors
+// the web app's src/pages/NotFound.tsx; on web it's reached via the "*" linking
+// path in App.tsx (any URL that doesn't match a configured route), matching
+// react-router's catch-all behavior in the old app.
 export default function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -51,6 +60,7 @@ export default function RootNavigator() {
       <Stack.Screen name="Signup" component={CenteredSignupScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Signin" component={CenteredSigninScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Signout" component={CenteredSignoutScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="NotFound" component={CenteredNotFoundScreen} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 }

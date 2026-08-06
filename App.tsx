@@ -8,11 +8,37 @@ import "./src/i18n/i18n";
 import React, { useEffect } from "react";
 import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, type LinkingOptions } from "@react-navigation/native";
 import { ThemeProvider, useTheme } from "./src/theme/ThemeProvider";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { LoadingProvider } from "./src/context/LoadingContext";
-import RootNavigator from "./src/navigation/RootNavigator";
+import RootNavigator, { type RootStackParamList } from "./src/navigation/RootNavigator";
+
+// Mirrors the old web app's react-router paths (src/router.jsx). Native has no URL bar so
+// this is web-only in effect, but the config lives here regardless of platform. Without an
+// explicit "*" -> NotFound mapping, an unrecognized URL falls through to the initial route
+// (Home) instead of showing the 404 screen, silently swallowing typos in the address bar.
+const linking: LinkingOptions<RootStackParamList> = {
+  prefixes: [],
+  config: {
+    screens: {
+      Main: {
+        screens: {
+          Home: "",
+          Game: "game",
+          Progress: "progress",
+          Profile: "profile",
+          About: "about",
+        },
+      },
+      Settings: "settings",
+      Signup: "signup",
+      Signin: "signin",
+      Signout: "signout",
+      NotFound: "*",
+    },
+  },
+};
 
 function AppContent() {
   const { theme, colors, setTheme } = useTheme();
@@ -31,6 +57,7 @@ function AppContent() {
 
   return (
     <NavigationContainer
+      linking={linking}
       theme={{
         dark: theme === "dark",
         colors: {
