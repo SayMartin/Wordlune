@@ -28,7 +28,7 @@ Android builds (`npm run android` / Gradle) need the daemon JVM on **Java 17 or 
 
 ## Architecture
 
-**Provider stack** (`App.tsx`): `SafeAreaProvider` > `ThemeProvider` > `LoadingProvider` > `AuthProvider` > `NavigationContainer` > `RootNavigator`. Theme colors feed directly into `NavigationContainer`'s theme.
+**Provider stack** (`App.tsx`): `SafeAreaProvider` > `ThemeProvider` > `LoadingProvider` > `AuthProvider` > `NavigationContainer` > `RootNavigator`. Theme colors feed directly into `NavigationContainer`'s theme. On web the whole stack is additionally wrapped in `WebPhoneFrame` (same file) — a no-op on iOS/Android, but on web it centers the app in a fixed phone-proportioned box (max 430×900) with a dark backdrop, since react-native-web has no native concept of a device frame and would otherwise stretch every screen full-bleed across the browser window.
 
 **Navigation**: `RootNavigator` (native-stack, headers hidden) hosts `MainTabs` (bottom-tabs: Home/Game/Progress/Profile/About) as the `Main` route, plus full-screen stack routes for `Signin`/`Signup`/`Signout`/`Settings`. `MultiplayerScreen` is a superseded standalone prototype — real Duel mode lives inside `GameScreen`, not as a separate route. There is no auth-gate redirect yet on Game/Progress/Profile — `useAuth().isAuthenticated` needs to be checked by callers.
 
@@ -48,3 +48,5 @@ Composed hooks layered on top of `useGame`, all driven from `GameScreen`:
 **i18n** (`src/i18n/i18n.ts`): `en`/`sv` resources from `src/locales/*/translation.json`. Language is never auto-detected from device locale — it defaults to English and only restores a previously *user-selected* language cached in AsyncStorage (`wordse:lang`), mirroring the web app's detector config.
 
 **Theming** (`src/theme/ThemeProvider.tsx`): simple light/dark palette context (not system-linked), always initializes to `"dark"` on boot regardless of persisted value, matching the web app's behavior. Screens consume `colors` from `useTheme()` and apply them manually in `StyleSheet` — there's no CSS-class-based theming.
+
+**Mode toggle / header-row pills** (`src/components/GameModeToggle.tsx`, sitting in `CategorySelector`'s `headerRow`): both the Practice/Competitive/Duel toggle buttons and `CategorySelector`'s "Select Categories" expand button use an explicit fixed `height: 40` (not padding-derived height) so they line up pixel-for-pixel on the shared row — emoji glyphs (☕🏆⚔️) render with inconsistent line-box metrics across browsers/fonts, so matching heights via padding+line-height alone doesn't reliably hold across environments. `GameModeToggle` shows the active mode as icon+label and inactive modes as icon-only (larger `fontSize: 20` on the icon, `accessibilityLabel` carries the full name) to stay compact enough for the three tabs to fit next to the categories button at phone width.

@@ -1,116 +1,24 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# WordseNative
 
-# Getting Started
+Wordse is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. WordseNative is the mobile/web port, playable on iOS, Android, and in the browser.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Tech stack
 
-## Step 1: Start Metro
+- **Expo / React Native** — cross-platform app (iOS, Android), with [react-native-web](https://necolas.github.io/react-native-web/) powering the browser version from the same codebase.
+- **Supabase** — backend for authentication, word data, scores, and realtime multiplayer.
+- **React Navigation** — bottom-tab navigation (Home, Game, Progress, Profile, About) plus full-screen auth/settings flows.
+- **i18n (i18next)** — English and Swedish translations.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## How to play
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Open the **Game** tab and pick a mode:
 
-```sh
-# Using npm
-npm start
+- **☕ Practice** — no timer, no pressure. Pick word categories/subcategories and a letter-count range, then guess at your own pace.
+- **🏆 Competitive** — a fixed run of multiple words scored end-to-end.
+- **⚔️ Duel** — real-time 1v1 against another player: both guess the same secret word simultaneously, scored by correct/present letters, with the match resolved live over a shared session.
 
-# OR using Yarn
-yarn start
-```
+Type a guess using the on-screen keyboard and submit it; the board colors each letter to show whether it's correct, present elsewhere in the word, or absent.
 
-## Step 2: Build and run your app
+### Logging in
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-> **Note**: Gradle needs to run on Java 17 or 21 (not whatever `java -version` reports by default on newer machines — JDK 24+ breaks the native/CMake build steps). Point Gradle at a compatible JDK by setting `org.gradle.java.home` in your global `~/.gradle/gradle.properties`, e.g.:
-> ```properties
-> org.gradle.java.home=/opt/homebrew/opt/openjdk@21
-> ```
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-### Web
-
-```sh
-npm run web
-```
-
-This starts the Expo/Metro dev server with a browser tab open. To produce a static build for deployment to your own server:
-
-```sh
-npm run build:web
-```
-
-This outputs a static site to `dist/` (`index.html` + JS bundle + assets) that can be served by any static file host or web server — no Node process required at runtime. Upload the contents of `dist/` to your server's web root.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Practice mode works with no account at all — tap **Start Playing** and go, though scores aren't saved without at least a guest session. Competitive and Duel modes require a full registered account (not just guest). Use the **Log In** link in the top-right corner to sign in, register, or continue as a guest.
