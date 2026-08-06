@@ -11,5 +11,9 @@ module.exports = {
     android: {
       package: 'com.wordsenative',
     },
+    web: {
+      bundler: 'metro',
+      output: 'single',
+    },
   },
 };

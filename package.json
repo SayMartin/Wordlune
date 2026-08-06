@@ -5,11 +5,14 @@
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "web": "expo start --web",
+    "build:web": "expo export --platform web",
     "lint": "eslint .",
     "start": "expo start",
     "test": "jest"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~57.0.8",
     "@react-native-async-storage/async-storage": "^3.1.1",
     "@react-native-community/slider": "5.2.0",
     "@react-native/new-app-screen": "0.86.2",
@@ -22,13 +25,15 @@
     "expo-system-ui": "~57.0.2",
     "i18next": "^26.3.6",
     "react": "19.2.8",
+    "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "react-native": "0.86.2",
     "react-native-localize": "^3.7.0",
     "react-native-safe-area-context": "^5.8.1",
     "react-native-screens": "^4.26.2",
     "react-native-svg": "15.15.4",
-    "react-native-url-polyfill": "^4.0.0"
+    "react-native-url-polyfill": "^4.0.0",
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

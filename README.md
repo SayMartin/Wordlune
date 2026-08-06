@@ -24,6 +24,11 @@ With Metro running, open a new terminal window/pane from the root of your React 
 
 ### Android
 
+> **Note**: Gradle needs to run on Java 17 or 21 (not whatever `java -version` reports by default on newer machines — JDK 24+ breaks the native/CMake build steps). Point Gradle at a compatible JDK by setting `org.gradle.java.home` in your global `~/.gradle/gradle.properties`, e.g.:
+> ```properties
+> org.gradle.java.home=/opt/homebrew/opt/openjdk@21
+> ```
+
 ```sh
 # Using npm
 npm run android
@@ -61,6 +66,20 @@ yarn ios
 If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+
+### Web
+
+```sh
+npm run web
+```
+
+This starts the Expo/Metro dev server with a browser tab open. To produce a static build for deployment to your own server:
+
+```sh
+npm run build:web
+```
+
+This outputs a static site to `dist/` (`index.html` + JS bundle + assets) that can be served by any static file host or web server — no Node process required at runtime. Upload the contents of `dist/` to your server's web root.
 
 ## Step 3: Modify your app
 

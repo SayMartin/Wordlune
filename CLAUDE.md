@@ -12,6 +12,8 @@ WordseNative is an Expo/React Native port of the "Wordse" web app (a Wordle-styl
 npm start           # Start Metro/Expo dev server
 npm run android      # expo run:android
 npm run ios          # expo run:ios (run `bundle install` then `bundle exec pod install` first if native deps changed)
+npm run web          # expo start --web (dev server + browser tab)
+npm run build:web    # expo export --platform web -> static site in dist/, deployable to any static host
 npm run lint          # eslint .
 npm test             # jest (jest-expo preset)
 ```
@@ -19,6 +21,10 @@ npm test             # jest (jest-expo preset)
 Run a single test file: `npx jest __tests__/App.test.tsx`.
 
 Requires Node >= 22.11.0. Supabase credentials are read from `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` (`.env`, see `.env.example`). If unset, `src/supabaseClient.ts` falls back to a no-op stub client so the app still renders in dev/test without a backend.
+
+Android builds (`npm run android` / Gradle) need the daemon JVM on **Java 17 or 21**, not whatever the system default happens to be — JDK 24+ trips a JNI-restriction warning during the prefab/CMake native-build steps (`configureCMakeDebug[armeabi-v7a]`) that Android Gradle Plugin misreports as a build failure. Pin it via `org.gradle.java.home` in `~/.gradle/gradle.properties` (machine-local, not the repo's `android/gradle.properties`) rather than changing the system JDK.
+
+**Web target** (`react-native-web`, configured via `web.bundler: "metro"` in `app.config.js`): all screens/navigation render on web with no code changes so far — `react-native-screens`, `react-native-svg`, `react-native-safe-area-context`, and the Supabase JS client all work through their web-compatible paths. `react` and `react-dom` must stay on the exact same version (a mismatch produces a blank page with a minified React error #527 in the console, no other symptom) — `react-dom` is not in Expo's SDK-managed version set, so bumping `react` requires manually bumping `react-dom` to match.
 
 ## Architecture
 

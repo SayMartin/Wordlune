@@ -22,21 +22,32 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <View style={styles.container}>
       {MODES.map((m) => {
         const isActive = mode === m.key;
         const isDisabled = disabled || !m.available;
+        const label = t(m.labelKey, { defaultValue: m.fallback });
         return (
           <Pressable
             key={m.key}
-            style={[styles.button, isActive && { backgroundColor: colors.background }]}
+            style={[
+              styles.button,
+              { borderColor: colors.border },
+              isActive && { backgroundColor: colors.surface },
+            ]}
             onPress={() => m.available && onChange(m.key)}
             disabled={isDisabled}
+            accessibilityLabel={label}
           >
-            <Text style={{ color: isDisabled ? colors.textMuted : colors.text, fontWeight: isActive ? "700" : "500" }}>
-              {m.emoji} {t(m.labelKey, { defaultValue: m.fallback })}
-              {!m.available ? " 🔒" : ""}
-            </Text>
+            <Text style={[styles.icon, { color: isDisabled ? colors.textMuted : colors.text }]}>{m.emoji}</Text>
+            {isActive ? (
+              <Text
+                style={{ color: isDisabled ? colors.textMuted : colors.text, fontWeight: "700", marginLeft: 6 }}
+              >
+                {label}
+                {!m.available ? " 🔒" : ""}
+              </Text>
+            ) : null}
           </Pressable>
         );
       })}
@@ -44,13 +55,25 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
   );
 }
 
+// Fixed height (matching CategorySelector's expandButton) instead of
+// padding-derived height — emoji glyphs have inconsistent line-box metrics
+// across browsers/fonts, so padding math alone doesn't reliably line the two
+// controls up.
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 4,
-    gap: 4,
+    gap: 6,
+    flexShrink: 0,
   },
-  button: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8 },
+  button: {
+    height: 40,
+    minWidth: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  icon: { fontSize: 20, lineHeight: 24 },
 });

@@ -220,8 +220,15 @@ export default function CategorySelector({
 
 const styles = StyleSheet.create({
   container: { gap: 8 },
-  headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  expandButton: { borderWidth: 1, borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12 },
+  headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 8 },
+  expandButton: {
+    height: 40,
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    flexShrink: 1,
+  },
   disabled: { opacity: 0.5 },
   list: { gap: 10 },
   categoryCard: { borderWidth: 1, borderRadius: 10, padding: 10, gap: 8 },
