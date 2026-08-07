@@ -1,16 +1,16 @@
 module.exports = {
   expo: {
-    name: 'WordseNative',
-    slug: 'WordseNative',
+    name: 'Wordse',
+    slug: 'wordse',
     version: '0.0.1',
     orientation: 'portrait',
     userInterfaceStyle: 'automatic',
     icon: './assets/icon.png',
     ios: {
-      bundleIdentifier: 'org.reactjs.native.example.WordseNative',
+      bundleIdentifier: 'se.wordse.app',
     },
     android: {
-      package: 'com.wordsenative',
+      package: 'se.wordse.app',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#4f46e5',

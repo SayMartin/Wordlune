@@ -24,7 +24,7 @@ import {
 const AUTH_REDIRECT_URL =
   Platform.OS === "web" && (globalThis as any).window
     ? (globalThis as any).window.location.origin
-    : "wordsenative://auth-callback";
+    : "se.wordse.app://auth-callback";
 
 export type AuthState = "visitor" | "guest" | "registered";
 

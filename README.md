@@ -1,6 +1,6 @@
-# WordseNative
+# Wordse
 
-Wordse is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. WordseNative is the mobile/web port, playable on iOS, Android, and in the browser.
+Wordse is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. Playable on iOS, Android, and in the browser.
 
 ## Tech stack
 

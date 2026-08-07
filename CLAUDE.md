@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-WordseNative is an Expo/React Native port of the "Wordse" web app (a Wordle-style word-guessing game), with Supabase as the backend for auth, word data, scores, and realtime multiplayer (Duel mode). When behavior is ambiguous, the web app's `src/router.jsx` and equivalent hooks are the reference implementation this port mirrors — see comments in `src/navigation/RootNavigator.tsx` for specifics on what's intentionally different. The original web app's repo (`Wordse`) is being retired in favor of this one; `supabase-ops/` (migrations + seed/content scripts, copied from that repo) is the only remaining home for that project's DB migration history and content-seeding tooling — see `supabase-ops/README.md`.
+This repo (internally still named `WordseNative`, branded to users as just "Wordse") is an Expo/React Native port of the original Vite-based "Wordse" web app (a Wordle-style word-guessing game), with Supabase as the backend for auth, word data, scores, and realtime multiplayer (Duel mode). When behavior is ambiguous, the original web app's `src/router.jsx` and equivalent hooks are the reference implementation this port mirrors — see comments in `src/navigation/RootNavigator.tsx` for specifics on what's intentionally different. That original web app's repo is being retired in favor of this one; `supabase-ops/` (migrations + seed/content scripts, copied from that repo) is the only remaining home for that project's DB migration history and content-seeding tooling — see `supabase-ops/README.md`. App identifiers: bundle id / Android package `se.wordse.app`, display name "Wordse".
 
 ## Commands
 

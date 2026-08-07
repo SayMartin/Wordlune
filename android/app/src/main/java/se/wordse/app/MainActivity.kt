@@ -1,4 +1,4 @@
-package com.wordsenative
+package se.wordse.app
 
 import android.os.Build
 import android.os.Bundle
