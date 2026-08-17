@@ -24,6 +24,9 @@ import type { RootStackParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
+const MIN_PASSWORD_LENGTH = 8;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function SignupScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -32,6 +35,7 @@ export default function SignupScreen() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [avatarSeed, setAvatarSeed] = useState("");
   const [useRandomAvatar, setUseRandomAvatar] = useState(false);
@@ -88,6 +92,29 @@ export default function SignupScreen() {
     }
     if (nameError) return;
 
+    if (!email.trim()) {
+      setError(t("email_required", { defaultValue: "Email is required" }));
+      return;
+    }
+    if (!EMAIL_PATTERN.test(email.trim())) {
+      setError(t("invalid_email", { defaultValue: "Please enter a valid email address" }));
+      return;
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(
+        t("password_too_short", {
+          defaultValue: `Password must be at least ${MIN_PASSWORD_LENGTH} characters`,
+          length: MIN_PASSWORD_LENGTH,
+        }),
+      );
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError(t("passwords_do_not_match", { defaultValue: "Passwords do not match" }));
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -102,7 +129,7 @@ export default function SignupScreen() {
 
       const result = await signUpNewUser(email, password, displayName, avatarUrl);
       if (!result.success) {
-        setError(result.error || "Signup failed");
+        setError(result.error || t("signup_failed", { defaultValue: "Signup failed" }));
       } else if (result.checkEmail) {
         setSuccessMessage(
           t("check_email_confirmation", {
@@ -174,7 +201,7 @@ export default function SignupScreen() {
           }}
           onBlur={() => checkNameAvailability(displayName)}
           maxLength={MAX_DISPLAY_NAME_LENGTH}
-          placeholder="e.g. WordMaster"
+          placeholder={t("display_name_placeholder", { defaultValue: "e.g. WordMaster" }) as string}
           placeholderTextColor={colors.textMuted}
           style={[
             styles.input,
@@ -189,7 +216,7 @@ export default function SignupScreen() {
             })}
           </Text>
         )}
-        {isChecking && <Text style={{ color: colors.textMuted, fontSize: 12 }}>Checking availability...</Text>}
+        {isChecking && <Text style={{ color: colors.textMuted, fontSize: 12 }}>{t("checking_availability", { defaultValue: "Checking availability..." })}</Text>}
         {nameError && <Text style={styles.error}>{nameError}</Text>}
       </View>
 
@@ -200,7 +227,7 @@ export default function SignupScreen() {
         <TextInput
           value={email}
           onChangeText={setEmail}
-          placeholder="Enter your email"
+          placeholder={t("email_placeholder", { defaultValue: "email" }) as string}
           placeholderTextColor={colors.textMuted}
           autoCapitalize="none"
           keyboardType="email-address"
@@ -212,7 +239,28 @@ export default function SignupScreen() {
         <Text style={[styles.label, { color: colors.text }]}>
           {t("password", { defaultValue: "Password" })}
         </Text>
-        <PasswordInput value={password} onChangeText={setPassword} placeholder="Enter your password" />
+        <PasswordInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder={t("password_placeholder", { defaultValue: "Enter your password" }) as string}
+        />
+        <Text style={[styles.hint, { color: colors.textMuted }]}>
+          {t("password_min_length_hint", {
+            defaultValue: `Must be at least ${MIN_PASSWORD_LENGTH} characters`,
+            length: MIN_PASSWORD_LENGTH,
+          })}
+        </Text>
+      </View>
+
+      <View style={styles.field}>
+        <Text style={[styles.label, { color: colors.text }]}>
+          {t("confirm_password", { defaultValue: "Confirm Password" })}
+        </Text>
+        <PasswordInput
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          placeholder={t("confirm_password_placeholder", { defaultValue: "Re-enter your password" }) as string}
+        />
       </View>
 
       {error && <Text style={styles.error}>{error}</Text>}
@@ -246,6 +294,7 @@ const styles = StyleSheet.create({
   input: { borderWidth: 1, borderRadius: 8, padding: 10 },
   error: { color: "#ef4444", fontSize: 12 },
   warning: { color: "#ea580c", fontSize: 12 },
+  hint: { fontSize: 12 },
   button: { borderRadius: 8, paddingVertical: 12, alignItems: "center" },
   primaryButton: { backgroundColor: "#2563eb" },
   primaryButtonText: { color: "#ffffff", fontWeight: "600" },

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 
 interface PasswordInputProps extends Omit<TextInputProps, "secureTextEntry"> {}
 
 export function PasswordInput({ style, ...props }: PasswordInputProps) {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -24,7 +26,11 @@ export function PasswordInput({ style, ...props }: PasswordInputProps) {
         style={styles.toggle}
         onPress={() => setShowPassword((v) => !v)}
         accessibilityRole="button"
-        accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+        accessibilityLabel={
+          showPassword
+            ? t("hide_password", { defaultValue: "Hide password" })
+            : t("show_password", { defaultValue: "Show password" })
+        }
       >
         <Text style={{ color: colors.textMuted }}>{showPassword ? "🙈" : "👁️"}</Text>
       </Pressable>

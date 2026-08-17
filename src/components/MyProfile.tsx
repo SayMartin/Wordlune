@@ -23,8 +23,8 @@ type Nav = NativeStackNavigationProp<AppParamList>;
 
 export default function MyProfile() {
   const { t, i18n } = useTranslation();
-  const { theme, setTheme } = useTheme();
-  const { profile, session, isAuthenticated, authState, refreshProfile, loadingInitial } = useAuth();
+  const { theme, setTheme, colors } = useTheme();
+  const { profile, session, isAuthenticated, authState, refreshProfile, loadingInitial, profileLoading } = useAuth();
   const navigation = useNavigation<Nav>();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -34,7 +34,6 @@ export default function MyProfile() {
   const [error, setError] = useState<string | null>(null);
 
   const [settingsLoading, setSettingsLoading] = useState(false);
-  const [settingsSaved, setSettingsSaved] = useState(false);
   const [originalSettings, setOriginalSettings] = useState<{ theme: "light" | "dark"; language: string; reduceMotion: boolean } | null>(null);
 
   const [isPublic, setIsPublic] = useState(false);
@@ -75,38 +74,42 @@ export default function MyProfile() {
 
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
-    setSettingsSaved(false);
   };
 
   const handleThemeOption = (t2: "light" | "dark") => {
     setTheme(t2);
-    setSettingsSaved(false);
   };
 
   const handleReduceMotionChange = () => {
     setReduceMotion((v) => !v);
-    setSettingsSaved(false);
   };
 
-  const handleSaveSettings = async () => {
-    setSettingsLoading(true);
-    setSettingsSaved(false);
+  const settingsChanged =
+    !!originalSettings &&
+    (originalSettings.theme !== theme ||
+      originalSettings.language !== i18n.language ||
+      originalSettings.reduceMotion !== reduceMotion);
 
-    if (authState === "registered" && profile) {
-      try {
+  const handleSaveSettings = async () => {
+    if (!settingsChanged) return;
+
+    setSettingsLoading(true);
+    try {
+      if (authState === "registered" && profile) {
         await updatePlayerSettings(profile.id, { theme, language: i18n.language, reduceMotion });
         await refreshProfile();
-        setSettingsSaved(true);
-        setOriginalSettings({ theme, language: i18n.language, reduceMotion });
-      } catch (err) {
-        console.error("Failed to save settings", err);
+      } else {
+        // No backend write for guests — hold the "Saving..." state briefly
+        // so the transition to "Settings Saved" is perceivable, matching
+        // the registered-user path instead of jumping instantly.
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
-    } else {
-      setSettingsSaved(true);
       setOriginalSettings({ theme, language: i18n.language, reduceMotion });
+    } catch (err) {
+      console.error("Failed to save settings", err);
+    } finally {
+      setSettingsLoading(false);
     }
-    setSettingsLoading(false);
-    setTimeout(() => setSettingsSaved(false), 3000);
   };
 
   const handleCancelSettings = () => {
@@ -124,7 +127,7 @@ export default function MyProfile() {
     return avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(display_name || "guest")}`;
   }, [isEditing, useRandomAvatar, avatarSeed, avatar_url, display_name]);
 
-  if (loadingInitial || (isAuthenticated && !profile)) {
+  if (loadingInitial || (isAuthenticated && !profile && profileLoading)) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
@@ -132,9 +135,22 @@ export default function MyProfile() {
     );
   }
 
-  if (!isAuthenticated || !profile) {
+  if (!isAuthenticated) {
     return (
       <Text style={styles.center}>{t("login_to_view_profile", { defaultValue: "Please log in to view your profile." })}</Text>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>
+          {t("profile_load_failed", { defaultValue: "Couldn't load your profile." })}
+        </Text>
+        <Pressable style={styles.secondaryButton} onPress={refreshProfile}>
+          <Text style={styles.secondaryButtonText}>{t("retry", { defaultValue: "Retry" })}</Text>
+        </Pressable>
+      </View>
     );
   }
 
@@ -201,7 +217,9 @@ export default function MyProfile() {
   };
 
   return (
-    <View style={styles.card}>
+    <>
+    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <Text style={[styles.cardTitle, { color: "#6366f1" }]}>{t("my_profile", { defaultValue: "My Profile" })}</Text>
       <View style={styles.headerRow}>
         <View style={styles.avatarCol}>
           <Image source={{ uri: currentAvatarSrc }} style={styles.avatar} />
@@ -215,7 +233,7 @@ export default function MyProfile() {
         <View style={styles.headerMain}>
           {isEditing ? (
             <View style={{ gap: 6 }}>
-              <Text style={styles.fieldLabel}>{t("display_name", { defaultValue: "Display Name" })}</Text>
+              <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>{t("display_name", { defaultValue: "Display Name" })}</Text>
               <TextInput
                 value={editName}
                 onChangeText={setEditName}
@@ -236,27 +254,27 @@ export default function MyProfile() {
             </View>
           ) : (
             <>
-              <Text style={styles.displayName}>{display_name}</Text>
-              <Text style={styles.email}>{email}</Text>
+              <Text style={[styles.displayName, { color: colors.text }]}>{display_name}</Text>
+              <Text style={[styles.email, { color: colors.textMuted }]}>{email}</Text>
             </>
           )}
         </View>
       </View>
 
       <View style={styles.statsSection}>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>{t("privacy_status", { defaultValue: "Privacy Status" })}</Text>
-          <Text style={[styles.statValue, { color: profileIsPublic ? "#16a34a" : "#f8fafc" }]}>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("privacy_status", { defaultValue: "Privacy Status" })}</Text>
+          <Text style={[styles.statValue, { color: profileIsPublic ? "#16a34a" : colors.text }]}>
             {profileIsPublic ? t("public", { defaultValue: "Public" }) : t("private", { defaultValue: "Private" })}
           </Text>
         </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>{t("level", { defaultValue: "Level" })}</Text>
-          <Text style={styles.statValue}>{profile.metadata?.level || 1}</Text>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("level", { defaultValue: "Level" })}</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{profile.metadata?.level || 1}</Text>
         </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>{t("joined", { defaultValue: "Joined" })}</Text>
-          <Text style={styles.statValue}>{profile.created_at ? new Date(profile.created_at).toLocaleDateString() : "-"}</Text>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("joined", { defaultValue: "Joined" })}</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{profile.created_at ? new Date(profile.created_at).toLocaleDateString() : "-"}</Text>
         </View>
       </View>
 
@@ -279,20 +297,6 @@ export default function MyProfile() {
         )}
       </View>
 
-      <ProfileSettingsSection
-        currentLanguage={i18n.language}
-        onLanguageChange={handleLanguageChange}
-        theme={theme}
-        onThemeChange={handleThemeOption}
-        reduceMotion={reduceMotion}
-        onReduceMotionChange={handleReduceMotionChange}
-        authState={authState}
-        loading={settingsLoading}
-        saved={settingsSaved}
-        onSave={handleSaveSettings}
-        onCancel={handleCancelSettings}
-      />
-
       {showGuestHint && (
         <View style={styles.guestOverlay}>
           <Text style={styles.guestTitle}>{t("guest_limitation_title", { defaultValue: "Guest Limitation" })}</Text>
@@ -301,7 +305,7 @@ export default function MyProfile() {
           </Text>
           <View style={styles.row}>
             <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Signup")}>
-              <Text style={styles.primaryButtonText}>{t("register_now", { defaultValue: "Register Now" })}</Text>
+              <Text style={styles.primaryButtonText}>{t("signup", { defaultValue: "Sign Up" })}</Text>
             </Pressable>
             <Pressable style={styles.linkButton} onPress={() => setShowGuestHint(false)}>
               <Text style={styles.link}>{t("close", { defaultValue: "Close" })}</Text>
@@ -310,28 +314,44 @@ export default function MyProfile() {
         </View>
       )}
     </View>
+
+    <ProfileSettingsSection
+      currentLanguage={i18n.language}
+      onLanguageChange={handleLanguageChange}
+      theme={theme}
+      onThemeChange={handleThemeOption}
+      reduceMotion={reduceMotion}
+      onReduceMotionChange={handleReduceMotionChange}
+      authState={authState}
+      loading={settingsLoading}
+      canSave={settingsChanged}
+      onSave={handleSaveSettings}
+      onCancel={handleCancelSettings}
+    />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24, color: "#94a3b8" },
-  card: { backgroundColor: "#334155", borderRadius: 12, padding: 20, position: "relative" },
+  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24, color: "#94a3b8", gap: 12 },
+  cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 8 },
+  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 4, position: "relative" },
   headerRow: { flexDirection: "row", gap: 14, marginBottom: 12 },
   avatarCol: { alignItems: "center", gap: 6 },
   avatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: "#e5e7eb" },
   headerMain: { flex: 1, justifyContent: "center" },
-  displayName: { fontSize: 20, fontWeight: "800", color: "#ffffff" },
-  email: { fontSize: 13, color: "#e2e8f0" },
-  fieldLabel: { fontSize: 11, fontWeight: "700", color: "#e2e8f0" },
+  displayName: { fontSize: 20, fontWeight: "800" },
+  email: { fontSize: 13 },
+  fieldLabel: { fontSize: 11, fontWeight: "700" },
   input: { backgroundColor: "#ffffff", borderRadius: 6, paddingHorizontal: 10, paddingVertical: 8, color: "#111827" },
   warning: { color: "#fdba74", fontSize: 11 },
   error: { color: "#fca5a5", fontSize: 13 },
   link: { color: "#bfdbfe", textDecorationLine: "underline", fontSize: 12 },
   linkButton: { marginTop: 4 },
   statsSection: { marginTop: 8, gap: 8 },
-  statRow: { flexDirection: "row", justifyContent: "space-between", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.2)", paddingBottom: 8 },
-  statLabel: { color: "#e2e8f0", fontWeight: "600" },
-  statValue: { color: "#ffffff", fontWeight: "700" },
+  statRow: { flexDirection: "row", justifyContent: "space-between", borderBottomWidth: 1, paddingBottom: 8 },
+  statLabel: { fontWeight: "600" },
+  statValue: { fontWeight: "700" },
   actions: { marginTop: 16 },
   row: { flexDirection: "row", gap: 8 },
   primaryButton: { backgroundColor: "#2563eb", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },

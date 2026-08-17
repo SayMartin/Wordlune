@@ -134,9 +134,14 @@ export async function suggestUniqueDisplayName(
 
 /**
  * Fetch the profile for the specified player.
+ *
+ * Retries a few times on "no rows" (PGRST116): right after signup/anonymous
+ * sign-in, the DB trigger that creates the player_profiles row can still be
+ * in flight, so the very first read can legitimately find nothing yet.
  */
 export async function getPlayerProfile(
   playerId: string,
+  retriesLeft = 3,
 ): Promise<PlayerProfile | null> {
   // Mapping 'id' from the table to our logical 'playerId' if needed, but here it is just the PK
   const { data, error } = await supabase
@@ -145,11 +150,53 @@ export async function getPlayerProfile(
     .eq("id", playerId)
     .single();
 
+  if (error && error.code === "PGRST116" && retriesLeft > 0) {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return getPlayerProfile(playerId, retriesLeft - 1);
+  }
+
   if (error && error.code !== "PGRST116") {
     console.error("Error fetching player profile:", error);
     return null;
   }
 
+  return data;
+}
+
+/**
+ * Fetch the profile for the specified player, creating one client-side if
+ * it's genuinely missing (not just still-being-created by the on_auth_user_created
+ * trigger, which getPlayerProfile's retries already cover). This heals sessions
+ * left behind by earlier signups where the trigger's insert failed — e.g. an
+ * anonymous sign-in with no display_name violating the NOT NULL/unique
+ * constraint on player_profiles.display_name — so the auth session exists but
+ * its profile row never does.
+ */
+export async function ensurePlayerProfile(
+  userId: string,
+  opts?: { displayName?: string; avatarUrl?: string },
+): Promise<PlayerProfile | null> {
+  const existing = await getPlayerProfile(userId, 0);
+  if (existing) return existing;
+
+  const displayName = opts?.displayName || (await suggestUniqueDisplayName("Guest"));
+  const avatarUrl =
+    opts?.avatarUrl ||
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`;
+
+  const { data, error } = await supabase
+    .from("player_profiles")
+    .upsert(
+      { id: userId, display_name: displayName, avatar_url: avatarUrl },
+      { onConflict: "id" },
+    )
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating fallback player profile:", error);
+    return null;
+  }
   return data;
 }
 

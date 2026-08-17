@@ -10,7 +10,7 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>{t("my_profile", { defaultValue: "My Profile" })}</Text>
+      <Text style={[styles.title, { color: colors.text }]}>{t("settings", { defaultValue: "Settings" })}</Text>
       <MyProfile />
     </ScrollView>
   );

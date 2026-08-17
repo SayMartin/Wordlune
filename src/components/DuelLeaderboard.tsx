@@ -59,7 +59,7 @@ export default function DuelLeaderboard() {
               </View>
             )}
             <Text style={[styles.name, { color: isMe ? "#4338ca" : colors.text }]} numberOfLines={1}>
-              {entry.display_name || "Unknown"}
+              {entry.display_name || t("unknown", { defaultValue: "Unknown" })}
               {isMe ? ` (${t("you", { defaultValue: "You" })})` : ""}
             </Text>
             <Text style={styles.wins}>

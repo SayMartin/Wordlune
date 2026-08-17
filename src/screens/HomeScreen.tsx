@@ -62,7 +62,7 @@ export default function HomeScreen() {
               onPress={() => navigation.navigate("Signup")}
             >
               <Text style={styles.outlineButtonText}>
-                {t("create_account", { defaultValue: "Create Account" })}
+                {t("signup", { defaultValue: "Sign Up" })}
               </Text>
             </Pressable>
           )}

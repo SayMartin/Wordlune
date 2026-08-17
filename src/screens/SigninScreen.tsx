@@ -36,7 +36,7 @@ export default function SigninScreen() {
     try {
       const result = await login(email, password);
       if (!result || !result.success) {
-        setError(result?.error || "Signin failed");
+        setError(result?.error || t("signin_failed", { defaultValue: "Sign in failed" }));
       } else {
         navigation.navigate("Main", { screen: "Home" });
       }
@@ -55,7 +55,7 @@ export default function SigninScreen() {
       const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(guestName)}`;
       const result = await loginAnonymously(guestName, avatarUrl);
       if (!result || !result.success) {
-        setError(result?.error || "Guest login failed");
+        setError(result?.error || t("guest_login_failed", { defaultValue: "Guest login failed" }));
       } else {
         navigation.navigate("Main", { screen: "Home" });
       }
@@ -91,7 +91,7 @@ export default function SigninScreen() {
         <TextInput
           value={email}
           onChangeText={setEmail}
-          placeholder="Enter your email"
+          placeholder={t("email_placeholder", { defaultValue: "email" }) as string}
           placeholderTextColor={colors.textMuted}
           autoCapitalize="none"
           keyboardType="email-address"
@@ -103,7 +103,11 @@ export default function SigninScreen() {
         <Text style={[styles.label, { color: colors.text }]}>
           {t("password", { defaultValue: "Password" })}
         </Text>
-        <PasswordInput value={password} onChangeText={setPassword} placeholder="Enter your password" />
+        <PasswordInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder={t("password_placeholder", { defaultValue: "Enter your password" }) as string}
+        />
       </View>
 
       {error && <Text style={styles.error}>{error}</Text>}
@@ -122,7 +126,7 @@ export default function SigninScreen() {
 
       <View style={styles.dividerRow}>
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
-        <Text style={{ color: colors.textMuted }}>Or</Text>
+        <Text style={{ color: colors.textMuted }}>{t("or", { defaultValue: "Or" })}</Text>
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
       </View>
 

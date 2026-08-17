@@ -10,8 +10,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../supabaseClient";
 import {
   getPlayerProfile,
+  ensurePlayerProfile,
   PlayerProfile,
 } from "../supabase/players-repository";
+
+// getPlayerProfile retries the read a few times to ride out the
+// on_auth_user_created trigger's insert; if it's still missing after that,
+// the row genuinely doesn't exist (e.g. an earlier sign-in whose trigger
+// insert failed), so fall back to creating it client-side.
+async function fetchOrCreateProfile(userId: string): Promise<PlayerProfile | null> {
+  const existing = await getPlayerProfile(userId);
+  if (existing) return existing;
+  return ensurePlayerProfile(userId);
+}
 
 // On web, redirect back to the page the user signed up from — matches the
 // original Wordse web app's `emailRedirectTo: window.location.origin`, and
@@ -32,6 +43,7 @@ interface AuthContextType {
   authState: AuthState;
   isAuthenticated: boolean;
   loadingInitial: boolean;
+  profileLoading: boolean;
   session?: any;
   profile: PlayerProfile | null;
   refreshProfile: () => Promise<void>;
@@ -59,6 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<any>(undefined);
   const [profile, setProfile] = useState<PlayerProfile | null>(null);
   const [loadingInitial, setLoadingInitial] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const authState: AuthState = !session
     ? "visitor"
@@ -71,8 +84,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setProfile(null);
       return;
     }
-    const p = await getPlayerProfile(session.user.id);
-    setProfile(p);
+    setProfileLoading(true);
+    try {
+      const p = await fetchOrCreateProfile(session.user.id);
+      setProfile(p);
+    } finally {
+      setProfileLoading(false);
+    }
   };
 
   const signUpNewUser = async (
@@ -152,10 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(data.session);
       if (data.session) {
         setIsAuthenticated(true);
-        // Wait for trigger to create profile
-        // A small delay might be needed or retry logic in getPlayerProfile or UI
-        // But usually Supabase is fast enough.
-        const p = await getPlayerProfile(data.session.user.id);
+        const p = await fetchOrCreateProfile(data.session.user.id);
         setProfile(p);
       }
       return { success: true };
@@ -217,7 +232,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (data.session) {
           setIsAuthenticated(true);
           // Don't await profile to unblock initialization
-          getPlayerProfile(data.session.user.id).then((p) => setProfile(p));
+          setProfileLoading(true);
+          fetchOrCreateProfile(data.session.user.id)
+            .then((p) => setProfile(p))
+            .catch((err) => console.error("fetchOrCreateProfile error", err))
+            .finally(() => setProfileLoading(false));
         } else {
           setIsAuthenticated(false);
           setProfile(null);
@@ -237,7 +256,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (session) {
         setIsAuthenticated(true);
         // Start fetching profile but don't block
-        getPlayerProfile(session.user.id).then((p) => setProfile(p));
+        setProfileLoading(true);
+        fetchOrCreateProfile(session.user.id)
+          .then((p) => setProfile(p))
+          .catch((err) => console.error("fetchOrCreateProfile error", err))
+          .finally(() => setProfileLoading(false));
       } else {
         setIsAuthenticated(false);
         setProfile(null);
@@ -259,6 +282,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         session,
         profile,
         loadingInitial,
+        profileLoading,
         refreshProfile,
         signUpNewUser,
         login,

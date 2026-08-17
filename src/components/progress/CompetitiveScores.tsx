@@ -129,7 +129,7 @@ export default function CompetitiveScores() {
             <Toggle checked={!!score.is_public} onChange={(v) => setScoreToPublish({ id: score.id, newVal: v })} />
             <View style={styles.rowMain}>
               <Text style={[styles.challengeName, { color: colors.text }]}>
-                {score.competitive_challenges?.name || "Challenge"}
+                {score.competitive_challenges?.name || t("challenge", { defaultValue: "Challenge" })}
               </Text>
               <Text style={{ color: colors.textMuted, fontSize: 11 }}>
                 {new Date(score.completed_at).toLocaleDateString()} · {Math.floor((score.total_duration || 0) / 60)}:
