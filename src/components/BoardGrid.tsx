@@ -28,7 +28,7 @@ export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6
   const { colors } = useTheme();
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const wordLen = (word && word.length) || 5;
-  const baseTileSize = wordLen <= 5 ? 30 : wordLen <= 7 ? 26 : wordLen <= 9 ? 22 : wordLen <= 12 ? 18 : 14;
+  const baseTileSize = wordLen <= 5 ? 26 : wordLen <= 7 ? 26 : wordLen <= 9 ? 22 : wordLen <= 12 ? 18 : 14;
 
   // On web there's usually a bit more room than on a phone, so let the tiles grow slightly
   // beyond the phone-tuned base size above — but stay height-bounded so the board+keyboard+
