@@ -52,15 +52,15 @@ interface AuthContextType {
     password: string,
     displayName?: string,
     avatarUrl?: string,
-  ) => Promise<{ success: boolean; error?: string; checkEmail?: boolean }>;
+  ) => Promise<{ success: boolean; error?: string; errorCode?: string; checkEmail?: boolean }>;
   login: (
     email: string,
     password: string,
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   loginAnonymously: (
     displayName?: string,
     avatarUrl?: string,
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       options,
     });
     if (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message, errorCode: error.code };
     }
 
     if (signUpData.session) {
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       if (error) {
         console.error("Error logging in:", error.message);
-        return { success: false, error: error.message };
+        return { success: false, error: error.message, errorCode: error.code };
       }
       const { data } = await supabase.auth.getSession();
       setSession(data.session);
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) {
         console.error("Error logging in anonymously:", error.message);
-        return { success: false, error: error.message };
+        return { success: false, error: error.message, errorCode: error.code };
       }
 
       setSession(data.session);

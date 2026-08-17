@@ -20,6 +20,7 @@ import {
   suggestUniqueDisplayName,
 } from "../supabase/players-repository";
 import { PasswordInput } from "../components/PasswordInput";
+import { translateAuthError } from "../utils/authErrors";
 import type { RootStackParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -129,7 +130,7 @@ export default function SignupScreen() {
 
       const result = await signUpNewUser(email, password, displayName, avatarUrl);
       if (!result.success) {
-        setError(result.error || t("signup_failed", { defaultValue: "Signup failed" }));
+        setError(translateAuthError(t, result.errorCode, result.error, "signup_failed", "Signup failed"));
       } else if (result.checkEmail) {
         setSuccessMessage(
           t("check_email_confirmation", {

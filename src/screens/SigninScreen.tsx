@@ -15,6 +15,7 @@ import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
 import { suggestUniqueDisplayName } from "../supabase/players-repository";
 import { PasswordInput } from "../components/PasswordInput";
+import { translateAuthError } from "../utils/authErrors";
 import type { RootStackParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -36,7 +37,7 @@ export default function SigninScreen() {
     try {
       const result = await login(email, password);
       if (!result || !result.success) {
-        setError(result?.error || t("signin_failed", { defaultValue: "Sign in failed" }));
+        setError(translateAuthError(t, result?.errorCode, result?.error, "signin_failed", "Sign in failed"));
       } else {
         navigation.navigate("Main", { screen: "Home" });
       }
@@ -55,7 +56,7 @@ export default function SigninScreen() {
       const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(guestName)}`;
       const result = await loginAnonymously(guestName, avatarUrl);
       if (!result || !result.success) {
-        setError(result?.error || t("guest_login_failed", { defaultValue: "Guest login failed" }));
+        setError(translateAuthError(t, result?.errorCode, result?.error, "guest_login_failed", "Guest login failed"));
       } else {
         navigation.navigate("Main", { screen: "Home" });
       }
