@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import HomeScreen from "../screens/HomeScreen";
 import GameScreen from "../screens/GameScreen";
 import ProgressScreen from "../screens/ProgressScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 import AboutScreen from "../screens/AboutScreen";
 import HeaderRight from "../components/HeaderRight";
 import SessionGate from "../components/SessionGate";
@@ -17,7 +17,7 @@ import type { MainTabParamList } from "./types";
 
 const isWeb = Platform.OS === "web";
 
-// Matches Wordse's router.jsx: /game, /progress, and /profile are wrapped in
+// Matches Wordse's router.jsx: /game, /progress, and /settings are wrapped in
 // SessionRequiredRoute (at least a guest session required); /home and
 // /about are open to visitors.
 const GatedHomeScreen = () => (
@@ -39,10 +39,10 @@ const GatedProgressScreen = () => (
     </SessionGate>
   </WebCentered>
 );
-const GatedProfileScreen = () => (
+const GatedSettingsScreen = () => (
   <WebCentered>
     <SessionGate>
-      <ProfileScreen />
+      <SettingsScreen />
     </SessionGate>
   </WebCentered>
 );
@@ -58,7 +58,7 @@ const ICONS: Record<keyof MainTabParamList, string> = {
   Home: "🏠",
   Game: "🎮",
   Progress: "📈",
-  Profile: "👤",
+  Settings: "👤",
   About: "ℹ️",
 };
 
@@ -90,7 +90,7 @@ function TabNavigator() {
       <Tab.Screen name="Home" component={GatedHomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
       <Tab.Screen name="Game" component={GatedGameScreen} options={{ title: t("game", { defaultValue: "Game" }) }} />
       <Tab.Screen name="Progress" component={GatedProgressScreen} options={{ title: t("progress", { defaultValue: "Progress" }) }} />
-      <Tab.Screen name="Profile" component={GatedProfileScreen} options={{ title: t("my_profile", { defaultValue: "Profile" }) }} />
+      <Tab.Screen name="Settings" component={GatedSettingsScreen} options={{ title: t("settings", { defaultValue: "Settings" }) }} />
       <Tab.Screen name="About" component={GatedAboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
     </Tab.Navigator>
   );

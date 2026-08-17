@@ -21,7 +21,7 @@ const REDUCE_MOTION_KEY = "wordse:reduceMotion";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 
-export default function MyProfile() {
+export default function Settings() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme, colors } = useTheme();
   const { profile, session, isAuthenticated, authState, refreshProfile, loadingInitial, profileLoading } = useAuth();

@@ -63,8 +63,8 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
   };
 
   const authAction = isLoggedIn
-    ? { label: t("logout", { defaultValue: "Logout" }), onPress: () => nav.navigate("Signout") }
-    : { label: t("login", { defaultValue: "Sign In" }), onPress: () => nav.navigate("Signin") };
+    ? { label: t("logout", { defaultValue: "Log Out" }), onPress: () => nav.navigate("Signout") }
+    : { label: t("login", { defaultValue: "Log In" }), onPress: () => nav.navigate("Login") };
 
   return (
     <View style={[styles.bar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>

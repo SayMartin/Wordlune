@@ -34,7 +34,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
       // player_profiles.display_name is NOT NULL — loginAnonymously() with no
       // args leaves it null (from raw_user_meta_data->>'full_name') and the
       // creation trigger 500s. Generate a guest name first, matching
-      // SigninScreen's handleGuestLogin.
+      // LoginScreen's handleGuestLogin.
       const guestName = await suggestUniqueDisplayName("Guest");
       const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(guestName)}`;
       await loginAnonymously(guestName, avatarUrl);
@@ -85,7 +85,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
             <View style={styles.row}>
               <Pressable
                 style={[styles.button, styles.outlineButton, { borderColor: colors.border }]}
-                onPress={() => navigation.navigate("Signin")}
+                onPress={() => navigation.navigate("Login")}
               >
                 <Text style={[styles.buttonTextDark, { color: colors.text }]}>
                   {t("login", { defaultValue: "Log In" })}

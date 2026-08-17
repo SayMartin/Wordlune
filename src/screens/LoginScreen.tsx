@@ -20,7 +20,7 @@ import type { RootStackParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
-export default function SigninScreen() {
+export default function LoginScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { login, loginAnonymously } = useAuth();
@@ -73,7 +73,7 @@ export default function SigninScreen() {
       contentContainerStyle={styles.container}
     >
       <Text style={[styles.title, { color: colors.text }]}>
-        {t("sign_in", { defaultValue: "Sign In" })}
+        {t("login", { defaultValue: "Log In" })}
       </Text>
 
       <View style={styles.row}>
@@ -81,7 +81,7 @@ export default function SigninScreen() {
           {t("no_account", { defaultValue: "Don't have an account?" })}{" "}
         </Text>
         <Pressable onPress={() => navigation.navigate("Signup")}>
-          <Text style={styles.link}>{t("sign_up", { defaultValue: "Sign up" })}</Text>
+          <Text style={styles.link}>{t("signup", { defaultValue: "Sign Up" })}</Text>
         </Pressable>
       </View>
 
@@ -121,7 +121,7 @@ export default function SigninScreen() {
         {loading ? (
           <ActivityIndicator color="#ffffff" />
         ) : (
-          <Text style={styles.primaryButtonText}>{t("sign_in", { defaultValue: "Sign In" })}</Text>
+          <Text style={styles.primaryButtonText}>{t("login", { defaultValue: "Log In" })}</Text>
         )}
       </Pressable>
 

@@ -157,7 +157,7 @@ export default function SignupScreen() {
         <Text style={{ color: colors.text, textAlign: "center", marginBottom: 24 }}>
           {successMessage}
         </Text>
-        <Pressable onPress={() => navigation.navigate("Signin")}>
+        <Pressable onPress={() => navigation.navigate("Login")}>
           <Text style={styles.link}>{t("go_to_signin", { defaultValue: "Go to Sign In" })}</Text>
         </Pressable>
       </View>
@@ -170,15 +170,15 @@ export default function SignupScreen() {
       contentContainerStyle={styles.container}
     >
       <Text style={[styles.title, { color: colors.text }]}>
-        {t("sign_up", { defaultValue: "Sign up" })}
+        {t("signup", { defaultValue: "Sign Up" })}
       </Text>
 
       <View style={styles.row}>
         <Text style={{ color: colors.textMuted }}>
           {t("has_account", { defaultValue: "Already have an account?" })}{" "}
         </Text>
-        <Pressable onPress={() => navigation.navigate("Signin")}>
-          <Text style={styles.link}>{t("sign_in", { defaultValue: "Sign in" })}</Text>
+        <Pressable onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.link}>{t("login", { defaultValue: "Log In" })}</Text>
         </Pressable>
       </View>
 
@@ -274,7 +274,7 @@ export default function SignupScreen() {
         {loading ? (
           <ActivityIndicator color="#ffffff" />
         ) : (
-          <Text style={styles.primaryButtonText}>{t("sign_up", { defaultValue: "Sign Up" })}</Text>
+          <Text style={styles.primaryButtonText}>{t("signup", { defaultValue: "Sign Up" })}</Text>
         )}
       </Pressable>
     </ScrollView>

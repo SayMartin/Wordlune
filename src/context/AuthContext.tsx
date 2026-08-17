@@ -226,7 +226,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const { data } = await supabase.auth.getSession();
+        // getSession() can hang (e.g. a stuck AsyncStorage read) — race it
+        // against a timeout so `session` always leaves its initial
+        // `undefined`, since SessionGate treats "still undefined" as "still
+        // loading" and would otherwise spin forever for a logged-out visitor.
+        const timeoutPromise = new Promise((resolve) =>
+          setTimeout(() => resolve({ data: { session: null }, timedOut: true }), 5000),
+        );
+        const result: any = await Promise.race([supabase.auth.getSession(), timeoutPromise]);
+        if (result?.timedOut) {
+          console.warn("checkAuthStatus: getSession() timed out, treating as no session");
+        }
+        const data = result.data;
         setSession(data.session);
 
         if (data.session) {
@@ -243,6 +254,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (err) {
         console.error("checkAuthStatus error", err);
+        setSession(null);
+        setIsAuthenticated(false);
+        setProfile(null);
       } finally {
         setLoadingInitial(false);
       }

@@ -63,13 +63,13 @@ export default function HeaderRight() {
       {authState === "registered" || authState === "guest" ? (
         <Pressable onPress={() => navigation.navigate("Signout")} hitSlop={8}>
           <Text style={[styles.actionText, { color: colors.accent }]}>
-            {t("logout", { defaultValue: "Logout" })}
+            {t("logout", { defaultValue: "Log Out" })}
           </Text>
         </Pressable>
       ) : (
-        <Pressable onPress={() => navigation.navigate("Signin")} hitSlop={8}>
+        <Pressable onPress={() => navigation.navigate("Login")} hitSlop={8}>
           <Text style={[styles.actionText, { color: colors.accent }]}>
-            {t("login", { defaultValue: "Sign In" })}
+            {t("login", { defaultValue: "Log In" })}
           </Text>
         </Pressable>
       )}
