@@ -12,7 +12,8 @@ type Nav = NativeStackNavigationProp<AppParamList>;
 const FEATURES = [
   { emoji: "☕", titleKey: "practice_mode", titleFallback: "Relax & Practice", descKey: "practice_desc", descFallback: "Hone your skills at your own pace. No timers, no pressure—just you and the words." },
   { emoji: "🏆", titleKey: "competitive_mode", titleFallback: "Climb the Ranks", descKey: "competitive_desc", descFallback: "Ready for the big leagues? Compete in ranked challenges and secure your spot on the leaderboard." },
-  { emoji: "🌍", titleKey: "multilingual", titleFallback: "Global & Local", descKey: "multilingual_desc", descFallback: "Play in English or Swedish. Improve your vocabulary in multiple languages while having fun." },
+  { emoji: "⚔️", titleKey: "duel_lobby_title", titleFallback: "Duel Mode", descKey: "duel_description", descFallback: "Face off against another player in real-time. Be the first to solve the word!" },
+  { emoji: "🌍", titleKey: "multilingual", titleFallback: "Global & Local", descKey: "multilingual_desc", descFallback: "Play in English, Swedish, or French. Improve your vocabulary in multiple languages while having fun." },
 ] as const;
 
 export default function HomeScreen() {
