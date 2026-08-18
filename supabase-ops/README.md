@@ -6,6 +6,8 @@ Database migration history and content-seeding scripts for the shared Supabase p
 
 Chronological SQL migration history for the project's schema (tables, views, triggers, RLS policies). Applied manually via the Supabase SQL editor or CLI — there's no automated migration runner wired up. `migrations/seeds/` holds the CSV word lists (categories like countries, capitals, car brands, hydrocarbons subcategories) used to seed the `words`/`categories`/`subcategories` tables.
 
+`20260818_cleanup_anonymous_users.sql` schedules a daily `pg_cron` job that deletes guest (`is_anonymous = true`) `auth.users` accounts inactive for 14+ days — nothing in the app itself ever deletes guest accounts, so without this they accumulate forever. Requires the `pg_cron` extension enabled (Database → Extensions in the dashboard, or the `create extension` line in the migration if you have the privileges). Also fixes `duel_matches`' foreign keys to `ON DELETE CASCADE` (they had no cascade before, which would've blocked deleting any guest who'd played a Duel). Applied and `pg_cron` enabled in the shared project as of 2026-08-18.
+
 ## scripts/
 
 Run from this directory (`supabase-ops/`) so the `migrations/...` relative paths inside them resolve correctly:
