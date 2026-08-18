@@ -17,6 +17,10 @@ interface Props {
 const LAYOUTS: Record<string, string[]> = {
   en: ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"],
   sv: ["QWERTYUIOPÅ", "ASDFGHJKLÖÄ", "ZXCVBNM"],
+  // Real AZERTY letter rows, plus a 4th row of the accented letters that
+  // appear in the seeded French word content — matching is accent-sensitive
+  // (see useGame.ts), so players need a way to actually type them.
+  fr: ["AZERTYUIOP", "QSDFGHJKLM", "WXCVBN", "ÉÈÊÀÂÇÎÔÙÛ"],
 };
 
 const STATUS_COLORS: Record<LetterStatus, string> = {

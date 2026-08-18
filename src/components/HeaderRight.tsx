@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
 import { updatePlayerSettings } from "../supabase/players-repository";
+import { flagFor, nextLanguage } from "../utils/languageCycle";
 import WavingHand from "./WavingHand";
 import type { AppParamList } from "../navigation/types";
 
@@ -13,13 +14,6 @@ import type { AppParamList } from "../navigation/types";
 // root-stack screens, so it's typed against the merged param list rather
 // than either navigator's own — see navigation/types.ts.
 type Nav = NativeStackNavigationProp<AppParamList>;
-
-function flagFor(lang: string) {
-  const code = lang.split("-")[0];
-  if (code.startsWith("sv")) return "🇸🇪";
-  if (code.startsWith("en")) return "🇬🇧";
-  return "🌐";
-}
 
 export default function HeaderRight() {
   const { t, i18n } = useTranslation();
@@ -29,7 +23,7 @@ export default function HeaderRight() {
   const lang = i18n.language || "en";
 
   const toggleLanguage = async () => {
-    const nextLang = lang.startsWith("en") ? "sv" : "en";
+    const nextLang = nextLanguage(lang);
     await i18n.changeLanguage(nextLang);
     if (authState === "registered" && profile?.id) {
       await updatePlayerSettings(profile.id, { language: nextLang });

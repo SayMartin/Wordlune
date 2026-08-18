@@ -1,51 +1,51 @@
-word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
-albania,Albania,Albanien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-andorra,Andorra,Andorra,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-armenia,Armenia,Armenien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-austria,Austria,Österrike,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-azerbaijan,Azerbaijan,Azerbajdzjan,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-belarus,Belarus,Vitryssland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-belgium,Belgium,Belgien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-bosnia_and_herzegovina,Bosnia and Herzegovina,Bosnien och Hercegovina,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-bulgaria,Bulgaria,Bulgarien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-croatia,Croatia,Kroatien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-cyprus,Cyprus,Cypern,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-czech_republic,Czech Republic,Tjeckien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-denmark,Denmark,Danmark,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-estonia,Estonia,Estland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-finland,Finland,Finland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-france,France,Frankrike,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-georgia,Georgia,Georgien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-germany,Germany,Tyskland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-greece,Greece,Grekland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-hungary,Hungary,Ungern,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-iceland,Iceland,Island,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-ireland,Ireland,Irland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-italy,Italy,Italien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-kosovo,Kosovo,Kosovo,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-latvia,Latvia,Lettland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-liechtenstein,Liechtenstein,Liechtenstein,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-lithuania,Lithuania,Litauen,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-luxembourg,Luxembourg,Luxemburg,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-malta,Malta,Malta,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-moldova,Moldova,Moldavien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-monaco,Monaco,Monaco,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-montenegro,Montenegro,Montenegro,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-netherlands,Netherlands,Nederländerna,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-north_macedonia,North Macedonia,Nordmakedonien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-norway,Norway,Norge,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-poland,Poland,Polen,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-portugal,Portugal,Portugal,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-romania,Romania,Rumänien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-russia,Russia,Ryssland,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-san_marino,San Marino,San Marino,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-serbia,Serbia,Serbien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-slovakia,Slovakia,Slovakien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-slovenia,Slovenia,Slovenien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-spain,Spain,Spanien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-sweden,Sweden,Sverige,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-switzerland,Switzerland,Schweiz,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-turkey,Turkey,Turkiet,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-ukraine,Ukraine,Ukraina,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-united_kingdom,United Kingdom,Storbritannien,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
-vatican_city,Vatican City,Vatikanstaten,geography,Geography,Geografi,countries-europe,Countries in Europe,Länder i Europa,1,seed,,true
+word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
+albania,Albania,Albanien,Albanie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+andorra,Andorra,Andorra,Andorre,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+armenia,Armenia,Armenien,Arménie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+austria,Austria,Österrike,Autriche,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+azerbaijan,Azerbaijan,Azerbajdzjan,Azerbaïdjan,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+belarus,Belarus,Vitryssland,Biélorussie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+belgium,Belgium,Belgien,Belgique,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+bosnia_and_herzegovina,Bosnia and Herzegovina,Bosnien och Hercegovina,Bosnie-Herzégovine,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+bulgaria,Bulgaria,Bulgarien,Bulgarie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+croatia,Croatia,Kroatien,Croatie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+cyprus,Cyprus,Cypern,Chypre,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+czech_republic,Czech Republic,Tjeckien,Tchéquie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+denmark,Denmark,Danmark,Danemark,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+estonia,Estonia,Estland,Estonie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+finland,Finland,Finland,Finlande,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+france,France,Frankrike,France,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+georgia,Georgia,Georgien,Géorgie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+germany,Germany,Tyskland,Allemagne,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+greece,Greece,Grekland,Grèce,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+hungary,Hungary,Ungern,Hongrie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+iceland,Iceland,Island,Islande,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+ireland,Ireland,Irland,Irlande,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+italy,Italy,Italien,Italie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+kosovo,Kosovo,Kosovo,Kosovo,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+latvia,Latvia,Lettland,Lettonie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+liechtenstein,Liechtenstein,Liechtenstein,Liechtenstein,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+lithuania,Lithuania,Litauen,Lituanie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+luxembourg,Luxembourg,Luxemburg,Luxembourg,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+malta,Malta,Malta,Malte,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+moldova,Moldova,Moldavien,Moldavie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+monaco,Monaco,Monaco,Monaco,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+montenegro,Montenegro,Montenegro,Monténégro,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+netherlands,Netherlands,Nederländerna,Pays-Bas,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+north_macedonia,North Macedonia,Nordmakedonien,Macédoine du Nord,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+norway,Norway,Norge,Norvège,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+poland,Poland,Polen,Pologne,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+portugal,Portugal,Portugal,Portugal,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+romania,Romania,Rumänien,Roumanie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+russia,Russia,Ryssland,Russie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+san_marino,San Marino,San Marino,Saint-Marin,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+serbia,Serbia,Serbien,Serbie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+slovakia,Slovakia,Slovakien,Slovaquie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+slovenia,Slovenia,Slovenien,Slovénie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+spain,Spain,Spanien,Espagne,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+sweden,Sweden,Sverige,Suède,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+switzerland,Switzerland,Schweiz,Suisse,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+turkey,Turkey,Turkiet,Turquie,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+ukraine,Ukraine,Ukraina,Ukraine,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+united_kingdom,United Kingdom,Storbritannien,Royaume-Uni,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true
+vatican_city,Vatican City,Vatikanstaten,Cité du Vatican,geography,Geography,Geografi,Géographie,countries-europe,Countries in Europe,Länder i Europa,Pays d'Europe,1,seed,,true

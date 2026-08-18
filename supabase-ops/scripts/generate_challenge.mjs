@@ -56,7 +56,7 @@ async function generateAllConfiguredChallenges() {
   // 1. Fetch all subcategories (slug might not exist, so use name_en)
   const { data: allSubcats, error: catError } = await supabase
     .from("subcategories")
-    .select("id, name_native, name_en, name_sv");
+    .select("id, name_native, name_en, name_sv, name_fr");
 
   if (catError || !allSubcats) {
     console.error("Failed to fetch subcategories:", catError);
@@ -72,6 +72,7 @@ async function generateAllConfiguredChallenges() {
     idToNameMap.set(sc.id, {
       en: sc.name_en || sc.name_native,
       sv: sc.name_sv || sc.name_native || sc.name_en,
+      fr: sc.name_fr || sc.name_native || sc.name_en,
     });
 
     if (sc.name_native) {
@@ -166,7 +167,7 @@ async function generateFiveLetterChallenge(
   // 2. Fetch word details to check lengths
   const { data: words, error: wordsError } = await supabase
     .from("words")
-    .select("id, word_en, word_sv")
+    .select("id, word_en, word_sv, word_fr")
     .in("id", sampleIds);
 
   if (wordsError) {
@@ -174,10 +175,14 @@ async function generateFiveLetterChallenge(
     return;
   }
 
-  // 3. Filter for exactly 5 letters in BOTH languages
+  // 3. Filter for exactly 5 letters in ALL THREE languages
   const candidates = words.filter((w) => {
-    if (!w.word_en || !w.word_sv) return false;
-    return w.word_en.trim().length === 5 && w.word_sv.trim().length === 5;
+    if (!w.word_en || !w.word_sv || !w.word_fr) return false;
+    return (
+      w.word_en.trim().length === 5 &&
+      w.word_sv.trim().length === 5 &&
+      w.word_fr.trim().length === 5
+    );
   });
 
   if (candidates.length < 5) {
@@ -293,10 +298,10 @@ async function createChallengeForSlugs(
   }
 
   // Fetch actual words to filter by length.
-  // IMPORTANT: Must fetch both EN and SV to ensure the challenge is playable in both.
+  // IMPORTANT: Must fetch EN, SV, and FR to ensure the challenge is playable in all three.
   const { data: words, error: wordsError } = await supabase
     .from("words")
-    .select("id, word_en, word_sv")
+    .select("id, word_en, word_sv, word_fr")
     .in("id", uniqueWordIds);
 
   if (wordsError) {
@@ -306,24 +311,27 @@ async function createChallengeForSlugs(
 
   // Filter max length 12
   const candidates = words.filter((w) => {
-    // 1. Must exist in both languages
-    if (!w.word_en || !w.word_sv) return false;
+    // 1. Must exist in all three languages
+    if (!w.word_en || !w.word_sv || !w.word_fr) return false;
 
-    // 2. Both must strictly respect the length limit
+    // 2. All three must strictly respect the length limit
     const enLen = w.word_en.trim().length;
     const svLen = w.word_sv.trim().length;
+    const frLen = w.word_fr.trim().length;
 
     return (
       enLen > 0 &&
       enLen <= MAX_WORD_LENGTH &&
       svLen > 0 &&
-      svLen <= MAX_WORD_LENGTH
+      svLen <= MAX_WORD_LENGTH &&
+      frLen > 0 &&
+      frLen <= MAX_WORD_LENGTH
     );
   });
 
   if (candidates.length < 5) {
     console.error(
-      `❌ Not enough words after filtering length <= ${MAX_WORD_LENGTH} in BOTH languages. Found: ${candidates.length}.`,
+      `❌ Not enough words after filtering length <= ${MAX_WORD_LENGTH} in all three languages. Found: ${candidates.length}.`,
     );
     return;
   }

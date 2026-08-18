@@ -1,69 +1,69 @@
-word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
-volvo,Volvo,Volvo,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-saab,Saab,Saab,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-ford,Ford,Ford,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-chevrolet,Chevrolet,Chevrolet,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-cadillac,Cadillac,Cadillac,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-gmc,GMC,GMC,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-chrysler,Chrysler,Chrysler,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-dodge,Dodge,Dodge,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-jeep,Jeep,Jeep,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-ram,RAM,RAM,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-toyota,Toyota,Toyota,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-honda_car,Honda,Honda,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-nissan,Nissan,Nissan,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-mazda,Mazda,Mazda,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-subaru,Subaru,Subaru,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-mitsubishi,Mitsubishi,Mitsubishi,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-isuzu,Isuzu,Isuzu,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-kia,Kia,Kia,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-hyundai,Hyundai,Hyundai,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-lexus,Lexus,Lexus,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-acura,Acura,Acura,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-infiniti,Infiniti,Infiniti,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-genesis,Genesis,Genesis,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-bmw,BMW,BMW,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-mercedes,Mercedes-Benz,Mercedes-Benz,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-audi,Audi,Audi,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-volkswagen,Volkswagen,Volkswagen,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-opel,Opel,Opel,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-vauxhall,Vauxhall,Vauxhall,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-mini,MINI,MINI,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-fiat,Fiat,Fiat,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-alfa_romeo,Alfa Romeo,Alfa Romeo,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-lancia,Lancia,Lancia,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-seat,SEAT,SEAT,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-skoda,Škoda,Škoda,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-peugeot,Peugeot,Peugeot,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-renault,Renault,Renault,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-citroen,Citroën,Citroën,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-ford_europe,Ford Europe,Ford,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-dacia,Dacia,Dacia,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-tesla,Tesla,Tesla,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-rivian,Rivian,Rivian,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-lucid,Lucid,Lucid,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-polestar,Polestar,Polestar,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-fisker,Fisker,Fisker,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-byd,BYD,BYD,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-geely,Geely,Geely,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-great_wall,Great Wall,Great Wall,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-chery,Chery,Chery,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-tata,Tata Motors,Tata Motors,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-mahindra,Mahindra,Mahindra,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-perodua,Perodua,Perodua,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-proton,Proton,Proton,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-ssangyong,SsangYong,SsangYong,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-daewoo,Daewoo,Daewoo,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-lotus,Lotus,Lotus,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-jaguar,Jaguar,Jaguar,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-land_rover,Land Rover,Land Rover,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-bentley,Bentley,Bentley,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-rolls_royce,Rolls-Royce,Rolls-Royce,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-aston_martin,Aston Martin,Aston Martin,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-maserati,Maserati,Maserati,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-pagani,Pagani,Pagani,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-koenigsegg,Koenigsegg,Koenigsegg,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-bugatti,Bugatti,Bugatti,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-ferrari,Ferrari,Ferrari,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-lamborghini,Lamborghini,Lamborghini,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
-mclaren,McLaren,McLaren,vehicles,Vehicles,Fordon,car-brands,Car Brands,Bilmärken,1,seed,,true
+word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
+volvo,Volvo,Volvo,Volvo,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+saab,Saab,Saab,Saab,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+ford,Ford,Ford,Ford,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+chevrolet,Chevrolet,Chevrolet,Chevrolet,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+cadillac,Cadillac,Cadillac,Cadillac,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+gmc,GMC,GMC,GMC,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+chrysler,Chrysler,Chrysler,Chrysler,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+dodge,Dodge,Dodge,Dodge,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+jeep,Jeep,Jeep,Jeep,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+ram,RAM,RAM,RAM,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+toyota,Toyota,Toyota,Toyota,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+honda_car,Honda,Honda,Honda,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+nissan,Nissan,Nissan,Nissan,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+mazda,Mazda,Mazda,Mazda,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+subaru,Subaru,Subaru,Subaru,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+mitsubishi,Mitsubishi,Mitsubishi,Mitsubishi,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+isuzu,Isuzu,Isuzu,Isuzu,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+kia,Kia,Kia,Kia,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+hyundai,Hyundai,Hyundai,Hyundai,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+lexus,Lexus,Lexus,Lexus,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+acura,Acura,Acura,Acura,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+infiniti,Infiniti,Infiniti,Infiniti,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+genesis,Genesis,Genesis,Genesis,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+bmw,BMW,BMW,BMW,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+mercedes,Mercedes-Benz,Mercedes-Benz,Mercedes-Benz,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+audi,Audi,Audi,Audi,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+volkswagen,Volkswagen,Volkswagen,Volkswagen,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+opel,Opel,Opel,Opel,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+vauxhall,Vauxhall,Vauxhall,Vauxhall,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+mini,MINI,MINI,MINI,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+fiat,Fiat,Fiat,Fiat,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+alfa_romeo,Alfa Romeo,Alfa Romeo,Alfa Romeo,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+lancia,Lancia,Lancia,Lancia,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+seat,SEAT,SEAT,SEAT,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+skoda,Škoda,Škoda,Škoda,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+peugeot,Peugeot,Peugeot,Peugeot,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+renault,Renault,Renault,Renault,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+citroen,Citroën,Citroën,Citroën,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+ford_europe,Ford Europe,Ford,Ford Europe,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+dacia,Dacia,Dacia,Dacia,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+tesla,Tesla,Tesla,Tesla,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+rivian,Rivian,Rivian,Rivian,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+lucid,Lucid,Lucid,Lucid,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+polestar,Polestar,Polestar,Polestar,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+fisker,Fisker,Fisker,Fisker,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+byd,BYD,BYD,BYD,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+geely,Geely,Geely,Geely,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+great_wall,Great Wall,Great Wall,Great Wall,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+chery,Chery,Chery,Chery,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+tata,Tata Motors,Tata Motors,Tata Motors,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+mahindra,Mahindra,Mahindra,Mahindra,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+perodua,Perodua,Perodua,Perodua,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+proton,Proton,Proton,Proton,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+ssangyong,SsangYong,SsangYong,SsangYong,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+daewoo,Daewoo,Daewoo,Daewoo,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+lotus,Lotus,Lotus,Lotus,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+jaguar,Jaguar,Jaguar,Jaguar,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+land_rover,Land Rover,Land Rover,Land Rover,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+bentley,Bentley,Bentley,Bentley,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+rolls_royce,Rolls-Royce,Rolls-Royce,Rolls-Royce,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+aston_martin,Aston Martin,Aston Martin,Aston Martin,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+maserati,Maserati,Maserati,Maserati,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+pagani,Pagani,Pagani,Pagani,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+koenigsegg,Koenigsegg,Koenigsegg,Koenigsegg,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+bugatti,Bugatti,Bugatti,Bugatti,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+ferrari,Ferrari,Ferrari,Ferrari,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+lamborghini,Lamborghini,Lamborghini,Lamborghini,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true
+mclaren,McLaren,McLaren,McLaren,vehicles,Vehicles,Fordon,Véhicules,car-brands,Car Brands,Bilmärken,Marques de voitures,1,seed,,true

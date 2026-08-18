@@ -1,4 +1,5 @@
 import { supabase } from "../supabaseClient";
+import { wordColumn } from "./langColumns";
 
 export const MAX_DISPLAY_NAME_LENGTH = 15;
 
@@ -746,7 +747,7 @@ export async function getChallengeWords(
   if (!word_ids || word_ids.length === 0) return [];
 
   // Determine which column to fetch
-  const langKey = lang.startsWith("sv") ? "word_sv" : "word_en";
+  const langKey = wordColumn(lang);
 
   // Also fetch word_en as fallback
   const { data: wordsRows, error: wError } = await supabase

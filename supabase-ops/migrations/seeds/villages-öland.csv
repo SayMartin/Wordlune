@@ -1,62 +1,61 @@
-
-word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
-akerby_lopperstad,Åkerby-Lopperstad,Åkerby-Lopperstad,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-alboke,Alböke,Alböke,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-albrunna,Albrunna,Albrunna,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-alby,Alby,Alby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-aleklinta,Äleklinta,Äleklinta,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-algutsrum,Algutsrum,Algutsrum,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-alvlosa,Alvlösa,Alvlösa,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-arbelunda,Arbelunda,Arbelunda,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-arontorp,Arontorp,Arontorp,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-as,Ås,Ås,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-askelunda,Askelunda,Askelunda,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-astad,Åstad,Åstad,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-bagby,Bägby,Bägby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-barby,Bårby,Bårby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-binnerback,Binnerbäck,Binnerbäck,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-bjorkviken,Björkviken,Björkviken,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-blasinge_borgholm,Bläsinge (Borgholm),Bläsinge,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-blasinge_morbylanga,Bläsinge (Mörbylånga),Bläsinge,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-boda,Böda,Böda,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-borgehage,Borgehage,Borgehage,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-borgholm,Borgholm,Borgholm,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-bredinge,Bredinge,Bredinge,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-bredsattra,Bredsättra,Bredsättra,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-brottorp,Bröttorp,Bröttorp,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-byrum,Byrum,Byrum,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-byxelkrok,Byxelkrok,Byxelkrok,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-dalby,Dalby,Dalby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-degerhamn,Degerhamn,Degerhamn,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-djupvik,Djupvik,Djupvik,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-djurstad,Djurstad,Djurstad,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-dodevi,Dödevi,Dödevi,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-dorby,Dörby,Dörby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-egby,Egby,Egby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-eketorp,Eketorp,Eketorp,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-enerum,Enerum,Enerum,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-eriksore,Eriksöre,Eriksöre,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-fagerum,Fagerum,Fagerum,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-farjestaden,Färjestaden,Färjestaden,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-fora,Föra,Föra,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-frosslunda,Frösslunda,Frösslunda,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-furuhall_blarror_solbergamarken,Furuhäll-Blårör-Solbergamarken,Furuhäll-Blårör-Solbergamarken,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gardby,Gårdby,Gårdby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gardslosa,Gärdslösa,Gärdslösa,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gardstorp,Gårdstorp,Gårdstorp,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gettlinge,Gettlinge,Gettlinge,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gillberga,Gillberga,Gillberga,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-glomminge,Glömminge,Glömminge,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-grankulla,Grankulla,Grankulla,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-grankullavik,Grankullavik,Grankullavik,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-grasgard,Gräsgård,Gräsgård,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-greby,Greby,Greby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-greda,Greda,Greda,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gronhogen,Grönhögen,Grönhögen,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-gunnarslund,Gunnarslund,Gunnarslund,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-hagby,Hagby,Hagby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-hagby_blasinge,Hagby-Bläsinge,Hagby-Bläsinge,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-hagelstad,Hagelstad,Hagelstad,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-hallnas,Hallnäs,Hallnäs,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-halltorp,Halltorp,Halltorp,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
-hammarby,Hammarbay,Hammarby,geography,Geography,Geografi,villages-öland,Villages on Öland,Byar på Öland,1,seed,,true
+word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
+akerby_lopperstad,Åkerby-Lopperstad,Åkerby-Lopperstad,Åkerby-Lopperstad,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+alboke,Alböke,Alböke,Alböke,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+albrunna,Albrunna,Albrunna,Albrunna,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+alby,Alby,Alby,Alby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+aleklinta,Äleklinta,Äleklinta,Äleklinta,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+algutsrum,Algutsrum,Algutsrum,Algutsrum,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+alvlosa,Alvlösa,Alvlösa,Alvlösa,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+arbelunda,Arbelunda,Arbelunda,Arbelunda,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+arontorp,Arontorp,Arontorp,Arontorp,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+as,Ås,Ås,Ås,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+askelunda,Askelunda,Askelunda,Askelunda,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+astad,Åstad,Åstad,Åstad,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+bagby,Bägby,Bägby,Bägby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+barby,Bårby,Bårby,Bårby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+binnerback,Binnerbäck,Binnerbäck,Binnerbäck,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+bjorkviken,Björkviken,Björkviken,Björkviken,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+blasinge_borgholm,Bläsinge (Borgholm),Bläsinge,Bläsinge,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+blasinge_morbylanga,Bläsinge (Mörbylånga),Bläsinge,Bläsinge,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+boda,Böda,Böda,Böda,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+borgehage,Borgehage,Borgehage,Borgehage,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+borgholm,Borgholm,Borgholm,Borgholm,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+bredinge,Bredinge,Bredinge,Bredinge,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+bredsattra,Bredsättra,Bredsättra,Bredsättra,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+brottorp,Bröttorp,Bröttorp,Bröttorp,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+byrum,Byrum,Byrum,Byrum,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+byxelkrok,Byxelkrok,Byxelkrok,Byxelkrok,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+dalby,Dalby,Dalby,Dalby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+degerhamn,Degerhamn,Degerhamn,Degerhamn,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+djupvik,Djupvik,Djupvik,Djupvik,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+djurstad,Djurstad,Djurstad,Djurstad,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+dodevi,Dödevi,Dödevi,Dödevi,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+dorby,Dörby,Dörby,Dörby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+egby,Egby,Egby,Egby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+eketorp,Eketorp,Eketorp,Eketorp,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+enerum,Enerum,Enerum,Enerum,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+eriksore,Eriksöre,Eriksöre,Eriksöre,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+fagerum,Fagerum,Fagerum,Fagerum,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+farjestaden,Färjestaden,Färjestaden,Färjestaden,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+fora,Föra,Föra,Föra,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+frosslunda,Frösslunda,Frösslunda,Frösslunda,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+furuhall_blarror_solbergamarken,Furuhäll-Blårör-Solbergamarken,Furuhäll-Blårör-Solbergamarken,Furuhäll-Blårör-Solbergamarken,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gardby,Gårdby,Gårdby,Gårdby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gardslosa,Gärdslösa,Gärdslösa,Gärdslösa,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gardstorp,Gårdstorp,Gårdstorp,Gårdstorp,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gettlinge,Gettlinge,Gettlinge,Gettlinge,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gillberga,Gillberga,Gillberga,Gillberga,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+glomminge,Glömminge,Glömminge,Glömminge,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+grankulla,Grankulla,Grankulla,Grankulla,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+grankullavik,Grankullavik,Grankullavik,Grankullavik,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+grasgard,Gräsgård,Gräsgård,Gräsgård,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+greby,Greby,Greby,Greby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+greda,Greda,Greda,Greda,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gronhogen,Grönhögen,Grönhögen,Grönhögen,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+gunnarslund,Gunnarslund,Gunnarslund,Gunnarslund,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+hagby,Hagby,Hagby,Hagby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+hagby_blasinge,Hagby-Bläsinge,Hagby-Bläsinge,Hagby-Bläsinge,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+hagelstad,Hagelstad,Hagelstad,Hagelstad,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+hallnas,Hallnäs,Hallnäs,Hallnäs,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+halltorp,Halltorp,Halltorp,Halltorp,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true
+hammarby,Hammarbay,Hammarby,Hammarby,geography,Geography,Geografi,Géographie,villages-öland,Villages on Öland,Byar på Öland,Villages d'Öland,1,seed,,true

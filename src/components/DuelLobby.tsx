@@ -7,6 +7,7 @@ import { Match, createMatch, listWaitingMatches, joinMatch, abandonMatch } from 
 import { supabase } from "../supabaseClient";
 import { getFiveLetterHydrocarbon } from "../supabase/words-repository";
 import Toggle from "./Toggle";
+import OptionButton from "./OptionButton";
 import DuelIcon from "./DuelIcon";
 import DuelLeaderboard from "./DuelLeaderboard";
 import DuelChallengeCard from "./DuelChallengeCard";
@@ -24,7 +25,7 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
   const [loading, setLoading] = useState(false);
   const [waitingMatches, setWaitingMatches] = useState<Match[]>([]);
   const [myMatchId, setMyMatchId] = useState<string | null>(null);
-  const [duelLang, setDuelLang] = useState<"en" | "sv">("en");
+  const [duelLang, setDuelLang] = useState<"en" | "sv" | "fr">("en");
   const [showHint, setShowHint] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [view, setView] = useState<"lobby" | "leaderboard">("lobby");
@@ -183,14 +184,15 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
       ) : (
         <ScrollView>
           <View style={[styles.optionRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            <Text style={{ fontSize: 22 }}>{duelLang === "en" ? "🇬🇧" : "🇸🇪"}</Text>
-            <Text style={{ color: duelLang === "en" ? "#4f46e5" : colors.textMuted, fontWeight: duelLang === "en" ? "700" : "400" }}>
-              English
-            </Text>
-            <Toggle checked={duelLang === "sv"} onChange={(checked) => setDuelLang(checked ? "sv" : "en")} />
-            <Text style={{ color: duelLang === "sv" ? "#4f46e5" : colors.textMuted, fontWeight: duelLang === "sv" ? "700" : "400" }}>
-              Svenska
-            </Text>
+            <OptionButton active={duelLang === "en"} onPress={() => setDuelLang("en")}>
+              🇬🇧 EN
+            </OptionButton>
+            <OptionButton active={duelLang === "sv"} onPress={() => setDuelLang("sv")}>
+              🇸🇪 SV
+            </OptionButton>
+            <OptionButton active={duelLang === "fr"} onPress={() => setDuelLang("fr")}>
+              🇫🇷 FR
+            </OptionButton>
           </View>
 
           <View style={[styles.optionRow, { backgroundColor: colors.background, borderColor: colors.border }]}>

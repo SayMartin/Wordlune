@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import DuelIcon from "./DuelIcon";
 import { getExtensionsForWord, getAllHydrocarbonSubcategories } from "../supabase/words-repository";
+import { flagFor } from "../utils/languageCycle";
 
 interface Props {
   duelOpponentName: string;
@@ -17,7 +18,7 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [wordSubcats, setWordSubcats] = useState<{ id: string; name: string }[]>([]);
-  const [allHydroList, setAllHydroList] = useState<{ id: string; name_en: string; name_sv: string }[]>([]);
+  const [allHydroList, setAllHydroList] = useState<{ id: string; name_en: string; name_sv: string; name_fr: string }[]>([]);
 
   useEffect(() => {
     getAllHydrocarbonSubcategories().then(setAllHydroList);
@@ -46,7 +47,7 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
           <View style={styles.statusCol}>
             {language && (
               <Text style={[styles.langBadge, { color: colors.textMuted, borderColor: colors.border }]}>
-                {language.startsWith("sv") ? "🇸🇪 SV" : "🇬🇧 EN"}
+                {flagFor(language)} {language.split("-")[0].toUpperCase()}
               </Text>
             )}
             <Text style={{ opacity: isHintEnabled ? 1 : 0.25, fontSize: 16 }}>💡</Text>
@@ -64,7 +65,8 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
         <View style={[styles.chipRow, { borderColor: colors.border }]}>
           {allHydroList.map((sub) => {
             const isActive = isHintEnabled && wordSubcats.some((ws) => ws.id === sub.id);
-            const displayName = language?.startsWith("sv") ? sub.name_sv : sub.name_en;
+            const langCode = language?.split("-")[0];
+            const displayName = langCode === "sv" ? sub.name_sv : langCode === "fr" ? sub.name_fr : sub.name_en;
             return (
               <View
                 key={sub.id}

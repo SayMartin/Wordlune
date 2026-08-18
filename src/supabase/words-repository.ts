@@ -1,4 +1,5 @@
 import { supabase } from "../supabaseClient";
+import { wordColumn, nameColumn } from "./langColumns";
 
 const DEFAULT_LIMIT = 10000; // Increased to ensure we get full categories/lists
 
@@ -8,7 +9,7 @@ export async function listFiveLetterWords(lang = "en"): Promise<string[]> {
   try {
     if (CACHE_5_LETTER[lang]) return CACHE_5_LETTER[lang];
 
-    const col = lang === "sv" ? "word_se" : "word_en";
+    const col = wordColumn(lang);
 
     // Fetch all words that are 5 letters long
     // Using ilike with 5 underscores matches any 5-char string
@@ -43,7 +44,7 @@ export async function listHydrocarbonFiveLetterWords(
   lang = "en",
 ): Promise<string[]> {
   try {
-    const col = lang === "sv" ? "word_se" : "word_en";
+    const col = wordColumn(lang);
 
     // 1. Find subcategory id for "%hydrocarbons%"
     const { data: subData, error: subError } = await supabase
@@ -166,7 +167,7 @@ export async function listAllWords(
   lang = "en",
   limit = DEFAULT_LIMIT,
 ): Promise<string[]> {
-  const col = `word_${lang}`;
+  const col = wordColumn(lang);
   try {
     // prefer language-specific column, fall back to common ones
     const trySelect = async (selectCol: string) => {
@@ -176,7 +177,7 @@ export async function listAllWords(
         .limit(limit);
       if (error) throw error;
       return (data ?? [])
-        .map((w: any) => safeToUpper(w[selectCol] || w.word || w.word_se || ""))
+        .map((w: any) => safeToUpper(w[selectCol] || w.word || w.word_sv || ""))
         .filter(Boolean);
     };
     try {
@@ -230,7 +231,7 @@ export async function listWordsByIds(
     for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
     return out;
   };
-  const col = `word_${lang}`;
+  const col = wordColumn(lang);
   try {
     const idChunks = chunk(ids, 200);
     let wordsData: any[] = [];
@@ -254,7 +255,7 @@ export async function listWordsByIds(
       }
     }
     return (wordsData ?? [])
-      .map((w: any) => safeToUpper(w[col] || w.word || w.word_se || ""))
+      .map((w: any) => safeToUpper(w[col] || w.word || w.word_sv || ""))
       .filter(Boolean);
   } catch (err) {
     console.error("listWordsByIds error", err);
@@ -474,8 +475,8 @@ export async function getExtensionsForWord(
   lang: string = "en",
 ): Promise<WordWithCategories | null> {
   try {
-    const col = `word_${lang}`;
-    const subNameCol = lang === "sv" ? "name_sv" : "name_en";
+    const col = wordColumn(lang);
+    const subNameCol = nameColumn(lang);
 
     // 1. Find word id
     // We treat "-" as word boundary in ILIKE sometimes, but here we want exact match
@@ -562,7 +563,7 @@ async function fetchSubcatsForWordId(
 // words_subcategories: Word_id, subcategory_id
 
 export async function getAllHydrocarbonSubcategories(): Promise<
-  { id: string; name_en: string; name_sv: string }[]
+  { id: string; name_en: string; name_sv: string; name_fr: string }[]
 > {
   try {
     const { data: cats, error: catError } = await supabase
@@ -575,7 +576,7 @@ export async function getAllHydrocarbonSubcategories(): Promise<
 
     const { data, error } = await supabase
       .from("subcategories")
-      .select("id, name_en, name_sv")
+      .select("id, name_en, name_sv, name_fr")
       .eq("category_id", cats[0].id)
       .order("name_en");
 

@@ -1,76 +1,76 @@
-word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
-sunseeker,Sunseeker,Sunseeker,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-princess,Princess,Princess,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-azimut,Azimut,Azimut,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-ferretti,Ferretti,Ferretti,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-beneteau,Beneteau,Beneteau,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-jeanneau,Jeanneau,Jeanneau,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-sea_ray,Sea Ray,Sea Ray,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-boston_whaler,Boston Whaler,Boston Whaler,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-buster,Buster,Buster,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-flipper,Flipper,Flipper,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-finnmaster,Finnmaster,Finnmaster,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-galeon,Galeon,Galeon,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-viking,Viking,Viking,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-hatteras,Hatteras,Hatteras,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-oceanco,Oceanco,Oceanco,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-lurssen,Lurssen,Lurssen,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-feadship,Feadship,Feadship,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-heesen,Heesen,Heesen,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-amels,Amels,Amels,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-fincantieri,Fincantieri,Fincantieri,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-hyundai_heavy,Hyundai Heavy Industries,Hyundai Heavy Industries,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-daewoo_shipbuilding,Daewoo Shipbuilding,Daewoo Shipbuilding,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-samsung_heavy,Samsung Heavy Industries,Samsung Heavy Industries,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-mitsubishi_ship,Mitsubishi Heavy Industries,Mitsubishi Heavy Industries,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-candela,Candela,Candela,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-mastercraft,MasterCraft,MasterCraft,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-chaparral,Chaparral,Chaparral,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-malibu,Malibu,Malibu,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-yamaha_boats,Yamaha Boats,Yamaha Boats,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-tiara,Tiara,Tiara,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-four_winns,Four Winns,Four Winns,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-grady_white,Grady-White,Grady-White,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-barletta,Barletta,Barletta,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-bennington,Bennington,Bennington,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-monte_carlo,Monte Carlo Yachts,Monte Carlo,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-greenline,Greenline,Greenline,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-master_yachts,Master Yachts,Master Yachts,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-sunseeker_sport,Sunseeker Sport,Sunseeker Sport,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-sea_fox,Sea Fox,Sea Fox,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-regal,Regal,Regal,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-edgewater,EdgeWater,EdgeWater,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-nimble,Nimble,Nimble,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-pierpont,Pierpont,Pierpont,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-custom_shipbuilder,Custom Shipbuilder,Custom Shipbuilder,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-yacht,Yacht,Yacht,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-sailboat,Sailboat,Segelbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-motorboat,Motorboat,Motorbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-fishing_boat,Fishing Boat,Fiskebåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-trawler,Trawler,Trålare,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-cargo_ship,Cargo Ship,Lastfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-tanker,Tanker,Tankfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-container_ship,Container Ship,Containerskepp,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-bulk_carrier,Bulk Carrier,Bulkfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-ferry,Ferry,Färja,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-cruise_ship,Cruise Ship,Kryssningsfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-ro_ro,Ro-Ro,Ro-Ro-fartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-catamaran,Catamaran,Katamaran,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-trimaran,Trimaran,Trimaran,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-speedboat,Speedboat,Racerbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-dinghy,Dinghy,Jolle,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-lifeboat,Lifeboat,Räddningsbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-patrol_boat,Patrol Boat,Patrullbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-destroyer,Destroyer,Jagare,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-frigate,Frigate,Fregatt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-submarine,Submarine,Ubåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-aircraft_carrier,Aircraft Carrier,Hangarfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-hovercraft,Hovercraft,Svävare,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-tugboat,Tugboat,Bogserbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-barge,Barge,Pråm,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-research_vessel,Research Vessel,Forskningsfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-offshore_support,Offshore Support,Supportfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-icebreaker,Icebreaker,Isbrytare,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-dredger,Dredger,Muddringsfartyg,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-sailing_yacht,Sailing Yacht,Segelyacht,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
-houseboat,Houseboat,Husbåt,vehicles,Vehicles,Fordon,at-sea,At sea,Till havs,1,seed,,true
+word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
+sunseeker,Sunseeker,Sunseeker,Sunseeker,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+princess,Princess,Princess,Princess,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+azimut,Azimut,Azimut,Azimut,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+ferretti,Ferretti,Ferretti,Ferretti,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+beneteau,Beneteau,Beneteau,Beneteau,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+jeanneau,Jeanneau,Jeanneau,Jeanneau,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+sea_ray,Sea Ray,Sea Ray,Sea Ray,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+boston_whaler,Boston Whaler,Boston Whaler,Boston Whaler,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+buster,Buster,Buster,Buster,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+flipper,Flipper,Flipper,Flipper,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+finnmaster,Finnmaster,Finnmaster,Finnmaster,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+galeon,Galeon,Galeon,Galeon,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+viking,Viking,Viking,Viking,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+hatteras,Hatteras,Hatteras,Hatteras,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+oceanco,Oceanco,Oceanco,Oceanco,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+lurssen,Lurssen,Lurssen,Lurssen,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+feadship,Feadship,Feadship,Feadship,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+heesen,Heesen,Heesen,Heesen,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+amels,Amels,Amels,Amels,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+fincantieri,Fincantieri,Fincantieri,Fincantieri,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+hyundai_heavy,Hyundai Heavy Industries,Hyundai Heavy Industries,Hyundai Heavy Industries,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+daewoo_shipbuilding,Daewoo Shipbuilding,Daewoo Shipbuilding,Daewoo Shipbuilding,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+samsung_heavy,Samsung Heavy Industries,Samsung Heavy Industries,Samsung Heavy Industries,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+mitsubishi_ship,Mitsubishi Heavy Industries,Mitsubishi Heavy Industries,Mitsubishi Heavy Industries,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+candela,Candela,Candela,Candela,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+mastercraft,MasterCraft,MasterCraft,MasterCraft,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+chaparral,Chaparral,Chaparral,Chaparral,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+malibu,Malibu,Malibu,Malibu,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+yamaha_boats,Yamaha Boats,Yamaha Boats,Yamaha Boats,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+tiara,Tiara,Tiara,Tiara,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+four_winns,Four Winns,Four Winns,Four Winns,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+grady_white,Grady-White,Grady-White,Grady-White,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+barletta,Barletta,Barletta,Barletta,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+bennington,Bennington,Bennington,Bennington,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+monte_carlo,Monte Carlo Yachts,Monte Carlo,Monte Carlo Yachts,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+greenline,Greenline,Greenline,Greenline,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+master_yachts,Master Yachts,Master Yachts,Master Yachts,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+sunseeker_sport,Sunseeker Sport,Sunseeker Sport,Sunseeker Sport,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+sea_fox,Sea Fox,Sea Fox,Sea Fox,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+regal,Regal,Regal,Regal,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+edgewater,EdgeWater,EdgeWater,EdgeWater,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+nimble,Nimble,Nimble,Nimble,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+pierpont,Pierpont,Pierpont,Pierpont,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+custom_shipbuilder,Custom Shipbuilder,Custom Shipbuilder,Custom Shipbuilder,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+yacht,Yacht,Yacht,Yacht,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+sailboat,Sailboat,Segelbåt,Voilier,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+motorboat,Motorboat,Motorbåt,Bateau à moteur,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+fishing_boat,Fishing Boat,Fiskebåt,Bateau de pêche,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+trawler,Trawler,Trålare,Chalutier,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+cargo_ship,Cargo Ship,Lastfartyg,Cargo,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+tanker,Tanker,Tankfartyg,Pétrolier,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+container_ship,Container Ship,Containerskepp,Porte-conteneurs,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+bulk_carrier,Bulk Carrier,Bulkfartyg,Vraquier,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+ferry,Ferry,Färja,Ferry,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+cruise_ship,Cruise Ship,Kryssningsfartyg,Paquebot,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+ro_ro,Ro-Ro,Ro-Ro-fartyg,Roulier,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+catamaran,Catamaran,Katamaran,Catamaran,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+trimaran,Trimaran,Trimaran,Trimaran,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+speedboat,Speedboat,Racerbåt,Vedette,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+dinghy,Dinghy,Jolle,Canot,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+lifeboat,Lifeboat,Räddningsbåt,Canot de sauvetage,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+patrol_boat,Patrol Boat,Patrullbåt,Patrouilleur,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+destroyer,Destroyer,Jagare,Contre-torpilleur,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+frigate,Frigate,Fregatt,Frégate,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+submarine,Submarine,Ubåt,Sous-marin,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+aircraft_carrier,Aircraft Carrier,Hangarfartyg,Porte-avions,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+hovercraft,Hovercraft,Svävare,Aéroglisseur,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+tugboat,Tugboat,Bogserbåt,Remorqueur,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+barge,Barge,Pråm,Péniche,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+research_vessel,Research Vessel,Forskningsfartyg,Navire de recherche,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+offshore_support,Offshore Support,Supportfartyg,Navire de soutien,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+icebreaker,Icebreaker,Isbrytare,Brise-glace,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+dredger,Dredger,Muddringsfartyg,Drague,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+sailing_yacht,Sailing Yacht,Segelyacht,Yacht à voiles,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true
+houseboat,Houseboat,Husbåt,Bateau habitable,vehicles,Vehicles,Fordon,Véhicules,at-sea,At sea,Till havs,En mer,1,seed,,true

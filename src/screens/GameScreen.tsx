@@ -32,6 +32,14 @@ type Mode = "practice" | "competitive" | "duel";
 
 const DEFAULT_MAX_LETTERS = 12;
 
+// Which physically-typed characters count as letters, per language — mirrors
+// Keyboard.tsx's LAYOUTS lookup table pattern.
+const LETTER_PATTERNS: Record<string, RegExp> = {
+  en: /[A-Za-z]/,
+  sv: /[A-Za-zÅÄÖåäö]/,
+  fr: /[A-Za-zÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒàâäçéèêëîïôöùûüÿæœ]/,
+};
+
 export default function GameScreen() {
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
@@ -375,10 +383,8 @@ export default function GameScreen() {
 
       if (k.length !== 1) return;
 
-      const lang = i18n.language || "en";
-      const swedishLetters = /[A-Za-zÅÄÖåäö]/;
-      const basicLetters = /[A-Za-z]/;
-      const isLetter = lang.startsWith("sv") ? swedishLetters.test(k) : basicLetters.test(k);
+      const lang = (i18n.language || "en").split("-")[0];
+      const isLetter = (LETTER_PATTERNS[lang] || LETTER_PATTERNS.en).test(k);
       if (isLetter) addLetter(k.toUpperCase());
     }
 

@@ -1,87 +1,87 @@
-word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
-stockholm,Stockholm,Stockholm,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-gothenburg,Gothenburg,Göteborg,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-malmo,Malmo,Malmö,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-uppsala,Uppsala,Uppsala,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-vasteras,Vasteras,Västerås,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-orebro,Orebro,Örebro,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-linkoping,Linkoping,Linköping,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-helsingborg,Helsingborg,Helsingborg,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-jonkoping,Jonkoping,Jönköping,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-norrkoping,Norrkoping,Norrköping,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-lund,Lund,Lund,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-umea,Umea,Umeå,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-gavle,Gavle,Gävle,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-boras,Boras,Borås,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sundsvall,Sundsvall,Sundsvall,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-halmstad,Halmstad,Halmstad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-karlstad,Karlstad,Karlstad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sodertalje,Sodertalje,Södertälje,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-eskilstuna,Eskilstuna,Eskilstuna,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-vaxjo,Vaxjo,Växjö,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-karlskrona,Karlskrona,Karlskrona,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-kalmar,Kalmar,Kalmar,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-trollhattan,Trollhattan,Trollhättan,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-lulea,Lulea,Luleå,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-kristianstad,Kristianstad,Kristianstad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-skovde,Skovde,Skövde,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-falun,Falun,Falun,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-skelleftea,Skelleftea,Skellefteå,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-ostersund,Ostersund,Östersund,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-landskrona,Landskrona,Landskrona,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-visby,Visby,Visby,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-ystad,Ystad,Ystad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-motala,Motala,Motala,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-nykoping,Nykoping,Nyköping,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-arvika,Arvika,Arvika,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-hallstahammar,Hallstahammar,Hallstahammar,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-herrljunga,Herrljunga,Herrljunga,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-kil,Kil,Kil,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-kungalv,Kungalv,Kungälv,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-mariefred,Mariefred,Mariefred,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-marbella,Marbella,Marbella,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-mariefors,Mariefors,Mariefors,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-oresjo,Oresjo,Öresjö,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-ragunda,Ragunda,Ragunda,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-rostock,Rostock,Rostock,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-ronneby,Ronneby,Ronneby,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-skurup,Skurup,Skurup,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sondrestrom,Sondrestrom,Søndreström,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sterling,Sterling,Sterling,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-strangnas,Strangnas,Strängnäs,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-svall,Svall,Svall,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-simrishamn,Simrishamn,Simrishamn,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-skanör,Skanör,Skanör,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sundsvall_north,Sundsvall North,Sundsvall North,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-stavanger,Stavanger,Stavanger,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-strömstad,Stromstad,Strömstad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-skelleftehamn,Skelleftehamn,Skelleftehamn,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-solleftea,Solleftea,Sollefteå,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-rikstad,Rikstad,Rikstad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-roslagen,Roslagen,Roslagen,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-rasbo,Rasbo,Rasbo,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-revel,revel,Revel,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-norrtalje,Norrtalje,Norrtälje,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-taby,Taby,Täby,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sollentuna,Sollentuna,Sollentuna,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-solna,Solna,Solna,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sundbyberg,Sundbyberg,Sundbyberg,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-uddevalla,Uddevalla,Uddevalla,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-karlskoga,Karlskoga,Karlskoga,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-boden,Boden,Boden,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-kiruna,Kiruna,Kiruna,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-pitea,Pitea,Piteå,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-koping,Koping,Köping,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-amal,Amal,Åmål,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-mariestad,Mariestad,Mariestad,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-varberg,Varberg,Varberg,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-falkenberg,Falkenberg,Falkenberg,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-ornskoldsvik,Ornskoldsvik,Örnsköldsvik,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-kungsbacka,Kungsbacka,Kungsbacka,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-eslov,Eslov,Eslöv,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-angelholm,Angelholm,Ängelholm,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-vastervik,Vastervik,Västervik,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-vanersborg,Vanersborg,Vänersborg,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-akersberga,Akersberga,Åkersberga,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-sigtuna,Sigtuna,Sigtuna,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
-lidingo,Lidingo,Lidingö,geography,Geography,Geografi,cities-sweden,Cities in Sweden,Städer i Sverige,1,seed,,true
+word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
+stockholm,Stockholm,Stockholm,Stockholm,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+gothenburg,Gothenburg,Göteborg,Göteborg,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+malmo,Malmo,Malmö,Malmö,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+uppsala,Uppsala,Uppsala,Uppsala,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+vasteras,Vasteras,Västerås,Västerås,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+orebro,Orebro,Örebro,Örebro,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+linkoping,Linkoping,Linköping,Linköping,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+helsingborg,Helsingborg,Helsingborg,Helsingborg,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+jonkoping,Jonkoping,Jönköping,Jönköping,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+norrkoping,Norrkoping,Norrköping,Norrköping,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+lund,Lund,Lund,Lund,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+umea,Umea,Umeå,Umeå,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+gavle,Gavle,Gävle,Gävle,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+boras,Boras,Borås,Borås,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sundsvall,Sundsvall,Sundsvall,Sundsvall,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+halmstad,Halmstad,Halmstad,Halmstad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+karlstad,Karlstad,Karlstad,Karlstad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sodertalje,Sodertalje,Södertälje,Södertälje,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+eskilstuna,Eskilstuna,Eskilstuna,Eskilstuna,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+vaxjo,Vaxjo,Växjö,Växjö,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+karlskrona,Karlskrona,Karlskrona,Karlskrona,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+kalmar,Kalmar,Kalmar,Kalmar,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+trollhattan,Trollhattan,Trollhättan,Trollhättan,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+lulea,Lulea,Luleå,Luleå,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+kristianstad,Kristianstad,Kristianstad,Kristianstad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+skovde,Skovde,Skövde,Skövde,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+falun,Falun,Falun,Falun,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+skelleftea,Skelleftea,Skellefteå,Skellefteå,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+ostersund,Ostersund,Östersund,Östersund,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+landskrona,Landskrona,Landskrona,Landskrona,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+visby,Visby,Visby,Visby,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+ystad,Ystad,Ystad,Ystad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+motala,Motala,Motala,Motala,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+nykoping,Nykoping,Nyköping,Nyköping,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+arvika,Arvika,Arvika,Arvika,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+hallstahammar,Hallstahammar,Hallstahammar,Hallstahammar,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+herrljunga,Herrljunga,Herrljunga,Herrljunga,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+kil,Kil,Kil,Kil,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+kungalv,Kungalv,Kungälv,Kungälv,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+mariefred,Mariefred,Mariefred,Mariefred,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+marbella,Marbella,Marbella,Marbella,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+mariefors,Mariefors,Mariefors,Mariefors,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+oresjo,Oresjo,Öresjö,Öresjö,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+ragunda,Ragunda,Ragunda,Ragunda,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+rostock,Rostock,Rostock,Rostock,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+ronneby,Ronneby,Ronneby,Ronneby,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+skurup,Skurup,Skurup,Skurup,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sondrestrom,Sondrestrom,Søndreström,Søndreström,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sterling,Sterling,Sterling,Sterling,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+strangnas,Strangnas,Strängnäs,Strängnäs,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+svall,Svall,Svall,Svall,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+simrishamn,Simrishamn,Simrishamn,Simrishamn,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+skanör,Skanör,Skanör,Skanör,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sundsvall_north,Sundsvall North,Sundsvall North,Sundsvall North,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+stavanger,Stavanger,Stavanger,Stavanger,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+strömstad,Stromstad,Strömstad,Strömstad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+skelleftehamn,Skelleftehamn,Skelleftehamn,Skelleftehamn,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+solleftea,Solleftea,Sollefteå,Sollefteå,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+rikstad,Rikstad,Rikstad,Rikstad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+roslagen,Roslagen,Roslagen,Roslagen,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+rasbo,Rasbo,Rasbo,Rasbo,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+revel,revel,Revel,Revel,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+norrtalje,Norrtalje,Norrtälje,Norrtälje,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+taby,Taby,Täby,Täby,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sollentuna,Sollentuna,Sollentuna,Sollentuna,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+solna,Solna,Solna,Solna,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sundbyberg,Sundbyberg,Sundbyberg,Sundbyberg,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+uddevalla,Uddevalla,Uddevalla,Uddevalla,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+karlskoga,Karlskoga,Karlskoga,Karlskoga,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+boden,Boden,Boden,Boden,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+kiruna,Kiruna,Kiruna,Kiruna,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+pitea,Pitea,Piteå,Piteå,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+koping,Koping,Köping,Köping,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+amal,Amal,Åmål,Åmål,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+mariestad,Mariestad,Mariestad,Mariestad,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+varberg,Varberg,Varberg,Varberg,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+falkenberg,Falkenberg,Falkenberg,Falkenberg,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+ornskoldsvik,Ornskoldsvik,Örnsköldsvik,Örnsköldsvik,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+kungsbacka,Kungsbacka,Kungsbacka,Kungsbacka,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+eslov,Eslov,Eslöv,Eslöv,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+angelholm,Angelholm,Ängelholm,Ängelholm,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+vastervik,Vastervik,Västervik,Västervik,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+vanersborg,Vanersborg,Vänersborg,Vänersborg,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+akersberga,Akersberga,Åkersberga,Åkersberga,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+sigtuna,Sigtuna,Sigtuna,Sigtuna,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true
+lidingo,Lidingo,Lidingö,Lidingö,geography,Geography,Geografi,Géographie,cities-sweden,Cities in Sweden,Städer i Sverige,Villes de Suède,1,seed,,true

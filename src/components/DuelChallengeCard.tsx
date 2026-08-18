@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Match } from "../supabase/matches-repository";
 import { useTheme } from "../theme/ThemeProvider";
+import { flagFor } from "../utils/languageCycle";
 
 const ADJECTIVES = ["Brave", "Calm", "Cyber", "Eager", "Fair", "Grand", "Happy", "Jolly", "Keen", "Lucky", "Magic", "Neon", "Odd", "Proud", "Quick", "Rare", "Solar", "Tough", "Vivid", "Wild"];
 const ANIMALS = ["Bear", "Cat", "Dog", "Eagle", "Fox", "Goat", "Hawk", "Ibex", "Jay", "Koala", "Lion", "Mouse", "Newt", "Owl", "Panda", "Quail", "Raven", "Shark", "Tiger", "Wolf"];
@@ -42,7 +43,7 @@ export default function DuelChallengeCard({ match, onJoin, loading }: Props) {
       <View style={styles.info}>
         <View style={styles.nameRow}>
           <Text style={[styles.name, { color: colors.text }]}>{getMatchDisplayName(match)}</Text>
-          <Text>{match.language === "sv" ? "🇸🇪" : "🇬🇧"}</Text>
+          <Text>{flagFor(match.language || "en")}</Text>
           {match.is_hint_enabled ? <Text>💡</Text> : null}
         </View>
         <Text style={{ color: colors.textMuted, fontSize: 11 }}>

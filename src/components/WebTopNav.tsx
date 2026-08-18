@@ -5,18 +5,12 @@ import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
 import { updatePlayerSettings } from "../supabase/players-repository";
+import { flagFor, nextLanguage } from "../utils/languageCycle";
 import Logo from "./Logo";
 import WavingHand from "./WavingHand";
 
 const MAX_WIDTH = 896; // matches Wordse's `max-w-4xl` container
 const MOBILE_BREAKPOINT = 768; // matches Tailwind's `md` breakpoint
-
-function flagFor(lang: string) {
-  const code = lang.split("-")[0];
-  if (code.startsWith("sv")) return "🇸🇪";
-  if (code.startsWith("en")) return "🇬🇧";
-  return "🌐";
-}
 
 // Replaces the bottom tab bar on web with a persistent top nav bar, mirroring
 // Wordse's HeaderCopy.tsx: logo, language flag, centered nav links, and an
@@ -34,7 +28,7 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
   const nav = navigation as any; // bubbles to root-stack routes (Signin/Signup/Signout) too
 
   const toggleLanguage = async () => {
-    const nextLang = lang.startsWith("en") ? "sv" : "en";
+    const nextLang = nextLanguage(lang);
     await i18n.changeLanguage(nextLang);
     if (authState === "registered" && profile?.id) {
       await updatePlayerSettings(profile.id, { language: nextLang });

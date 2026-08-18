@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import Toggle from "./Toggle";
+import OptionButton from "./OptionButton";
 
 interface Props {
   currentLanguage: string;
@@ -34,27 +35,6 @@ export default function ProfileSettingsSection({
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const OptionButton = ({
-    active,
-    onPress,
-    children,
-  }: {
-    active: boolean;
-    onPress: () => void;
-    children: React.ReactNode;
-  }) => (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.optionButton,
-        { borderColor: active ? "#4f46e5" : colors.border },
-        active && { backgroundColor: "#eef2ff" },
-      ]}
-    >
-      <Text style={{ color: active ? "#4338ca" : colors.text, fontWeight: "600", fontSize: 13 }}>{children}</Text>
-    </Pressable>
-  );
-
   return (
     <>
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -65,6 +45,9 @@ export default function ProfileSettingsSection({
           </OptionButton>
           <OptionButton active={currentLanguage.startsWith("sv")} onPress={() => onLanguageChange("sv")}>
             Svenska
+          </OptionButton>
+          <OptionButton active={currentLanguage.startsWith("fr")} onPress={() => onLanguageChange("fr")}>
+            Français
           </OptionButton>
         </View>
       </View>
@@ -124,7 +107,6 @@ const styles = StyleSheet.create({
   card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 4 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 8 },
   row: { flexDirection: "row", gap: 8 },
-  optionButton: { borderWidth: 1, borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12 },
   footer: { gap: 14 },
   note: { fontSize: 15, fontStyle: "italic" },
   buttonRow: { flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" },

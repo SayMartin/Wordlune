@@ -4,10 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import en from "../locales/en/translation.json";
 import sv from "../locales/sv/translation.json";
+import fr from "../locales/fr/translation.json";
 
 const resources = {
   en: { translation: en },
   sv: { translation: sv },
+  fr: { translation: fr },
 };
 
 const LANG_STORAGE_KEY = "wordse:lang";

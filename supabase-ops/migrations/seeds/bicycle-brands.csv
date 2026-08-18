@@ -1,52 +1,52 @@
-word_native,word_en,word_sv,category_name_native,category_name_en,category_name_sv,subcategory_name_native,subcategory_name_en,subcategory_name_sv,difficulty,source,created_by,is_active
-trek,Trek,Trek,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-specialized,Specialized,Specialized,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-giant,Giant,Giant,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-cannondale,Cannondale,Cannondale,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-scott,Scott,Scott,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-bianchi,Bianchi,Bianchi,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-pinarello,Pinarello,Pinarello,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-cervelo,Cervélo,Cervélo,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-colnago,Colnago,Colnago,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-santacruz,Santa Cruz,Santa Cruz,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-orbea,Orbea,Orbea,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-merida,Merida,Merida,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-kona,Kona,Kona,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-marin,Marin,Marin,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-gt,GT,GT,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-fuji,Fuji,Fuji,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-raleigh,Raleigh,Raleigh,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-brompton,Brompton,Brompton,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-schwinn,Schwinn,Schwinn,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-cube,Cube,Cube,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-rocky_mountain,Rocky Mountain,Rocky Mountain,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-yeti,Yeti,Yeti,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-felt,Felt,Felt,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-diamondback,Diamondback,Diamondback,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-electra,Electra,Electra,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-haibike,Haibike,Haibike,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-lapierre,Lapierre,Lapierre,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-mondraker,Mondraker,Mondraker,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-norco,Norco,Norco,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-surly,Surly,Surly,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-salsa,Salsa,Salsa,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-dahon,Dahon,Dahon,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-ri se_muller,Riese & Müller,Riese & Müller,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-stromer,Stromer,Stromer,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-vanmoof,VanMoof,VanMoof,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-kalkhoff,Kalkhoff,Kalkhoff,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-bulls,Bulls,Bulls,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-strom,Strom,Strom,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-gazelle,Gazelle,Gazelle,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-trek_fitness,Trek Fitness,Trek Fitness,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-specialized_e,Specialized E,Specialized E,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-giant_e,Giant E,Giant E,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-focus,Focus,Focus,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-bianchi_croad,Bianchi Croad,Bianchi Croad,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-colnago_c,Colnago C,Colnago C,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-pegasus,Pegasus,Pegasus,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-victoria,Victoria,Victoria,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-haibike_e,Haibike E,Haibike E,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-mbk,MBK,MBK,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-motobecane,Motobécane,Motobécane,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
-cleveland,Cleveland,Cleveland,vehicles,Vehicles,Fordon,bicycle-brands,Bicycle Brands,Cykelmärken,1,seed,,true
+word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
+trek,Trek,Trek,Trek,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+specialized,Specialized,Specialized,Specialized,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+giant,Giant,Giant,Giant,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+cannondale,Cannondale,Cannondale,Cannondale,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+scott,Scott,Scott,Scott,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+bianchi,Bianchi,Bianchi,Bianchi,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+pinarello,Pinarello,Pinarello,Pinarello,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+cervelo,Cervélo,Cervélo,Cervélo,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+colnago,Colnago,Colnago,Colnago,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+santacruz,Santa Cruz,Santa Cruz,Santa Cruz,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+orbea,Orbea,Orbea,Orbea,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+merida,Merida,Merida,Merida,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+kona,Kona,Kona,Kona,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+marin,Marin,Marin,Marin,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+gt,GT,GT,GT,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+fuji,Fuji,Fuji,Fuji,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+raleigh,Raleigh,Raleigh,Raleigh,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+brompton,Brompton,Brompton,Brompton,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+schwinn,Schwinn,Schwinn,Schwinn,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+cube,Cube,Cube,Cube,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+rocky_mountain,Rocky Mountain,Rocky Mountain,Rocky Mountain,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+yeti,Yeti,Yeti,Yeti,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+felt,Felt,Felt,Felt,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+diamondback,Diamondback,Diamondback,Diamondback,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+electra,Electra,Electra,Electra,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+haibike,Haibike,Haibike,Haibike,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+lapierre,Lapierre,Lapierre,Lapierre,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+mondraker,Mondraker,Mondraker,Mondraker,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+norco,Norco,Norco,Norco,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+surly,Surly,Surly,Surly,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+salsa,Salsa,Salsa,Salsa,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+dahon,Dahon,Dahon,Dahon,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+ri se_muller,Riese & Müller,Riese & Müller,Riese & Müller,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+stromer,Stromer,Stromer,Stromer,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+vanmoof,VanMoof,VanMoof,VanMoof,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+kalkhoff,Kalkhoff,Kalkhoff,Kalkhoff,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+bulls,Bulls,Bulls,Bulls,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+strom,Strom,Strom,Strom,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+gazelle,Gazelle,Gazelle,Gazelle,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+trek_fitness,Trek Fitness,Trek Fitness,Trek Fitness,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+specialized_e,Specialized E,Specialized E,Specialized E,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+giant_e,Giant E,Giant E,Giant E,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+focus,Focus,Focus,Focus,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+bianchi_croad,Bianchi Croad,Bianchi Croad,Bianchi Croad,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+colnago_c,Colnago C,Colnago C,Colnago C,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+pegasus,Pegasus,Pegasus,Pegasus,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+victoria,Victoria,Victoria,Victoria,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+haibike_e,Haibike E,Haibike E,Haibike E,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+mbk,MBK,MBK,MBK,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+motobecane,Motobécane,Motobécane,Motobécane,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
+cleveland,Cleveland,Cleveland,Cleveland,vehicles,Vehicles,Fordon,Véhicules,bicycle-brands,Bicycle Brands,Cykelmärken,Marques de vélos,1,seed,,true
