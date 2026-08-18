@@ -11,6 +11,7 @@ import { supabase } from "../supabaseClient";
 import {
   getPlayerProfile,
   ensurePlayerProfile,
+  deleteOwnAccount,
   PlayerProfile,
 } from "../supabase/players-repository";
 
@@ -72,6 +73,7 @@ interface AuthContextType {
   requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -263,6 +265,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const deleteAccount = async () => {
+    const result = await deleteOwnAccount();
+    if (!result.success) {
+      return result;
+    }
+
+    // Account (and its auth.users row) is gone server-side at this point —
+    // best-effort signOut to invalidate the now-dangling refresh token, but
+    // local state must be cleared regardless of whether that call succeeds,
+    // same reasoning as logout()'s try/finally above.
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      // ignore
+    } finally {
+      setSession(undefined);
+      setProfile(null);
+      setIsAuthenticated(false);
+
+      try {
+        const allKeys = await AsyncStorage.getAllKeys();
+        const authKeys = allKeys.filter(
+          (key) => key.startsWith("sb-") && key.endsWith("-auth-token"),
+        );
+        if (authKeys.length > 0) {
+          await AsyncStorage.removeMany(authKeys);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    return result;
+  };
+
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
@@ -344,6 +381,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         requestPasswordReset,
         updatePassword,
         logout,
+        deleteAccount,
       }}
     >
       {children}

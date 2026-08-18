@@ -220,6 +220,25 @@ export async function updatePlayerProfile(
   return data;
 }
 
+/**
+ * Permanently delete the calling user's own account (guest or registered)
+ * and everything tied to it. Runs as the `delete_own_account` Postgres
+ * function (supabase-ops/migrations/20260818_delete_own_account.sql), which
+ * deletes the auth.users row for auth.uid() — a regular client can't do
+ * this directly (requires the service-role key), so it goes through a
+ * security-definer RPC instead. Deleting auth.users cascades into
+ * player_profiles -> game_scores/challenge_attempts/challenge_results, and
+ * duel_matches.
+ */
+export async function deleteOwnAccount(): Promise<{ success: boolean; error?: string }> {
+  const { error } = await supabase.rpc("delete_own_account");
+  if (error) {
+    console.error("Error deleting account:", error);
+    return { success: false, error: error.message };
+  }
+  return { success: true };
+}
+
 // --- Settings Management ---
 
 /**

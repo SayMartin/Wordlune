@@ -16,6 +16,7 @@ import {
 } from "../supabase/players-repository";
 import Toggle from "./Toggle";
 import ProfileSettingsSection from "./ProfileSettingsSection";
+import ConfirmationOverlay from "./ConfirmationOverlay";
 
 const REDUCE_MOTION_KEY = "wordse:reduceMotion";
 
@@ -24,7 +25,7 @@ type Nav = NativeStackNavigationProp<AppParamList>;
 export default function Settings() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme, colors } = useTheme();
-  const { profile, session, isAuthenticated, authState, refreshProfile, loadingInitial, profileLoading } = useAuth();
+  const { profile, session, isAuthenticated, authState, refreshProfile, loadingInitial, profileLoading, deleteAccount } = useAuth();
   const navigation = useNavigation<Nav>();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -32,6 +33,10 @@ export default function Settings() {
   const [editName, setEditName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [originalSettings, setOriginalSettings] = useState<{ theme: "light" | "dark"; language: string; reduceMotion: boolean } | null>(null);
@@ -216,6 +221,22 @@ export default function Settings() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const result = await deleteAccount();
+      if (!result.success) {
+        setDeleteError(result.error || t("delete_account_failed", { defaultValue: "Failed to delete account" }));
+        setShowDeleteConfirm(false);
+        return;
+      }
+      navigation.navigate("Main", { screen: "Home" });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <>
     <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -328,6 +349,36 @@ export default function Settings() {
       onSave={handleSaveSettings}
       onCancel={handleCancelSettings}
     />
+
+    <View style={[styles.card, styles.dangerCard, { backgroundColor: colors.surface, borderColor: "#dc2626" }]}>
+      <Text style={[styles.cardTitle, { color: "#dc2626" }]}>{t("danger_zone", { defaultValue: "Danger Zone" })}</Text>
+      <Text style={{ color: colors.textMuted, fontSize: 13, marginBottom: 12 }}>
+        {t("delete_account_description", {
+          defaultValue: "Permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
+        })}
+      </Text>
+      {deleteError && <Text style={styles.error}>{deleteError}</Text>}
+      <Pressable
+        style={[styles.dangerButton, deleting && styles.disabled]}
+        onPress={() => setShowDeleteConfirm(true)}
+        disabled={deleting}
+      >
+        <Text style={styles.primaryButtonText}>{t("delete_account", { defaultValue: "Delete Account" })}</Text>
+      </Pressable>
+    </View>
+
+    {showDeleteConfirm && (
+      <ConfirmationOverlay
+        variant="danger"
+        title={t("confirm_delete_account_title", { defaultValue: "Delete Account?" })}
+        message={t("confirm_delete_account_msg", {
+          defaultValue: "This will permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
+        })}
+        confirmText={deleting ? t("deleting", { defaultValue: "Deleting..." }) : t("delete_account", { defaultValue: "Delete Account" })}
+        onConfirm={handleDeleteAccount}
+        onCancel={deleting ? undefined : () => setShowDeleteConfirm(false)}
+      />
+    )}
     </>
   );
 }
@@ -358,6 +409,8 @@ const styles = StyleSheet.create({
   primaryButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 13 },
   secondaryButton: { backgroundColor: "#6b7280", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
   secondaryButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 13 },
+  dangerCard: { marginTop: 8 },
+  dangerButton: { backgroundColor: "#dc2626", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8, alignSelf: "flex-start" },
   disabled: { opacity: 0.5 },
   guestOverlay: {
     position: "absolute",
