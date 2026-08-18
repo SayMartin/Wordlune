@@ -61,6 +61,25 @@ export default function AboutScreen() {
             ]}
           />
         </View>
+
+        <View style={[styles.modeBlock, styles.modeBlockDivider, { borderTopColor: colors.border }]}>
+          <Text style={[styles.modeTitle, { color: colors.text }]}>
+            ⚔️ {t("duel_lobby_title", { defaultValue: "Duel Mode" })}
+          </Text>
+          <Text style={[styles.modeDesc, { color: colors.textMuted }]}>
+            {t("duel_description", {
+              defaultValue: "Face off against another player in real-time. Be the first to solve the word!",
+            })}
+          </Text>
+          <BulletList
+            color={colors.textMuted}
+            items={[
+              t("duel_feat_1", { defaultValue: "Real-time 1v1 — both players guess the same secret word at once" }),
+              t("duel_feat_2", { defaultValue: "Scored by correct and present letters as you type" }),
+              t("duel_feat_3", { defaultValue: "Open to Guests and Registered players alike" }),
+            ]}
+          />
+        </View>
       </View>
 
       <View style={[styles.card, styles.accessCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -92,6 +111,8 @@ export default function AboutScreen() {
                 t("guest_desc_1", { defaultValue: "Play Practice Mode" }),
                 t("guest_desc_2", { defaultValue: "Persistence is mix of local storage and backend." }),
                 t("guest_desc_3", { defaultValue: "Some data will be lost if e.g. browser data is cleared." }),
+                t("guest_desc_6", { defaultValue: "Can delete your account and all its data anytime" }),
+                t("guest_desc_7", { defaultValue: "Inactive guest accounts are automatically deleted after 14 days" }),
               ]}
             />
             <BulletList
@@ -118,6 +139,7 @@ export default function AboutScreen() {
                 t("reg_desc_5", { defaultValue: "Manage Profile" }),
                 t("reg_desc_6", { defaultValue: "Persistence to a PostgreSQL backend" }),
                 t("reg_desc_7", { defaultValue: "Cross-device sync" }),
+                t("reg_desc_8", { defaultValue: "Can delete your account and all its data anytime" }),
               ]}
             />
           </View>
