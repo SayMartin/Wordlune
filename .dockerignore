@@ -1,0 +1,11 @@
+node_modules
+dist
+.expo
+android
+ios
+.git
+.github
+__tests__
+*.md
+.env
+.env.local
