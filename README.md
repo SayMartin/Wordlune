@@ -2,11 +2,13 @@
 
 Wordse is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. Playable on iOS, Android, and in the browser.
 
+Live at **[wordse.appfinningar.se](https://wordse.appfinningar.se)**.
+
 ## Tech stack
 
 - **Expo / React Native** — cross-platform app (iOS, Android), with [react-native-web](https://necolas.github.io/react-native-web/) powering the browser version from the same codebase. The web version is a full responsive desktop site (top nav bar, hamburger menu on narrow windows) rather than a mobile-only view, and supports typing guesses directly on your computer's keyboard.
 - **Supabase** — backend for authentication, word data, scores, and realtime multiplayer.
-- **React Navigation** — bottom tabs on iOS/Android, a top nav bar on web (Home, Game, Progress, Profile, About), plus full-screen auth/settings flows on both.
+- **React Navigation** — bottom tabs on iOS/Android, a top nav bar on web (Home, Game, Progress, Settings, About), plus full-screen auth/settings flows on both.
 - **i18n (i18next)** — English and Swedish translations.
 
 ## How to play
@@ -21,4 +23,4 @@ Type a guess using the on-screen keyboard (or your computer's keyboard, in the b
 
 ### Logging in
 
-The Game, Progress, and Profile tabs require at least a guest session — tapping into any of them as a first-time visitor shows a "Play as Guest" option (no account needed), alongside Log In / Sign Up. Competitive and Duel modes go a step further and require a full registered account (not just guest).
+The Game, Progress, and Settings tabs require at least a guest session — tapping into any of them as a first-time visitor shows a "Play as Guest" option (no account needed), alongside Log In / Sign Up. Competitive and Duel modes go a step further and require a full registered account (not just guest).
