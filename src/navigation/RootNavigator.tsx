@@ -4,6 +4,7 @@ import MainTabs from "./MainTabs";
 import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignoutScreen from "../screens/SignoutScreen";
+import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import WebCentered from "../components/WebCentered";
 import type { RootStackParamList } from "./types";
@@ -29,6 +30,11 @@ const CenteredSignoutScreen = () => (
     <SignoutScreen />
   </WebCentered>
 );
+const CenteredResetPasswordScreen = () => (
+  <WebCentered>
+    <ResetPasswordScreen />
+  </WebCentered>
+);
 const CenteredNotFoundScreen = () => (
   <WebCentered>
     <NotFoundScreen />
@@ -52,6 +58,7 @@ export default function RootNavigator() {
       <Stack.Screen name="Signup" component={CenteredSignupScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Login" component={CenteredLoginScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Signout" component={CenteredSignoutScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="ResetPassword" component={CenteredResetPasswordScreen} options={{ headerShown: true }} />
       <Stack.Screen name="NotFound" component={CenteredNotFoundScreen} options={{ headerShown: true }} />
     </Stack.Navigator>
   );

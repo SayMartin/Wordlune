@@ -37,6 +37,14 @@ const AUTH_REDIRECT_URL =
     ? (globalThis as any).window.location.origin
     : "se.wordse.app://auth-callback";
 
+// Same web/native split as AUTH_REDIRECT_URL, but pointed at the
+// ResetPasswordScreen route so a clicked reset-password email link lands
+// the user directly on the "set new password" form instead of Home.
+const RESET_PASSWORD_REDIRECT_URL =
+  Platform.OS === "web" && (globalThis as any).window
+    ? `${(globalThis as any).window.location.origin}/reset-password`
+    : "se.wordse.app://reset-password";
+
 export type AuthState = "visitor" | "guest" | "registered";
 
 interface AuthContextType {
@@ -61,6 +69,8 @@ interface AuthContextType {
     displayName?: string,
     avatarUrl?: string,
   ) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
+  requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -176,6 +186,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { success: true };
     } catch (e: any) {
       console.error("loginAnonymously error", e);
+      return { success: false, error: e?.message || String(e) };
+    }
+  };
+
+  const requestPasswordReset = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: RESET_PASSWORD_REDIRECT_URL,
+      });
+      if (error) {
+        console.error("Error requesting password reset:", error.message);
+        return { success: false, error: error.message, errorCode: error.code };
+      }
+      return { success: true };
+    } catch (e: any) {
+      console.error("requestPasswordReset error", e);
+      return { success: false, error: e?.message || String(e) };
+    }
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        console.error("Error updating password:", error.message);
+        return { success: false, error: error.message, errorCode: error.code };
+      }
+      return { success: true };
+    } catch (e: any) {
+      console.error("updatePassword error", e);
       return { success: false, error: e?.message || String(e) };
     }
   };
@@ -301,6 +341,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signUpNewUser,
         login,
         loginAnonymously,
+        requestPasswordReset,
+        updatePassword,
         logout,
       }}
     >

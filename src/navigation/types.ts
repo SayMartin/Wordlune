@@ -13,6 +13,7 @@ export type RootStackParamList = {
   Signup: undefined;
   Login: undefined;
   Signout: undefined;
+  ResetPassword: undefined;
   NotFound: undefined;
 };
 

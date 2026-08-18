@@ -34,6 +34,7 @@ const linking: LinkingOptions<RootStackParamList> = {
       Signup: "signup",
       Login: "login",
       Signout: "signout",
+      ResetPassword: "reset-password",
       NotFound: "*",
     },
   },
