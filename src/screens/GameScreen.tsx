@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, type RouteProp } from "@react-navigation/native";
@@ -8,7 +8,6 @@ import { useAuth } from "../context/AuthContext";
 import useGame from "../hooks/useGame";
 import useDuelMode from "../hooks/useDuelMode";
 import useChallengeMode from "../hooks/useChallengeMode";
-import { normalizeForCompare } from "../utils/wordUtils";
 import { saveGameScore } from "../supabase/players-repository";
 import { Match, claimVictory, abandonMatch } from "../supabase/matches-repository";
 import BoardGrid from "../components/BoardGrid";
@@ -258,19 +257,10 @@ export default function GameScreen() {
     setShowResultOverlay(status === "won" || status === "lost");
   }, [status]);
 
-  const isGuessInPool = useMemo(() => {
-    if (status !== "playing") return false;
-    if (currentGuess.length !== effectiveMax) return false;
-    if (!candidatePool || candidatePool.length === 0) return true;
-    const gNorm = normalizeForCompare(currentGuess);
-    return candidatePool.some((w) => normalizeForCompare(w) === gNorm);
-  }, [status, currentGuess, effectiveMax, candidatePool]);
+  const isRowFull = status === "playing" && currentGuess.length === (secret?.length || effectiveMax);
 
   const clientFilteredCount = candidatePool
-    ? candidatePool.filter((w) => {
-        const len = w.replace(/[\s-]/g, "").length;
-        return len > effectiveMin && len <= effectiveMax;
-      }).length
+    ? candidatePool.filter((w) => w.length > effectiveMin && w.length <= effectiveMax).length
     : null;
   const poolCount = clientFilteredCount !== null ? clientFilteredCount : (localPoolCount ?? 0);
 
@@ -578,7 +568,7 @@ export default function GameScreen() {
               onEnter={submitGuess}
               onDelete={deleteLetter}
               state={keyboardState}
-              highlightControlKeys={isGuessInPool}
+              highlightControlKeys={isRowFull}
               language={gameMode === "duel" ? activeMatch?.language : undefined}
             />
 

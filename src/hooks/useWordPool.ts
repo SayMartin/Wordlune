@@ -105,19 +105,13 @@ export default function useWordPool({
           let filtered = words;
 
           if (typeof exactLength === "number") {
-            filtered = filtered.filter(
-              (w: string) => w.replace(/[\s\-]/g, "").length === exactLength,
-            );
+            filtered = filtered.filter((w: string) => w.length === exactLength);
           } else {
             if (typeof maxLetters === "number") {
-              filtered = filtered.filter(
-                (w: string) => w.replace(/[\s\-]/g, "").length <= maxLetters,
-              );
+              filtered = filtered.filter((w: string) => w.length <= maxLetters);
             }
             if (typeof minLetters === "number") {
-              filtered = filtered.filter(
-                (w: string) => w.replace(/[\s\-]/g, "").length > minLetters,
-              );
+              filtered = filtered.filter((w: string) => w.length > minLetters);
             }
           }
 
@@ -156,19 +150,13 @@ export default function useWordPool({
         let filtered = words;
 
         if (typeof exactLength === "number") {
-          filtered = filtered.filter(
-            (w: string) => w.replace(/[\s\-]/g, "").length === exactLength,
-          );
+          filtered = filtered.filter((w: string) => w.length === exactLength);
         } else {
           if (typeof maxLetters === "number") {
-            filtered = filtered.filter(
-              (w: string) => w.replace(/[\s\-]/g, "").length <= maxLetters,
-            );
+            filtered = filtered.filter((w: string) => w.length <= maxLetters);
           }
           if (typeof minLetters === "number") {
-            filtered = filtered.filter(
-              (w: string) => w.replace(/[\s\-]/g, "").length > minLetters,
-            );
+            filtered = filtered.filter((w: string) => w.length > minLetters);
           }
         }
 

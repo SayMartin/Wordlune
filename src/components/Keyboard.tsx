@@ -65,15 +65,26 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
           )}
         </View>
       ))}
-      <Pressable
-        style={[
-          styles.enterKey,
-          { borderColor: highlightControlKeys ? "#2563eb" : colors.border, backgroundColor: colors.surface },
-        ]}
-        onPress={onEnter}
-      >
-        <Text style={[styles.keyText, { color: colors.text, fontWeight: "700" }]}>{t("enter", { defaultValue: "Enter" })} ⏎</Text>
-      </Pressable>
+      <View style={styles.enterKeyRow}>
+        <Pressable
+          style={[
+            styles.enterKey,
+            highlightControlKeys
+              ? { borderColor: colors.accent, backgroundColor: colors.accent }
+              : { borderColor: colors.border, backgroundColor: colors.surface, opacity: 0.5 },
+          ]}
+          onPress={onEnter}
+        >
+          <Text
+            style={[
+              styles.keyText,
+              { color: highlightControlKeys ? "#ffffff" : colors.text, fontWeight: "700" },
+            ]}
+          >
+            {t("enter", { defaultValue: "Enter" })} ⏎
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -91,12 +102,13 @@ const styles = StyleSheet.create({
   },
   deleteKey: { flex: 1.5 },
   keyText: { fontWeight: "600", fontSize: 14 },
+  enterKeyRow: { alignItems: "center", marginTop: 4 },
   enterKey: {
     height: 44,
+    width: "80%",
     borderRadius: 6,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 4,
   },
 });

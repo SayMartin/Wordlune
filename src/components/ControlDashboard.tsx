@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import DuelDashboardHeader from "./DuelDashboardHeader";
@@ -141,7 +141,11 @@ export default function ControlDashboard({
         <View style={styles.cluster}>
           {showMainButton && (
             <Pressable
-              style={[styles.mainButton, disabled ? styles.disabledButton : styles.activeButton]}
+              style={[
+                styles.mainButton,
+                styles.noWebOutline,
+                disabled ? styles.disabledButton : styles.activeButton,
+              ]}
               onPress={handleMainAction}
               disabled={disabled}
             >
@@ -155,7 +159,13 @@ export default function ControlDashboard({
 
           {!isDuel && !hideRestart && (
             <Pressable
-              style={[styles.resetButton, { borderColor: colors.border }, (status === "idle" || disabled) && styles.disabledIcon]}
+              style={[
+                styles.resetButton,
+                styles.noWebOutline,
+                status === "idle" || disabled
+                  ? [{ borderColor: colors.border }, styles.disabledIcon]
+                  : { borderColor: "#4f46e5" },
+              ]}
               onPress={() => {
                 onReset();
                 setInternalElapsed(0);
@@ -205,11 +215,14 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   cluster: { flexDirection: "row", alignItems: "center", gap: 10 },
-  mainButton: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
-  activeButton: { backgroundColor: "#4f46e5" },
-  disabledButton: { backgroundColor: "#94a3b8" },
+  // Browser default focus outlines follow whichever button was last clicked,
+  // not app state — suppressed so the border below is the only ring shown.
+  noWebOutline: Platform.OS === "web" ? { outlineWidth: 0 } : {},
+  mainButton: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8, borderWidth: 2 },
+  activeButton: { backgroundColor: "#4f46e5", borderColor: "#c7d2fe" },
+  disabledButton: { backgroundColor: "#94a3b8", borderColor: "transparent" },
   mainButtonText: { color: "#ffffff", fontWeight: "700" },
-  resetButton: { borderWidth: 1, borderRadius: 8, paddingVertical: 10, paddingHorizontal: 12 },
+  resetButton: { borderWidth: 2, borderRadius: 8, paddingVertical: 10, paddingHorizontal: 12 },
   disabledIcon: { opacity: 0.4 },
   timer: { fontWeight: "700", fontSize: 16, fontVariant: ["tabular-nums"] },
   suddenDeathTimer: { color: "#dc2626", fontSize: 20 },
