@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
 import { suggestUniqueDisplayName } from "../supabase/players-repository";
+import WavingHand from "./WavingHand";
 import type { AppParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
@@ -46,7 +47,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
       <View style={[styles.center, { backgroundColor: colors.background }]}>
         <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <View style={[styles.header, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            <Text style={styles.emoji}>👋</Text>
+            <WavingHand size={32} />
             <Text style={[styles.title, { color: colors.text }]}>
               {t("welcome_player", { defaultValue: "Welcome Player!" })}
             </Text>
@@ -125,7 +126,6 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 16 },
   card: { width: "100%", maxWidth: 400, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
   header: { padding: 16, borderBottomWidth: 1, alignItems: "center", gap: 6 },
-  emoji: { fontSize: 32 },
   title: { fontSize: 18, fontWeight: "800" },
   body: { padding: 20, gap: 12, alignItems: "stretch" },
   message: { fontSize: 15, lineHeight: 21, textAlign: "center", marginBottom: 4 },

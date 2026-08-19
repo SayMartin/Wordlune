@@ -244,8 +244,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (err) {
       console.error("Unexpected error during signOut", err);
     } finally {
-      // Always clear local state
-      setSession(undefined);
+      // Always clear local state. null, not undefined — SessionGate treats
+      // `undefined` as "still loading" and would spin forever otherwise.
+      setSession(null);
       setProfile(null);
       setIsAuthenticated(false);
 
@@ -280,7 +281,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       // ignore
     } finally {
-      setSession(undefined);
+      // null, not undefined — SessionGate treats `undefined` as "still
+      // loading" and would spin forever otherwise.
+      setSession(null);
       setProfile(null);
       setIsAuthenticated(false);
 

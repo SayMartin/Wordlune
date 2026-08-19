@@ -45,10 +45,16 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
   const isLoggedIn = authState === "registered" || authState === "guest";
   const activeRouteName = state.routes[state.index].name;
 
+  // Mirrors SessionGate's gating: Game/Progress/Settings require at least a
+  // guest session, so flag them with a lock for visitors rather than letting
+  // the link look like any other and only revealing that on click.
+  const GATED_ROUTES = new Set(["Game", "Progress", "Settings"]);
+
   const links = state.routes.map((route) => ({
     name: route.name,
     label: (descriptors[route.key].options.title as string) || route.name,
     isActive: route.name === activeRouteName,
+    isGated: authState === "visitor" && GATED_ROUTES.has(route.name),
   }));
 
   const goToTab = (name: string) => {
@@ -90,6 +96,7 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
                       link.isActive && styles.navLinkActive,
                     ]}
                   >
+                    {link.isGated ? "🔒 " : ""}
                     {link.label}
                   </Text>
                 </Pressable>
@@ -134,6 +141,7 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
             {links.map((link) => (
               <Pressable key={link.name} style={styles.dropdownItem} onPress={() => goToTab(link.name)}>
                 <Text style={[styles.dropdownText, { color: link.isActive ? colors.accent : colors.text }]}>
+                  {link.isGated ? "🔒 " : ""}
                   {link.label}
                 </Text>
               </Pressable>
