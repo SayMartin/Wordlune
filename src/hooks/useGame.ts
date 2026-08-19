@@ -6,7 +6,7 @@ import useWordPool from "./useWordPool";
 
 type LetterStatus = "absent" | "present" | "correct";
 
-const STORAGE_KEY = "wordse:game:v1";
+const STORAGE_KEY = "wordlune:game:v1";
 
 interface PersistedState {
   secret: string;

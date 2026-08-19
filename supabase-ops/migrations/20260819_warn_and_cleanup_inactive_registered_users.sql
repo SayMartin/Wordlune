@@ -90,22 +90,22 @@ begin
       and coalesce(u.last_sign_in_at, u.created_at) < now() - inactive_after
   loop
     subject := case r.lang
-      when 'sv' then 'Ditt Wordse-konto raderas snart'
-      when 'fr' then E'Votre compte Wordse sera bientôt supprimé'
-      else 'Your Wordse account will be deleted soon'
+      when 'sv' then 'Ditt Wordlune-konto raderas snart'
+      when 'fr' then E'Votre compte Wordlune sera bientôt supprimé'
+      else 'Your Wordlune account will be deleted soon'
     end;
     body := case r.lang
       when 'sv' then
         '<p>Hej ' || coalesce(r.display_name, 'spelare') || ',</p>' ||
-        E'<p>Ditt Wordse-konto har varit inaktivt i över 6 månader. Om du inte loggar in inom 14 dagar kommer kontot och all tillhörande data (poäng, historik) att raderas permanent.</p>' ||
+        E'<p>Ditt Wordlune-konto har varit inaktivt i över 6 månader. Om du inte loggar in inom 14 dagar kommer kontot och all tillhörande data (poäng, historik) att raderas permanent.</p>' ||
         E'<p>Logga bara in någon gång så avbryts raderingen automatiskt.</p>'
       when 'fr' then
         '<p>Bonjour ' || coalesce(r.display_name, 'joueur') || ',</p>' ||
-        E'<p>Votre compte Wordse est inactif depuis plus de 6 mois. Si vous ne vous reconnectez pas sous 14 jours, le compte et toutes les données associées (scores, historique) seront supprimés définitivement.</p>' ||
+        E'<p>Votre compte Wordlune est inactif depuis plus de 6 mois. Si vous ne vous reconnectez pas sous 14 jours, le compte et toutes les données associées (scores, historique) seront supprimés définitivement.</p>' ||
         E'<p>Reconnectez-vous simplement pour annuler la suppression.</p>'
       else
         '<p>Hi ' || coalesce(r.display_name, 'player') || ',</p>' ||
-        '<p>Your Wordse account has been inactive for over 6 months. If you don''t sign in within the next 14 days, the account and all its data (scores, history) will be permanently deleted.</p>' ||
+        '<p>Your Wordlune account has been inactive for over 6 months. If you don''t sign in within the next 14 days, the account and all its data (scores, history) will be permanently deleted.</p>' ||
         '<p>Just sign in any time before then to cancel the deletion.</p>'
     end;
 
@@ -116,7 +116,7 @@ begin
         'Content-Type', 'application/json'
       ),
       body := jsonb_build_object(
-        'from', 'Wordse <noreply@appfinningar.se>',
+        'from', 'Wordlune <noreply@appfinningar.se>',
         'to', array[r.email],
         'subject', subject,
         'html', body

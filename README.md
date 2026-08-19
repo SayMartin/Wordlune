@@ -1,8 +1,8 @@
-# Wordse
+# Wordlune
 
-Wordse is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. Playable on iOS, Android, and in the browser.
+Wordlune is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. Playable on iOS, Android, and in the browser.
 
-Live at **[wordse.appfinningar.se](https://wordse.appfinningar.se)**.
+Live at **[wordlune.se](https://wordlune.se)**.
 
 ## Tech stack
 

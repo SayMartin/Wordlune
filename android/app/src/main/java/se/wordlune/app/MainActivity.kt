@@ -1,4 +1,4 @@
-package se.wordse.app
+package se.wordlune.app
 
 import android.os.Build
 import android.os.Bundle

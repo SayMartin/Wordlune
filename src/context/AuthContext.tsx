@@ -28,7 +28,7 @@ async function fetchOrCreateProfile(userId: string): Promise<PlayerProfile | nul
 // On web, redirect back to the page the user signed up from — matches the
 // original Wordse web app's `emailRedirectTo: window.location.origin`, and
 // Supabase's redirect allow-list is already scoped to
-// https://wordse.appfinningar.se. On native, a custom URL scheme is needed
+// https://wordlune.se. On native, a custom URL scheme is needed
 // instead, which requires native config (iOS: CFBundleURLTypes in
 // Info.plist, Android: intent-filter in AndroidManifest.xml) that isn't set
 // up yet — signup with email confirmation won't complete the redirect on
@@ -36,7 +36,7 @@ async function fetchOrCreateProfile(userId: string): Promise<PlayerProfile | nul
 const AUTH_REDIRECT_URL =
   Platform.OS === "web" && (globalThis as any).window
     ? (globalThis as any).window.location.origin
-    : "se.wordse.app://auth-callback";
+    : "se.wordlune.app://auth-callback";
 
 // Same web/native split as AUTH_REDIRECT_URL, but pointed at the
 // ResetPasswordScreen route so a clicked reset-password email link lands
@@ -44,7 +44,7 @@ const AUTH_REDIRECT_URL =
 const RESET_PASSWORD_REDIRECT_URL =
   Platform.OS === "web" && (globalThis as any).window
     ? `${(globalThis as any).window.location.origin}/reset-password`
-    : "se.wordse.app://reset-password";
+    : "se.wordlune.app://reset-password";
 
 export type AuthState = "visitor" | "guest" | "registered";
 

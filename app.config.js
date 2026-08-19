@@ -1,16 +1,16 @@
 module.exports = {
   expo: {
-    name: 'Wordse',
-    slug: 'wordse',
+    name: 'Wordlune',
+    slug: 'wordlune',
     version: '0.0.1',
     orientation: 'portrait',
     userInterfaceStyle: 'automatic',
     icon: './assets/icon.png',
     ios: {
-      bundleIdentifier: 'se.wordse.app',
+      bundleIdentifier: 'se.wordlune.app',
     },
     android: {
-      package: 'se.wordse.app',
+      package: 'se.wordlune.app',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#4f46e5',

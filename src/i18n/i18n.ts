@@ -12,7 +12,7 @@ const resources = {
   fr: { translation: fr },
 };
 
-const LANG_STORAGE_KEY = "wordse:lang";
+const LANG_STORAGE_KEY = "wordlune:lang";
 
 i18n.use(initReactI18next).init({
   resources,

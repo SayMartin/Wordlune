@@ -12,7 +12,7 @@ export default function WebFooter() {
   return (
     <View style={[styles.footer, { borderTopColor: colors.border }]}>
       <Text style={[styles.text, { color: colors.textMuted }]}>
-        © {year} Wordse. {t("all_rights_reserved", { defaultValue: "All rights reserved." })}
+        © {year} Wordlune. {t("all_rights_reserved", { defaultValue: "All rights reserved." })}
       </Text>
     </View>
   );

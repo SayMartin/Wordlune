@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'se.wordse.app'
+    namespace 'se.wordlune.app'
     defaultConfig {
-        applicationId 'se.wordse.app'
+        applicationId 'se.wordlune.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

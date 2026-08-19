@@ -40,7 +40,7 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-const STORAGE_KEY = "wordse:theme";
+const STORAGE_KEY = "wordlune:theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Always initialize dark mode as fallback, matching the web app's

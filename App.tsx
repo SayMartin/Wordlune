@@ -1,5 +1,5 @@
 /**
- * Wordse (React Native) — ported from the Wordse web app.
+ * Wordlune (React Native) — ported from the original Wordse web app.
  *
  * @format
  */

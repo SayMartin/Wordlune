@@ -18,7 +18,7 @@ import Toggle from "./Toggle";
 import ProfileSettingsSection from "./ProfileSettingsSection";
 import ConfirmationOverlay from "./ConfirmationOverlay";
 
-const REDUCE_MOTION_KEY = "wordse:reduceMotion";
+const REDUCE_MOTION_KEY = "wordlune:reduceMotion";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 

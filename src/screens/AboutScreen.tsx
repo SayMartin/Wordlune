@@ -15,8 +15,8 @@ export default function AboutScreen() {
         <Text style={[styles.pageTitle, { color: colors.text }]}>{t("about", { defaultValue: "About" })}</Text>
         <Text style={[styles.intro, { color: colors.textMuted }]}>
           {t("about_description", {
-            app: "Wordse",
-            defaultValue: "Wordse is a word puzzle game designed to test your vocabulary and problem-solving skills.",
+            app: "Wordlune",
+            defaultValue: "Wordlune is a word puzzle game designed to test your vocabulary and problem-solving skills.",
           })}
         </Text>
       </View>

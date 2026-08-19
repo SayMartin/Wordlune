@@ -72,7 +72,7 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
         <View style={styles.side}>
           <Pressable style={styles.brand} onPress={() => goToTab("Home")}>
             <Logo size={32} />
-            <Text style={[styles.brandText, { color: colors.text }]}>Wordse</Text>
+            <Text style={[styles.brandText, { color: colors.text }]}>Wordlune</Text>
           </Pressable>
           <Pressable
             onPress={toggleLanguage}

@@ -23,7 +23,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/saymartin/wordse:latest
+          tags: ghcr.io/saymartin/wordlune:latest
           build-args: |
             EXPO_PUBLIC_SUPABASE_URL=${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
             EXPO_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
