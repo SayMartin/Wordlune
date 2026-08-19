@@ -34,16 +34,15 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
               styles.button,
               { borderColor: colors.border },
               isActive && { backgroundColor: colors.surface },
+              isDisabled && styles.disabledState,
             ]}
             onPress={() => m.available && onChange(m.key)}
             disabled={isDisabled}
             accessibilityLabel={label}
           >
-            <Text style={[styles.icon, { color: isDisabled ? colors.textMuted : colors.text }]}>{m.emoji}</Text>
+            <Text style={[styles.icon, { color: colors.text }]}>{m.emoji}</Text>
             {isActive ? (
-              <Text
-                style={{ color: isDisabled ? colors.textMuted : colors.text, fontWeight: "700", marginLeft: 6 }}
-              >
+              <Text style={{ color: colors.text, fontWeight: "700", marginLeft: 6 }}>
                 {label}
                 {!m.available ? " 🔒" : ""}
               </Text>
@@ -76,4 +75,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   icon: { fontSize: 20, lineHeight: 24 },
+  // Shared disabled recipe across the app: uniform opacity fade, no per-button
+  // custom disabled color.
+  disabledState: { opacity: 0.4 },
 });

@@ -114,14 +114,17 @@ export default function ControlDashboard({
     }
   }
 
+  // Icon-only main button: the glyph carries the meaning, the label below is
+  // kept only for accessibilityLabel (screen readers, not visible text).
+  const mainIcon = status === "playing" ? "⏸" : "▶";
   const mainLabel =
     status === "playing"
-      ? t("pause_game", { defaultValue: "Pause" })
+      ? t("pause_short", { defaultValue: "Pause" })
       : status === "paused"
-        ? t("resume_game", { defaultValue: "Resume" })
+        ? t("resume_short", { defaultValue: "Resume" })
         : status === "won" || status === "lost"
           ? t("play_again", { defaultValue: "Play Again" })
-          : startLabel || t("play_now", { defaultValue: "Start Game" });
+          : startLabel || t("start_short", { defaultValue: "Start" });
 
   const showMainButton = !((status === "won" || status === "lost") && hideRestart);
 
@@ -144,15 +147,18 @@ export default function ControlDashboard({
               style={[
                 styles.mainButton,
                 styles.noWebOutline,
-                disabled ? styles.disabledButton : styles.activeButton,
+                disabled
+                  ? [{ backgroundColor: colors.surface, borderColor: colors.border }, styles.disabledState]
+                  : styles.activeButton,
               ]}
               onPress={handleMainAction}
               disabled={disabled}
+              accessibilityLabel={mainLabel}
             >
               {poolLoading ? (
-                <ActivityIndicator color="#ffffff" />
+                <ActivityIndicator color={disabled ? colors.text : "#ffffff"} />
               ) : (
-                <Text style={styles.mainButtonText}>{mainLabel}</Text>
+                <Text style={[styles.mainButtonIcon, { color: disabled ? colors.text : "#ffffff" }]}>{mainIcon}</Text>
               )}
             </Pressable>
           )}
@@ -163,7 +169,7 @@ export default function ControlDashboard({
                 styles.resetButton,
                 styles.noWebOutline,
                 status === "idle" || disabled
-                  ? [{ borderColor: colors.border }, styles.disabledIcon]
+                  ? [{ borderColor: colors.border }, styles.disabledState]
                   : { borderColor: "#4f46e5" },
               ]}
               onPress={() => {
@@ -171,8 +177,11 @@ export default function ControlDashboard({
                 setInternalElapsed(0);
               }}
               disabled={status === "idle" || disabled}
+              accessibilityLabel={t("reset", { defaultValue: "Reset" })}
             >
-              <Text style={{ color: colors.text }}>↻</Text>
+              <Text style={[styles.resetButtonIcon, { color: status === "idle" || disabled ? colors.textMuted : "#4f46e5" }]}>
+                ↻
+              </Text>
             </Pressable>
           )}
 
@@ -218,12 +227,29 @@ const styles = StyleSheet.create({
   // Browser default focus outlines follow whichever button was last clicked,
   // not app state — suppressed so the border below is the only ring shown.
   noWebOutline: Platform.OS === "web" ? { outlineWidth: 0 } : {},
-  mainButton: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8, borderWidth: 2 },
+  mainButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   activeButton: { backgroundColor: "#4f46e5", borderColor: "#c7d2fe" },
-  disabledButton: { backgroundColor: "#94a3b8", borderColor: "transparent" },
-  mainButtonText: { color: "#ffffff", fontWeight: "700" },
-  resetButton: { borderWidth: 2, borderRadius: 8, paddingVertical: 10, paddingHorizontal: 12 },
-  disabledIcon: { opacity: 0.4 },
+  mainButtonIcon: { fontSize: 18 },
+  resetButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  resetButtonIcon: { fontSize: 20, fontWeight: "700" },
+  // Shared disabled recipe for every control on this bar: neutral fill/border
+  // (applied inline with theme colors) plus a uniform opacity fade — no
+  // control should invent its own disabled look.
+  disabledState: { opacity: 0.4 },
   timer: { fontWeight: "700", fontSize: 16, fontVariant: ["tabular-nums"] },
   suddenDeathTimer: { color: "#dc2626", fontSize: 20 },
   hint: { textAlign: "center", color: "#ef4444", fontWeight: "600", fontSize: 13 },

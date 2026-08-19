@@ -151,7 +151,7 @@ export default function CategorySelector({
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Pressable
-          style={[styles.expandButton, { borderColor: colors.border }, disabled && styles.disabled]}
+          style={[styles.expandButton, { borderColor: colors.border }, disabled && styles.disabledState]}
           onPress={() => !disabled && setCollapsed((c) => !c)}
           disabled={disabled}
         >
@@ -229,7 +229,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     flexShrink: 1,
   },
-  disabled: { opacity: 0.5 },
+  // Shared disabled recipe across the app: uniform opacity fade, no per-button
+  // custom disabled color.
+  disabledState: { opacity: 0.4 },
   list: { gap: 10 },
   categoryCard: { borderWidth: 1, borderRadius: 10, padding: 10, gap: 8 },
   categoryHeaderRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },

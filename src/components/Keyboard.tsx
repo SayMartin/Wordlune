@@ -71,7 +71,7 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
             styles.enterKey,
             highlightControlKeys
               ? { borderColor: colors.accent, backgroundColor: colors.accent }
-              : { borderColor: colors.border, backgroundColor: colors.surface, opacity: 0.5 },
+              : { borderColor: colors.border, backgroundColor: colors.surface, opacity: 0.4 },
           ]}
           onPress={onEnter}
         >
