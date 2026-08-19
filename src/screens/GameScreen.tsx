@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, type RouteProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -9,6 +9,7 @@ import useGame from "../hooks/useGame";
 import useDuelMode from "../hooks/useDuelMode";
 import useChallengeMode from "../hooks/useChallengeMode";
 import { saveGameScore } from "../supabase/players-repository";
+import { getExtensionsForWord } from "../supabase/words-repository";
 import { Match, claimVictory, abandonMatch } from "../supabase/matches-repository";
 import BoardGrid from "../components/BoardGrid";
 import Keyboard from "../components/Keyboard";
@@ -55,6 +56,7 @@ export default function GameScreen() {
   const [minLetters, setMinLetters] = useState(0);
   const [overrideFive, setOverrideFive] = useState(false);
   const [isPracticeHintEnabled, setIsPracticeHintEnabled] = useState(false);
+  const [practiceHintSubcategories, setPracticeHintSubcategories] = useState<{ id: string; name: string }[]>([]);
   const [localPoolCount, setLocalPoolCount] = useState<number | null>(null);
 
   // Result / feedback state declared up front — useChallengeMode below needs
@@ -257,6 +259,21 @@ export default function GameScreen() {
     setShowResultOverlay(status === "won" || status === "lost");
   }, [status]);
 
+  useEffect(() => {
+    if (gameMode !== "practice" || !isPracticeHintEnabled || !secret) {
+      setPracticeHintSubcategories([]);
+      return;
+    }
+    let cancelled = false;
+    const lang = (i18n.language || "en").split("-")[0];
+    getExtensionsForWord(secret.trim(), lang).then((data) => {
+      if (!cancelled) setPracticeHintSubcategories(data?.subcategories || []);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [gameMode, isPracticeHintEnabled, secret, i18n.language]);
+
   const isRowFull = status === "playing" && currentGuess.length === (secret?.length || effectiveMax);
 
   const clientFilteredCount = candidatePool
@@ -407,6 +424,17 @@ export default function GameScreen() {
     resetGame();
   };
 
+  const handlePracticeGiveUp = () => {
+    setCompetitiveConfirm({
+      title: t("confirm_give_up_practice_title", { defaultValue: "Give Up?" }),
+      message: t("confirm_give_up_practice_msg", { defaultValue: "The correct answer will be shown." }),
+      onConfirm: () => {
+        setCompetitiveConfirm(null);
+        giveUpWord();
+      },
+    });
+  };
+
   const handleChallengeGiveUp = () => {
     setCompetitiveConfirm({
       title: t("confirm_give_up_title", { defaultValue: "Give Up Challenge?" }),
@@ -427,12 +455,15 @@ export default function GameScreen() {
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={styles.container}>
         {showPoolSelectors ? (
-          <>
+          <View style={[styles.filterCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <CategorySelector
               onChange={handleSelectionChange}
               onCountChange={handleCountChange}
               disabled={status === "playing" || status === "paused"}
               headerContent={<GameModeToggle mode={gameMode} onChange={handleModeChange} disabled={status === "playing" || status === "paused"} />}
+              highlightedSubcategoryIds={
+                isPracticeHintEnabled ? practiceHintSubcategories.map((s) => s.id) : undefined
+              }
             />
 
             <LetterSlider
@@ -456,8 +487,9 @@ export default function GameScreen() {
               hintChecked={isPracticeHintEnabled}
               onHintChange={setIsPracticeHintEnabled}
               hintLabel={t("enable_hints", { defaultValue: "Enable Hints" })}
+              hintNames={isPracticeHintEnabled ? practiceHintSubcategories.map((s) => s.name) : []}
             />
-          </>
+          </View>
         ) : (
           <GameModeToggle mode={gameMode} onChange={handleModeChange} />
         )}
@@ -537,7 +569,21 @@ export default function GameScreen() {
               hideRestart={gameMode === "duel" || gameMode === "competitive"}
               startLabel={gameMode === "competitive" ? t("start_challenge", { defaultValue: "Start Challenge" }) : undefined}
               suddenDeathEndTime={gameMode === "duel" ? suddenDeathEndTime : undefined}
-            />
+            >
+              {gameMode === "practice" && (
+                <Pressable
+                  onPress={handlePracticeGiveUp}
+                  disabled={status !== "playing"}
+                  style={[styles.giveUpButton, status !== "playing" && styles.giveUpButtonDisabled]}
+                >
+                  <Text
+                    style={[styles.giveUpButtonText, status !== "playing" && styles.giveUpButtonTextDisabled]}
+                  >
+                    {t("give_up", { defaultValue: "Give Up" })}
+                  </Text>
+                </Pressable>
+              )}
+            </ControlDashboard>
 
             {gameMode === "duel" ? (
               <View style={styles.duelBoards}>
@@ -669,6 +715,10 @@ export default function GameScreen() {
 
 const styles = StyleSheet.create({
   container: { padding: 16, gap: 16, alignItems: "stretch" },
+  // Matches ControlDashboard's `bar` card recipe so the filter panel and the
+  // play controls read as the same family of surface instead of the filters
+  // floating without a background while everything below them is carded.
+  filterCard: { borderWidth: 1, borderRadius: 12, padding: 14, gap: 14 },
   banner: { padding: 10, borderRadius: 8 },
   duelBoards: { flexDirection: "row", justifyContent: "space-around", gap: 12 },
   challengeBanner: { borderWidth: 1, borderRadius: 10, padding: 12, gap: 6, alignItems: "center" },
@@ -684,4 +734,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
   },
+  giveUpButton: {
+    borderWidth: 1,
+    borderColor: "#dc2626",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  giveUpButtonText: { color: "#dc2626", fontWeight: "700", fontSize: 12 },
+  // Shared disabled recipe across the app: neutral border + uniform opacity
+  // fade, no per-button custom disabled color.
+  giveUpButtonDisabled: { borderColor: "#94a3b8", opacity: 0.4 },
+  giveUpButtonTextDisabled: { color: "#94a3b8" },
 });

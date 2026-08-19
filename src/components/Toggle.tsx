@@ -21,7 +21,7 @@ export default function Toggle({ checked, onChange, label, disabled = false }: T
         trackColor={{ true: "#2563eb", false: colors.border }}
       />
       {label && (
-        <Text style={[styles.label, { color: colors.text, opacity: disabled ? 0.5 : 1 }]}>
+        <Text style={[styles.label, { color: colors.text, opacity: disabled ? 0.4 : 1 }]}>
           {label}
         </Text>
       )}

@@ -153,12 +153,21 @@ export default function useGame(
   });
 
   // Hydrate persisted state from AsyncStorage on mount (skipped for duel /
-  // overrideSecret, which never use persisted state).
+  // overrideSecret, which never use persisted state). This races against
+  // useWordPool's own fetch below — both resolve asynchronously and both
+  // call setState, so whichever settles last wins. Without the length check,
+  // a persisted secret picked under an earlier (wider) letter-range filter
+  // could win that race and silently override a freshly-filtered secret,
+  // resuming a round the current Min/Max sliders would never have allowed.
   useEffect(() => {
     let cancelled = false;
     if (overrideSecret || gameModeProp === "duel") return;
     loadState().then((persisted) => {
-      if (!cancelled && persisted) setState(persisted);
+      if (cancelled || !persisted) return;
+      const len = persisted.secret.length;
+      const fitsMax = typeof maxLetters !== "number" || len <= maxLetters;
+      const fitsMin = typeof minLetters !== "number" || len > minLetters;
+      if (fitsMax && fitsMin) setState(persisted);
     });
     return () => {
       cancelled = true;

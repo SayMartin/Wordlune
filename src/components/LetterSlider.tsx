@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import Slider from "@react-native-community/slider";
 import { useTheme } from "../theme/ThemeProvider";
 import Toggle from "./Toggle";
@@ -22,6 +23,10 @@ interface Props {
   hintChecked?: boolean;
   onHintChange?: (checked: boolean) => void;
   hintLabel?: string;
+  // Subcategory names the current secret belongs to — shown as a compact
+  // line under the toggles instead of requiring CategorySelector to be
+  // expanded (there's no room for that there).
+  hintNames?: string[];
 }
 
 export default function LetterSlider({
@@ -42,7 +47,9 @@ export default function LetterSlider({
   hintChecked,
   onHintChange,
   hintLabel,
+  hintNames,
 }: Props) {
+  const { t } = useTranslation();
   const { colors } = useTheme();
 
   return (
@@ -96,6 +103,12 @@ export default function LetterSlider({
           />
         )}
       </View>
+
+      {hintChecked && !!hintNames?.length && (
+        <Text style={[styles.hint, { color: "#f59e0b" }]}>
+          💡 {t("hint_categories", { defaultValue: "Hint" })}: {hintNames.join(", ")}
+        </Text>
+      )}
     </View>
   );
 }
@@ -108,4 +121,5 @@ const styles = StyleSheet.create({
   sliderCaptionRight: { textAlign: "right" },
   slider: { flex: 1, height: 32 },
   toggles: { flexDirection: "row", gap: 20, marginTop: 4 },
+  hint: { fontSize: 13, fontWeight: "700", marginTop: 2 },
 });

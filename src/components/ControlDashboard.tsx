@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
@@ -60,6 +60,21 @@ export default function ControlDashboard({
   const [internalElapsed, setInternalElapsed] = useState(0);
   const [running, setRunning] = useState(false);
   const [suddenDeathRemaining, setSuddenDeathRemaining] = useState<number | null>(null);
+  const mainButtonRef = useRef<any>(null);
+  const resetButtonRef = useRef<any>(null);
+
+  // react-native-web's Pressable hijacks a physical Enter keypress whenever
+  // it still holds DOM focus (its own keydown handler stops propagation and
+  // fires onPress via a document keyup listener) — `focusable={false}` alone
+  // does NOT prevent this, since tabIndex=-1 elements can still be focused by
+  // a mouse click. Blurring right after a click/tap is the only reliable way
+  // to stop a later physical Enter (used to submit a guess) from re-hitting
+  // this button instead of GameScreen's own keydown handler.
+  function blurAfterPress(ref: React.RefObject<any>) {
+    if (Platform.OS === "web" && ref.current && typeof ref.current.blur === "function") {
+      ref.current.blur();
+    }
+  }
 
   const displayElapsed = elapsedTime !== undefined ? elapsedTime : internalElapsed;
 
@@ -101,6 +116,7 @@ export default function ControlDashboard({
   const isDuel = gameMode === "duel";
 
   function handleMainAction() {
+    blurAfterPress(mainButtonRef);
     if (disabled) return;
     if (status === "playing") onPause();
     else if (status === "paused") onResume();
@@ -151,9 +167,11 @@ export default function ControlDashboard({
                   ? [{ backgroundColor: colors.surface, borderColor: colors.border }, styles.disabledState]
                   : styles.activeButton,
               ]}
+              ref={mainButtonRef}
               onPress={handleMainAction}
               disabled={disabled}
               accessibilityLabel={mainLabel}
+              focusable={false}
             >
               {poolLoading ? (
                 <ActivityIndicator color={disabled ? colors.text : "#ffffff"} />
@@ -172,12 +190,15 @@ export default function ControlDashboard({
                   ? [{ borderColor: colors.border }, styles.disabledState]
                   : { borderColor: "#4f46e5" },
               ]}
+              ref={resetButtonRef}
               onPress={() => {
+                blurAfterPress(resetButtonRef);
                 onReset();
                 setInternalElapsed(0);
               }}
               disabled={status === "idle" || disabled}
               accessibilityLabel={t("reset", { defaultValue: "Reset" })}
+              focusable={false}
             >
               <Text style={[styles.resetButtonIcon, { color: status === "idle" || disabled ? colors.textMuted : "#4f46e5" }]}>
                 ↻
@@ -250,7 +271,7 @@ const styles = StyleSheet.create({
   // (applied inline with theme colors) plus a uniform opacity fade — no
   // control should invent its own disabled look.
   disabledState: { opacity: 0.4 },
-  timer: { fontWeight: "700", fontSize: 16, fontVariant: ["tabular-nums"] },
+  timer: { fontWeight: "700", fontSize: 20, fontVariant: ["tabular-nums"] },
   suddenDeathTimer: { color: "#dc2626", fontSize: 20 },
   hint: { textAlign: "center", color: "#ef4444", fontWeight: "600", fontSize: 13 },
   exitButton: {
