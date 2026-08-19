@@ -2,14 +2,14 @@
 
 Wordlune is a Wordle-style word-guessing game — guess the secret word letter by letter, with feedback on which letters are correct, present, or absent. Playable on iOS, Android, and in the browser.
 
-Live at **[wordlune.se](https://wordlune.se)**.
+Live at **[wordlune.appfinningar.se](https://wordlune.appfinningar.se)**.
 
 ## Tech stack
 
 - **Expo / React Native** — cross-platform app (iOS, Android), with [react-native-web](https://necolas.github.io/react-native-web/) powering the browser version from the same codebase. The web version is a full responsive desktop site (top nav bar, hamburger menu on narrow windows) rather than a mobile-only view, and supports typing guesses directly on your computer's keyboard.
 - **Supabase** — backend for authentication, word data, scores, and realtime multiplayer.
 - **React Navigation** — bottom tabs on iOS/Android, a top nav bar on web (Home, Game, Progress, Settings, About), plus full-screen auth/settings flows on both.
-- **i18n (i18next)** — English and Swedish translations.
+- **i18n (i18next)** — English, Swedish, and French translations.
 
 ## How to play
 
