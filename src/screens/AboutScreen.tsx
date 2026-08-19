@@ -1,7 +1,11 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
+
+// Built by concatenation rather than a literal string, so the address doesn't
+// appear verbatim in the page source for simple scrapers to harvest.
+const SUPPORT_EMAIL = ["support", "appfinningar.se"].join("@");
 
 // Ported from Wordse's src/pages/About.tsx — same three sections (intro,
 // game modes, account/access tiers), same i18n keys.
@@ -145,6 +149,19 @@ export default function AboutScreen() {
           </View>
         </View>
       </View>
+
+      <View style={styles.supportRow}>
+        <Text style={[styles.supportText, { color: colors.textMuted }]}>
+          {t("support_contact", { defaultValue: "Need help? Contact us at" })}{" "}
+        </Text>
+        <Text
+          accessibilityRole="link"
+          onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`)}
+          style={[styles.supportText, styles.supportLink, { color: colors.accent }]}
+        >
+          {SUPPORT_EMAIL}
+        </Text>
+      </View>
     </ScrollView>
   );
 }
@@ -186,4 +203,7 @@ const styles = StyleSheet.create({
   bulletList: { gap: 4 },
   bulletItem: { fontSize: 13, lineHeight: 19 },
   strikethrough: { textDecorationLine: "line-through", opacity: 0.6 },
+  supportRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center" },
+  supportText: { fontSize: 14 },
+  supportLink: { fontWeight: "700", textDecorationLine: "underline" },
 });
