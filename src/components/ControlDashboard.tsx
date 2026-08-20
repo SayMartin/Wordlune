@@ -38,6 +38,7 @@ export default function ControlDashboard({
   gameMode,
   status,
   secret,
+  poolCount,
   hasSelection = true,
   poolLoading = false,
   onReset,
@@ -112,7 +113,8 @@ export default function ControlDashboard({
     return `${mm}:${ss}`;
   }
 
-  const disabled = !hasSelection || poolLoading;
+  const noWordsFound = poolCount !== undefined && poolCount === 0 && !poolLoading;
+  const disabled = !hasSelection || poolLoading || noWordsFound;
   const isDuel = gameMode === "duel";
 
   function handleMainAction() {
@@ -230,6 +232,9 @@ export default function ControlDashboard({
 
       {!hasSelection && (
         <Text style={styles.hint}>{t("select_subcategories_to_enable", { defaultValue: "Select subcategories to enable game" })}</Text>
+      )}
+      {hasSelection && noWordsFound && (
+        <Text style={styles.hint}>{t("no_words_for_filter", { defaultValue: "No words match the current letter range — widen it to start" })}</Text>
       )}
     </View>
   );

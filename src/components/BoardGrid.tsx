@@ -36,7 +36,7 @@ export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6
   let tileSize = baseTileSize;
   if (Platform.OS === "web") {
     const gap = 4;
-    const availableWidth = Math.min(windowWidth, 896) - 32 /* GameScreen container padding */;
+    const availableWidth = Math.min(windowWidth, 896) - 16 /* GameScreen container padding */;
     const fitWidthTile = Math.floor((availableWidth - gap * (wordLen - 1)) / wordLen);
     // Rough budget for the board's own height, leaving room for the header/controls/keyboard/footer above and below it.
     const heightBudget = windowHeight * 0.32;

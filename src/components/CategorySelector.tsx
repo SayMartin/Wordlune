@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   // custom disabled color.
   disabledState: { opacity: 0.4 },
   list: { gap: 10 },
-  categoryCard: { borderWidth: 1, borderRadius: 10, padding: 10, gap: 8 },
+  categoryCard: { borderWidth: 1, borderRadius: 10, paddingVertical: 10, paddingHorizontal: 6, gap: 8 },
   categoryHeaderRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   categoryTitle: { fontWeight: "700", fontSize: 14 },
   subGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },

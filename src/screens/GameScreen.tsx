@@ -30,7 +30,8 @@ import type { AppParamList } from "../navigation/types";
 type Nav = NativeStackNavigationProp<AppParamList>;
 type Mode = "practice" | "competitive" | "duel";
 
-const DEFAULT_MAX_LETTERS = 12;
+const DEFAULT_MAX_LETTERS = 8;
+const ABSOLUTE_MAX_LETTERS = 12;
 
 // Which physically-typed characters count as letters, per language — mirrors
 // Keyboard.tsx's LAYOUTS lookup table pattern.
@@ -67,10 +68,9 @@ export default function GameScreen() {
   const [showResultOverlay, setShowResultOverlay] = useState(false);
   const [showChallengeSelector, setShowChallengeSelector] = useState(false);
 
-  const isDefaultMax = maxLetters === DEFAULT_MAX_LETTERS;
   const effectiveMax = gameMode === "duel" ? 5 : overrideFive ? 5 : maxLetters;
   const effectiveMin = gameMode === "duel" ? 4 : overrideFive ? 4 : minLetters;
-  const filterMax = overrideFive ? 5 : isDefaultMax ? undefined : maxLetters;
+  const filterMax = overrideFive ? 5 : maxLetters;
   const filterMin = overrideFive ? 4 : minLetters;
 
   const {
@@ -471,12 +471,12 @@ export default function GameScreen() {
               minValue={effectiveMin}
               onChange={(min, max) => {
                 setMinLetters(Math.max(0, min));
-                setMaxLetters(Math.min(18, max));
+                setMaxLetters(Math.min(ABSOLUTE_MAX_LETTERS, max));
               }}
               min={0}
-              max={19}
+              max={ABSOLUTE_MAX_LETTERS}
               step={1}
-              label={t("max_letters", { defaultValue: "Letters" })}
+              label={t("max_letters", { defaultValue: "ABC" })}
               count={poolCount}
               disabled={overrideFive || status === "playing" || status === "paused"}
               checkboxDisabled={status === "playing" || status === "paused"}
@@ -714,11 +714,11 @@ export default function GameScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, gap: 16, alignItems: "stretch" },
+  container: { paddingVertical: 16, paddingHorizontal: 8, gap: 16, alignItems: "stretch" },
   // Matches ControlDashboard's `bar` card recipe so the filter panel and the
   // play controls read as the same family of surface instead of the filters
   // floating without a background while everything below them is carded.
-  filterCard: { borderWidth: 1, borderRadius: 12, padding: 14, gap: 14 },
+  filterCard: { borderWidth: 1, borderRadius: 12, paddingVertical: 14, paddingHorizontal: 8, gap: 14 },
   banner: { padding: 10, borderRadius: 8 },
   duelBoards: { flexDirection: "row", justifyContent: "space-around", gap: 12 },
   challengeBanner: { borderWidth: 1, borderRadius: 10, padding: 12, gap: 6, alignItems: "center" },

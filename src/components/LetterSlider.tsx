@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import Slider from "@react-native-community/slider";
 import { useTheme } from "../theme/ThemeProvider";
 import Toggle from "./Toggle";
 
@@ -29,6 +28,30 @@ interface Props {
   hintNames?: string[];
 }
 
+function StepperButton({
+  glyph,
+  onPress,
+  disabled,
+}: {
+  glyph: string;
+  onPress: () => void;
+  disabled: boolean;
+}) {
+  const { colors } = useTheme();
+  return (
+    <Pressable
+      style={[styles.stepperButton, { borderColor: colors.border }, disabled && styles.disabledState]}
+      onPress={onPress}
+      disabled={disabled}
+      // Visual size stays compact so the row doesn't get tall, but the tap
+      // target still meets Material Design's 48dp minimum touch size.
+      hitSlop={8}
+    >
+      <Text style={{ color: colors.text, fontWeight: "700" }}>{glyph}</Text>
+    </Pressable>
+  );
+}
+
 export default function LetterSlider({
   value,
   minValue,
@@ -52,38 +75,31 @@ export default function LetterSlider({
   const { t } = useTranslation();
   const { colors } = useTheme();
 
+  const decMin = () => onChange(Math.max(min, minValue - step), value);
+  const incMin = () => onChange(Math.min(minValue + step, value - step), value);
+  const decMax = () => onChange(minValue, Math.max(value - step, minValue + step));
+  const incMax = () => onChange(minValue, Math.min(max, value + step));
+
   return (
     <View style={styles.container}>
-      <Text style={[styles.summary, { color: colors.text }]}>
-        {minValue} &lt; {label} ≤ {value}
-        {count !== undefined && count !== null ? `  (${count})` : ""}
-      </Text>
-
-      <View style={styles.sliderRow}>
-        <Text style={[styles.sliderCaption, { color: colors.textMuted }]}>Min</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={min}
-          maximumValue={max}
-          step={step}
-          value={minValue}
-          disabled={disabled}
-          minimumTrackTintColor="#2563eb"
-          maximumTrackTintColor={colors.border}
-          onValueChange={(v) => onChange(Math.min(v, value - 1), value)}
-        />
-        <Text style={[styles.sliderCaption, styles.sliderCaptionRight, { color: colors.textMuted }]}>Max</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={min}
-          maximumValue={max}
-          step={step}
-          value={value}
-          disabled={disabled}
-          minimumTrackTintColor="#2563eb"
-          maximumTrackTintColor={colors.border}
-          onValueChange={(v) => onChange(minValue, Math.max(v, minValue + 1))}
-        />
+      <View style={styles.summaryRow}>
+        <StepperButton glyph="−" onPress={decMin} disabled={disabled || minValue <= min} />
+        {/* minValue itself is the exclusive lower bound (word.length > minValue) used
+            for filtering, but "1 ≤" reads more naturally than "0 <" — so it's shown
+            here as the equivalent inclusive bound (minValue + 1). */}
+        <Text style={[styles.summary, { color: colors.text }]}>{minValue + 1}</Text>
+        <StepperButton glyph="+" onPress={incMin} disabled={disabled || minValue + step >= value} />
+        <Text style={[styles.summary, { color: colors.text }]}>
+          {" ≤ "}
+          {label}
+          {" ≤ "}
+        </Text>
+        <StepperButton glyph="−" onPress={decMax} disabled={disabled || value - step <= minValue} />
+        <Text style={[styles.summary, { color: colors.text }]}>{value}</Text>
+        <StepperButton glyph="+" onPress={incMax} disabled={disabled || value >= max} />
+        {count !== undefined && count !== null && (
+          <Text style={[styles.summary, { color: colors.text }]}>{`  (${count})`}</Text>
+        )}
       </View>
 
       <View style={styles.toggles}>
@@ -115,11 +131,20 @@ export default function LetterSlider({
 
 const styles = StyleSheet.create({
   container: { gap: 8 },
+  summaryRow: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", rowGap: 4 },
   summary: { fontSize: 14, fontWeight: "600" },
-  sliderRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  sliderCaption: { width: 26, fontSize: 12 },
-  sliderCaptionRight: { textAlign: "right" },
-  slider: { flex: 1, height: 32 },
+  stepperButton: {
+    width: 32,
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 6,
+    marginHorizontal: 8,
+  },
+  // Shared disabled recipe across the app: uniform opacity fade, no per-button
+  // custom disabled color.
+  disabledState: { opacity: 0.4 },
   toggles: { flexDirection: "row", gap: 20, marginTop: 4 },
   hint: { fontSize: 13, fontWeight: "700", marginTop: 2 },
 });
