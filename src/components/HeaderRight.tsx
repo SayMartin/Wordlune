@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
-import WavingHand from "./WavingHand";
+import AuthStatusIcon from "./AuthStatusIcon";
 import type { AppParamList } from "../navigation/types";
 
 // Rendered as headerRight both inside MainTabs (nested) and directly on
@@ -29,7 +29,7 @@ export default function HeaderRight() {
   return (
     <View style={styles.container}>
       <View style={styles.greetingRow}>
-        <WavingHand />
+        <AuthStatusIcon authState={authState} />
         <Text style={[styles.greeting, { color: colors.text }]} numberOfLines={1}>
           {greetingLabel}
         </Text>

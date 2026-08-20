@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { updatePlayerSettings } from "../supabase/players-repository";
 import { flagFor, nextLanguage } from "../utils/languageCycle";
 import Logo from "./Logo";
-import WavingHand from "./WavingHand";
+import AuthStatusIcon from "./AuthStatusIcon";
 
 const MAX_WIDTH = 896; // matches Wordse's `max-w-4xl` container
 const MOBILE_BREAKPOINT = 768; // matches Tailwind's `md` breakpoint
@@ -107,7 +107,7 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
 
         <View style={[styles.side, styles.sideEnd]}>
           <View style={styles.greetingRow}>
-            <WavingHand />
+            <AuthStatusIcon authState={authState} />
             <Text style={[styles.greeting, { color: colors.text }]} numberOfLines={1}>
               {greetingLabel}
             </Text>
