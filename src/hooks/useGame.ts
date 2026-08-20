@@ -251,17 +251,22 @@ export default function useGame(
       if (s.status !== "playing" && s.status !== "idle") return s;
 
       const nextStatus = s.status === "idle" ? "playing" : s.status;
+      // Typing directly (without pressing ▶ first) implicitly starts the round here,
+      // so startTime must be stamped on this transition too — otherwise it stays
+      // unset and the result overlay's elapsed-time display falls back to 0.
+      const startTime = s.status === "idle" ? Date.now() : s.startTime;
       const maxLen = Math.max(1, s.secret.length || 5);
 
       if (s.currentGuess.length >= maxLen) {
         // even if we are full, we might need to update status from idle -> playing?
         // usually unlikely to be full and idle simultaneously unless restored from weird state
-        if (s.status === "idle") return { ...s, status: "playing" };
+        if (s.status === "idle") return { ...s, status: "playing", startTime };
         return s;
       }
       return {
         ...s,
         status: nextStatus,
+        startTime,
         currentGuess: (s.currentGuess + letter).toUpperCase().slice(0, maxLen),
       };
     });
