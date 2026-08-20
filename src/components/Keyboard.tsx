@@ -19,8 +19,20 @@ const LAYOUTS: Record<string, string[]> = {
   sv: ["QWERTYUIOPÅ", "ASDFGHJKLÖÄ", "ZXCVBNM"],
   // Real AZERTY letter rows, plus a 4th row of the accented letters that
   // appear in the seeded French word content — matching is accent-sensitive
-  // (see useGame.ts), so players need a way to actually type them.
-  fr: ["AZERTYUIOP", "QSDFGHJKLM", "WXCVBN", "ÉÈÊÀÂÇÎÔÙÛ"],
+  // (see useGame.ts), so players need a way to actually type them. Ä/Ö/Å
+  // aren't native French letters, but word_fr deliberately reuses word_sv's
+  // native spelling for Swedish place-name categories (see CLAUDE.md) —
+  // tacked onto the end of the WXCVBN row rather than growing the already-
+  // full accent row further.
+  fr: ["AZERTYUIOP", "QSDFGHJKLM", "WXCVBNÄÖÅ", "ÉÈÊÀÂÇÎÔÙÛ"],
+};
+
+// French's last letter row is already a full 10-key accent row — space and
+// hyphen move down to the Enter row (left of Enter) for that language
+// instead of being squeezed onto the end of it. Other languages keep them on
+// the last letter row as usual.
+const SPACE_HYPHEN_ON_ENTER_ROW: Record<string, boolean> = {
+  fr: true,
 };
 
 const STATUS_COLORS: Record<LetterStatus, string> = {
@@ -33,7 +45,9 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const lang = language || i18n.language || "en";
-  const rows = LAYOUTS[lang.split("-")[0]] || LAYOUTS.en;
+  const langKey = lang.split("-")[0];
+  const rows = LAYOUTS[langKey] || LAYOUTS.en;
+  const spaceHyphenOnEnterRow = SPACE_HYPHEN_ON_ENTER_ROW[langKey] ?? false;
 
   const keyStyle = (ch: string) => {
     const st = state[ch];
@@ -50,7 +64,7 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
               <Text style={[styles.keyText, { color: keyTextColor(ch) }]}>{ch}</Text>
             </Pressable>
           ))}
-          {ridx === rows.length - 1 && (
+          {ridx === rows.length - 1 && !spaceHyphenOnEnterRow && (
             <>
               <Pressable style={[styles.key, keyStyle(" ")]} onPress={() => onKey(" ")}>
                 <Text style={[styles.keyText, { color: keyTextColor(" ") }]}>␣</Text>
@@ -58,14 +72,29 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
               <Pressable style={[styles.key, keyStyle("-")]} onPress={() => onKey("-")}>
                 <Text style={[styles.keyText, { color: keyTextColor("-") }]}>‑</Text>
               </Pressable>
-              <Pressable style={[styles.key, styles.deleteKey, { borderColor: colors.border }]} onPress={onDelete}>
-                <Text style={[styles.keyText, { color: colors.text }]}>⌫</Text>
-              </Pressable>
             </>
           )}
         </View>
       ))}
+      {/* Delete lives on the Enter row (right of Enter) for every language —
+          keeps it off the already-full last letter row and gives it a
+          consistent, predictable spot regardless of how many letter rows a
+          language has. Enter itself is a fixed 60% width and always
+          centered: the two side zones are equal-flex containers sharing the
+          remaining 40%, whether or not one of them is empty. */}
       <View style={styles.enterKeyRow}>
+        <View style={[styles.enterSide, styles.enterSideLeft]}>
+          {spaceHyphenOnEnterRow && (
+            <>
+              <Pressable style={[styles.sideKey, keyStyle(" ")]} onPress={() => onKey(" ")}>
+                <Text style={[styles.keyText, { color: keyTextColor(" ") }]}>␣</Text>
+              </Pressable>
+              <Pressable style={[styles.sideKey, keyStyle("-")]} onPress={() => onKey("-")}>
+                <Text style={[styles.keyText, { color: keyTextColor("-") }]}>‑</Text>
+              </Pressable>
+            </>
+          )}
+        </View>
         <Pressable
           style={[
             styles.enterKey,
@@ -84,6 +113,11 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
             {t("enter", { defaultValue: "Enter" })} ⏎
           </Text>
         </Pressable>
+        <View style={[styles.enterSide, styles.enterSideRight]}>
+          <Pressable style={[styles.sideKey, styles.deleteSideKey, { borderColor: colors.border }]} onPress={onDelete}>
+            <Text style={[styles.keyText, { color: colors.text }]}>⌫</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -100,15 +134,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  deleteKey: { flex: 1.5 },
   keyText: { fontWeight: "600", fontSize: 14 },
-  enterKeyRow: { alignItems: "center", marginTop: 4 },
+  enterKeyRow: { flexDirection: "row", alignItems: "center", marginTop: 4 },
   enterKey: {
     height: 44,
-    width: "80%",
+    width: "50%",
     borderRadius: 6,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },
+  // Equal-flex zones on either side of Enter — always the same width as
+  // each other (sharing the 50% Enter doesn't take), whether or not one of
+  // them is empty, so Enter's fixed 50% stays centered on the row. Their
+  // buttons (sideKey) are flex:1 too, so they split whatever width the zone
+  // has evenly between however many of them are present.
+  enterSide: { flex: 1, flexDirection: "row", alignItems: "center", gap: 6 },
+  enterSideLeft: { paddingRight: 6 },
+  enterSideRight: { paddingLeft: 6 },
+  sideKey: {
+    flex: 1,
+    height: 44,
+    borderRadius: 6,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  // Slightly wider than its siblings (same ratio as the old last-row delete
+  // key) — same flex-based sizing, just a bigger share.
+  deleteSideKey: { flex: 1.4 },
 });

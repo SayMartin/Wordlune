@@ -8,6 +8,7 @@ import ProgressScreen from "../screens/ProgressScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import AboutScreen from "../screens/AboutScreen";
 import HeaderRight from "../components/HeaderRight";
+import HeaderLeft from "../components/HeaderLeft";
 import SessionGate from "../components/SessionGate";
 import WebTopNav from "../components/WebTopNav";
 import WebFooter from "../components/WebFooter";
@@ -76,6 +77,11 @@ function TabNavigator() {
       screenOptions={({ route }) => ({
         headerShown: !isWeb,
         tabBarPosition: isWeb ? "top" : "bottom",
+        // No title text in the native header — just the logo+flag (headerLeft)
+        // and greeting+logout (headerRight) clusters, mirroring how the web
+        // top nav doesn't show a "current page" label either.
+        headerTitle: () => null,
+        headerLeft: () => <HeaderLeft />,
         headerRight: () => <HeaderRight />,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textMuted,

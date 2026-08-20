@@ -5,8 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
-import { updatePlayerSettings } from "../supabase/players-repository";
-import { flagFor, nextLanguage } from "../utils/languageCycle";
 import WavingHand from "./WavingHand";
 import type { AppParamList } from "../navigation/types";
 
@@ -16,19 +14,10 @@ import type { AppParamList } from "../navigation/types";
 type Nav = NativeStackNavigationProp<AppParamList>;
 
 export default function HeaderRight() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation<Nav>();
   const { authState, profile } = useAuth();
-  const lang = i18n.language || "en";
-
-  const toggleLanguage = async () => {
-    const nextLang = nextLanguage(lang);
-    await i18n.changeLanguage(nextLang);
-    if (authState === "registered" && profile?.id) {
-      await updatePlayerSettings(profile.id, { language: nextLang });
-    }
-  };
 
   const greetingLabel =
     authState === "registered"
@@ -45,14 +34,6 @@ export default function HeaderRight() {
           {greetingLabel}
         </Text>
       </View>
-
-      <Pressable
-        onPress={toggleLanguage}
-        accessibilityLabel={t("toggle_language", { defaultValue: "Switch Language" })}
-        hitSlop={8}
-      >
-        <Text style={styles.flag}>{flagFor(lang)}</Text>
-      </Pressable>
 
       {authState === "registered" || authState === "guest" ? (
         <Pressable onPress={() => navigation.navigate("Signout")} hitSlop={8}>
@@ -75,6 +56,5 @@ const styles = StyleSheet.create({
   container: { flexDirection: "row", alignItems: "center", gap: 14, paddingRight: 16 },
   greetingRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   greeting: { fontWeight: "600", fontSize: 13, maxWidth: 100 },
-  flag: { fontSize: 20 },
   actionText: { fontWeight: "700", fontSize: 13 },
 });

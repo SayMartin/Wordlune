@@ -38,7 +38,10 @@ const ABSOLUTE_MAX_LETTERS = 12;
 const LETTER_PATTERNS: Record<string, RegExp> = {
   en: /[A-Za-z]/,
   sv: /[A-Za-zÅÄÖåäö]/,
-  fr: /[A-Za-zÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒàâäçéèêëîïôöùûüÿæœ]/,
+  // Å isn't a native French letter, but word_fr deliberately reuses word_sv's
+  // native spelling for Swedish place-name categories (see CLAUDE.md), so it
+  // has to be typeable here too.
+  fr: /[A-Za-zÀÂÄÅÇÉÈÊËÎÏÔÖÙÛÜŸÆŒàâäåçéèêëîïôöùûüÿæœ]/,
 };
 
 export default function GameScreen() {
