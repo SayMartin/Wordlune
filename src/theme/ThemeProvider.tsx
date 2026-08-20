@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { THEME_KEY as STORAGE_KEY } from "../utils/localStorageKeys";
 
 type Theme = "light" | "dark";
 
@@ -39,8 +40,6 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
-
-const STORAGE_KEY = "wordlune:theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Always initialize dark mode as fallback, matching the web app's

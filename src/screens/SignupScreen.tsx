@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import Avatar, { localAvatarUrl } from "../components/Avatar";
 import { useAuth } from "../context/AuthContext";
 import {
   MAX_DISPLAY_NAME_LENGTH,
@@ -21,6 +21,7 @@ import {
 } from "../supabase/players-repository";
 import { PasswordInput } from "../components/PasswordInput";
 import { translateAuthError } from "../utils/authErrors";
+import { MINIMUM_AGE } from "../constants/privacy";
 import type { RootStackParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -47,9 +48,12 @@ export default function SignupScreen() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+
   const avatarUrl = useMemo(() => {
     const seed = useRandomAvatar ? avatarSeed : displayName || "guest";
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}`;
+    return localAvatarUrl(seed);
   }, [useRandomAvatar, avatarSeed, displayName]);
 
   const randomizeAvatar = () => {
@@ -113,6 +117,24 @@ export default function SignupScreen() {
     }
     if (password !== confirmPassword) {
       setError(t("passwords_do_not_match", { defaultValue: "Passwords do not match" }));
+      return;
+    }
+
+    if (!privacyAccepted) {
+      setError(
+        t("privacy_policy_accept_required", {
+          defaultValue: "Please confirm you have read the Privacy Policy",
+        }),
+      );
+      return;
+    }
+    if (!ageConfirmed) {
+      setError(
+        t("privacy_policy_age_required", {
+          age: MINIMUM_AGE,
+          defaultValue: "You must be at least {{age}} to create an account",
+        }),
+      );
       return;
     }
 
@@ -183,7 +205,7 @@ export default function SignupScreen() {
       </View>
 
       <View style={styles.avatarSection}>
-        <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+        <Avatar uri={avatarUrl} fallbackSeed={displayName} size={96} />
         <Pressable onPress={randomizeAvatar}>
           <Text style={styles.link}>{t("randomize_avatar", { defaultValue: "Randomize" })}</Text>
         </Pressable>
@@ -264,6 +286,40 @@ export default function SignupScreen() {
         />
       </View>
 
+      {/* Both start unticked — a pre-ticked box is not a valid acknowledgement,
+          and reads as sharp practice even where consent isn't the legal basis.
+          Note these are acknowledgements, not consent: the basis for the
+          account itself is contract (Art. 6(1)(b)), so asking permission to
+          process would misrepresent what's happening. */}
+      <View style={styles.consentGroup}>
+        <Checkbox
+          checked={privacyAccepted}
+          onToggle={() => setPrivacyAccepted((v) => !v)}
+          colors={colors}
+          label={t("privacy_policy_accept_label", {
+            defaultValue: "I have read and accept the Privacy Policy",
+          })}
+        />
+        <Checkbox
+          checked={ageConfirmed}
+          onToggle={() => setAgeConfirmed((v) => !v)}
+          colors={colors}
+          label={t("privacy_policy_age_label", {
+            age: MINIMUM_AGE,
+            defaultValue: "I am {{age}} years old or older",
+          })}
+        />
+        {/* Separate line rather than a link nested inside the checkbox label:
+            a tappable Text inside a Pressable makes it ambiguous whether a tap
+            opens the policy or toggles the box, and word order varies enough
+            across en/sv/fr that an inline link is awkward to translate. */}
+        <Pressable onPress={() => navigation.navigate("PrivacyPolicy")}>
+          <Text style={[styles.link, styles.consentLink]}>
+            {t("privacy_policy_read_link", { defaultValue: "Read the Privacy Policy" })}
+          </Text>
+        </Pressable>
+      </View>
+
       {error && <Text style={styles.error}>{error}</Text>}
 
       <Pressable
@@ -281,8 +337,58 @@ export default function SignupScreen() {
   );
 }
 
+function Checkbox({
+  checked,
+  onToggle,
+  label,
+  colors,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  label: string;
+  colors: { text: string; border: string; accent: string };
+}) {
+  return (
+    <Pressable
+      style={styles.checkRow}
+      onPress={onToggle}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+      accessibilityLabel={label}
+      // 48dp minimum touch target without inflating the row, same approach as
+      // LetterSlider's stepper buttons.
+      hitSlop={6}
+    >
+      <View
+        style={[
+          styles.checkbox,
+          { borderColor: checked ? colors.accent : colors.border },
+          checked && { backgroundColor: colors.accent },
+        ]}
+      >
+        {checked && <Text style={styles.checkMark}>✓</Text>}
+      </View>
+      <Text style={[styles.checkLabel, { color: colors.text }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   container: { padding: 24, paddingTop: 64, gap: 16, maxWidth: 420, width: "100%", alignSelf: "center" },
+  consentGroup: { gap: 12 },
+  checkRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 5,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 1,
+  },
+  checkMark: { color: "#ffffff", fontSize: 14, fontWeight: "900", lineHeight: 18 },
+  checkLabel: { flex: 1, fontSize: 14, lineHeight: 20 },
+  consentLink: { fontSize: 14, marginLeft: 32 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   title: { fontSize: 22, fontWeight: "700" },
   successTitle: { color: "#16a34a" },

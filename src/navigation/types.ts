@@ -14,6 +14,8 @@ export type RootStackParamList = {
   Login: undefined;
   Signout: undefined;
   ResetPassword: undefined;
+  PrivacyPolicy: undefined;
+  DeleteAccount: undefined;
   NotFound: undefined;
 };
 

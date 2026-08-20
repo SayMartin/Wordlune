@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import { localAvatarUrl } from "./Avatar";
 import { useAuth } from "../context/AuthContext";
 import { suggestUniqueDisplayName } from "../supabase/players-repository";
 import WavingHand from "./WavingHand";
@@ -37,7 +38,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
       // creation trigger 500s. Generate a guest name first, matching
       // LoginScreen's handleGuestLogin.
       const guestName = await suggestUniqueDisplayName("Guest");
-      const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(guestName)}`;
+      const avatarUrl = localAvatarUrl(guestName);
       await loginAnonymously(guestName, avatarUrl);
       setSigningIn(false);
       // authState flips to "guest" once loginAnonymously resolves, re-rendering into children.
@@ -74,6 +75,25 @@ export default function SessionGate({ children }: { children: React.ReactNode })
                 </Text>
               )}
             </Pressable>
+
+            {/* "Play as Guest" creates a real auth.users row, so it is real
+                processing and needs notice. No checkbox here on purpose —
+                the basis is contract, and adding friction to the low-commitment
+                path would be disproportionate to what a guest account holds. */}
+            <View style={styles.guestNoticeRow}>
+              <Text style={[styles.guestNotice, { color: colors.textMuted }]}>
+                {t("privacy_policy_guest_notice", {
+                  defaultValue: "By continuing you accept our",
+                })}{" "}
+              </Text>
+              <Text
+                accessibilityRole="link"
+                onPress={() => navigation.navigate("PrivacyPolicy")}
+                style={[styles.guestNotice, styles.guestNoticeLink, { color: colors.accent }]}
+              >
+                {t("privacy_policy", { defaultValue: "Privacy Policy" })}
+              </Text>
+            </View>
 
             <View style={styles.dividerRow}>
               <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
@@ -140,5 +160,8 @@ const styles = StyleSheet.create({
   dividerLine: { flex: 1, height: 1 },
   dividerText: { fontSize: 13 },
   linkMuted: { fontSize: 13, textAlign: "center", textDecorationLine: "underline", marginTop: 4 },
+  guestNoticeRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center" },
+  guestNotice: { fontSize: 12, lineHeight: 17 },
+  guestNoticeLink: { fontWeight: "700", textDecorationLine: "underline" },
   linkAccent: { fontSize: 12, textAlign: "center", marginTop: 2 },
 });

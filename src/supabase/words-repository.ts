@@ -349,66 +349,6 @@ export async function listWordsSubcategories(subcatIds: string[]) {
   }
 }
 
-// --- board realtime helpers ---
-export async function getRecentBoardEvents(boardId: string, limit = 50) {
-  try {
-    const { data, error } = await supabase
-      .from("board_events")
-      .select("*")
-      .eq("board_id", boardId)
-      .order("created_at", { ascending: false })
-      .limit(limit);
-    if (error) throw error;
-    return data ?? [];
-  } catch (err) {
-    console.error("getRecentBoardEvents error", err);
-    return [];
-  }
-}
-
-export async function getBoardState(boardId: string) {
-  try {
-    const { data, error } = await supabase
-      .from("board_state")
-      .select("*")
-      .eq("board_id", boardId)
-      .single();
-    if (error) throw error;
-    return data ?? null;
-  } catch (err) {
-    console.error("getBoardState error", err);
-    return null;
-  }
-}
-
-export function createBoardChannel(boardId: string) {
-  const topic = `board:${boardId}:events`;
-  return supabase.channel(topic, { config: { private: true } });
-}
-
-export async function addBoardEvent(
-  boardId: string,
-  eventType: string,
-  payload: any = {},
-) {
-  try {
-    const { data: userData } = await supabase.auth.getUser();
-    const user = userData?.user ?? null;
-    const insert = {
-      board_id: boardId,
-      user_id: user?.id ?? null,
-      event_type: eventType,
-      payload,
-    } as any;
-    const { data, error } = await supabase.from("board_events").insert(insert);
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error("addBoardEvent error", err);
-    return null;
-  }
-}
-
 /**
  * Specifically for Duel Mode:
  * Finds the "Hydrocarbons" subcategory, fetches all linked words,

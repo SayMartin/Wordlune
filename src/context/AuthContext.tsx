@@ -6,12 +6,14 @@ import {
   useEffect,
 } from "react";
 import { Platform } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../supabaseClient";
+import { clearStoredKeys } from "../utils/localStorageKeys";
+import { PRIVACY_POLICY_VERSION } from "../constants/privacy";
 import {
   getPlayerProfile,
   ensurePlayerProfile,
   deleteOwnAccount,
+  updatePlayerProfileMetadata,
   PlayerProfile,
 } from "../supabase/players-repository";
 
@@ -46,6 +48,18 @@ const RESET_PASSWORD_REDIRECT_URL =
     ? `${(globalThis as any).window.location.origin}/reset-password`
     : "se.wordlune.app://reset-password";
 
+// Stamped into player_profiles.metadata.privacy_policy so it's possible to
+// tell which version of the policy a given account was shown. A policy update
+// requires notifying users, not re-obtaining consent — the legal basis for the
+// account itself is contract, not consent — but knowing what they accepted is
+// part of being able to demonstrate compliance (Art. 5(2)).
+function privacyAcceptanceStamp() {
+  return {
+    version: PRIVACY_POLICY_VERSION,
+    accepted_at: new Date().toISOString(),
+  };
+}
+
 export type AuthState = "visitor" | "guest" | "registered";
 
 interface AuthContextType {
@@ -62,6 +76,8 @@ interface AuthContextType {
     displayName?: string,
     avatarUrl?: string,
   ) => Promise<{ success: boolean; error?: string; errorCode?: string; checkEmail?: boolean }>;
+  /** Records that this account accepted PRIVACY_POLICY_VERSION. */
+  recordPrivacyAcceptance: () => Promise<void>;
   login: (
     email: string,
     password: string,
@@ -111,8 +127,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     displayName?: string,
     avatarUrl?: string,
   ) => {
+    // `metadata` rides along into player_profiles.metadata via the
+    // on_auth_user_created trigger, which already does
+    // `coalesce(new.raw_user_meta_data->'metadata', '{}')` — so recording the
+    // accepted policy version needs no schema change.
     const options = {
-      data: { full_name: displayName, avatar_url: avatarUrl },
+      data: {
+        full_name: displayName,
+        avatar_url: avatarUrl,
+        metadata: { privacy_policy: privacyAcceptanceStamp() },
+      },
       emailRedirectTo: AUTH_REDIRECT_URL,
     };
     const { data: signUpData, error } = await supabase.auth.signUp({
@@ -167,8 +191,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loginAnonymously = async (displayName?: string, avatarUrl?: string) => {
     try {
+      // Guests get the same stamp: "Play as Guest" creates a real auth.users
+      // row, so it is real processing and the notice shown next to the button
+      // is the point at which they were informed.
       const options = {
-        data: { full_name: displayName, avatar_url: avatarUrl },
+        data: {
+          full_name: displayName,
+          avatar_url: avatarUrl,
+          metadata: { privacy_policy: privacyAcceptanceStamp() },
+        },
       };
       const { data, error } = await supabase.auth.signInAnonymously({
         options,
@@ -222,6 +253,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // For accounts created before the policy existed, or before a version bump.
+  // Merges into metadata rather than overwriting it, same read-modify-write
+  // shape as updatePlayerSettings().
+  const recordPrivacyAcceptance = async () => {
+    const userId = session?.user?.id;
+    if (!userId) return;
+    try {
+      await updatePlayerProfileMetadata(userId, {
+        privacy_policy: privacyAcceptanceStamp(),
+      });
+      await refreshProfile();
+    } catch (e) {
+      console.error("recordPrivacyAcceptance error", e);
+    }
+  };
+
   const logout = async () => {
     try {
       // Create a timeout promise that resolves after 1000ms
@@ -250,19 +297,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setProfile(null);
       setIsAuthenticated(false);
 
-      // Force clear Supabase's persisted session if possible
-      try {
-        // Supabase uses keys like sb-<projectRef>-auth-token
-        const allKeys = await AsyncStorage.getAllKeys();
-        const authKeys = allKeys.filter(
-          (key) => key.startsWith("sb-") && key.endsWith("-auth-token"),
-        );
-        if (authKeys.length > 0) {
-          await AsyncStorage.removeMany(authKeys);
-        }
-      } catch (e) {
-        // ignore
-      }
+      // Force clear Supabase's persisted session, plus the in-progress round
+      // (it holds the secret word). Theme/language/reduce-motion are device
+      // preferences and deliberately survive — see localStorageKeys.ts.
+      await clearStoredKeys({ devicePreferences: false });
     }
   };
 
@@ -287,17 +325,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setProfile(null);
       setIsAuthenticated(false);
 
-      try {
-        const allKeys = await AsyncStorage.getAllKeys();
-        const authKeys = allKeys.filter(
-          (key) => key.startsWith("sb-") && key.endsWith("-auth-token"),
-        );
-        if (authKeys.length > 0) {
-          await AsyncStorage.removeMany(authKeys);
-        }
-      } catch (e) {
-        // ignore
-      }
+      // Unlike logout(), this also clears the device preferences — the account
+      // is gone, so nothing belonging to it should be left on the device.
+      await clearStoredKeys({ devicePreferences: true });
     }
 
     return result;
@@ -379,6 +409,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         profileLoading,
         refreshProfile,
         signUpNewUser,
+        recordPrivacyAcceptance,
         login,
         loginAnonymously,
         requestPasswordReset,

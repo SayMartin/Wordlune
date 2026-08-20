@@ -1,5 +1,6 @@
 import { supabase } from "../supabaseClient";
 import { wordColumn } from "./langColumns";
+import { localAvatarUrl } from "../components/Avatar";
 
 export const MAX_DISPLAY_NAME_LENGTH = 15;
 
@@ -61,17 +62,20 @@ export async function isDisplayNameTaken(name: string): Promise<boolean> {
   // Generally checks "is this specific non-empty string taken?"
   if (!name) return false;
 
-  const { count, error } = await supabase
-    .from("player_profiles")
-    .select("id", { count: "exact", head: true })
-    .eq("display_name", name);
+  // Goes through the display_name_available() RPC rather than reading
+  // player_profiles directly: the base table is locked to own-row-only
+  // (20260822_gdpr_rls_lockdown.sql), so a direct query would always report
+  // "free" regardless of the truth. See 20260821_gdpr_privacy_helpers.sql.
+  const { data, error } = await supabase.rpc("display_name_available", {
+    p_name: name,
+  });
 
   if (error) {
     console.error("Error checking display name availability:", error);
     // Fail safe: assume taken if error to prevent collision, or throw.
     return true;
   }
-  return (count || 0) > 0;
+  return data === false;
 }
 
 /**
@@ -86,51 +90,23 @@ export async function suggestUniqueDisplayName(
     baseName = baseName.slice(0, MAX_DISPLAY_NAME_LENGTH);
   }
 
-  // 1. Check if the base name itself is free
-  const taken = await isDisplayNameTaken(baseName);
-  if (!taken) return baseName;
+  // The suffix search runs server-side (suggest_display_name(), see
+  // 20260821_gdpr_privacy_helpers.sql). It used to be a client-side
+  // `ilike '<prefix>%'` over player_profiles, which handed every matching
+  // display name in the table to the caller just to pick a free number.
+  const { data, error } = await supabase.rpc("suggest_display_name", {
+    p_base: baseName,
+  });
 
-  // 2. Fetch all names that start with the prefix of baseName
-  // We use a prefix shorter than baseName to ensure we catch candidates
-  // even if we have to shorten baseName to fit a suffix.
-  // We leave room for at least 3 chars of suffix in the search, just in case.
-  const safePrefixLen = Math.max(
-    1,
-    Math.min(baseName.length, MAX_DISPLAY_NAME_LENGTH - 3),
-  );
-  const searchPrefix = baseName.slice(0, safePrefixLen);
-
-  const { data, error } = await supabase
-    .from("player_profiles")
-    .select("display_name")
-    .ilike("display_name", `${searchPrefix}%`);
-
-  if (error) {
-    console.error("Error fetching similar names:", error);
+  if (error || typeof data !== "string") {
+    console.error("Error suggesting a display name:", error);
     // Fallback: strict truncation and random number
     const suffix = Math.floor(Math.random() * 999).toString();
     const maxBase = MAX_DISPLAY_NAME_LENGTH - suffix.length;
     return `${baseName.slice(0, maxBase)}${suffix}`;
   }
 
-  const existingNames = new Set(
-    data?.map((d: any) => d.display_name?.toLowerCase()),
-  );
-
-  // 3. Find the first available suffix
-  let counter = 1;
-  while (true) {
-    const suffix = counter.toString();
-    const allowedBaseLen = MAX_DISPLAY_NAME_LENGTH - suffix.length;
-    // Truncate base if needed to fit suffix
-    const effectiveBase = baseName.slice(0, allowedBaseLen);
-    const candidate = `${effectiveBase}${suffix}`;
-
-    if (!existingNames.has(candidate.toLowerCase())) {
-      return candidate;
-    }
-    counter++;
-  }
+  return data;
 }
 
 /**
@@ -183,7 +159,7 @@ export async function ensurePlayerProfile(
   const displayName = opts?.displayName || (await suggestUniqueDisplayName("Guest"));
   const avatarUrl =
     opts?.avatarUrl ||
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`;
+    localAvatarUrl(displayName);
 
   const { data, error } = await supabase
     .from("player_profiles")
@@ -292,6 +268,94 @@ export async function updatePlayerSettings(
   return {
     player_id: playerId,
     ...(data.metadata?.settings || {}),
+  };
+}
+
+/**
+ * Merge top-level keys into player_profiles.metadata, leaving everything else
+ * (including `settings` and `level`) untouched.
+ *
+ * Same read-modify-write shape as updatePlayerSettings above, one level up:
+ * that one merges into metadata.settings, this one merges into metadata
+ * itself. Used for the privacy-policy acceptance stamp.
+ */
+export async function updatePlayerProfileMetadata(
+  playerId: string,
+  metadataUpdates: Record<string, any>,
+): Promise<boolean> {
+  const profile = await getPlayerProfile(playerId);
+  if (!profile) return false;
+
+  const { error } = await supabase
+    .from("player_profiles")
+    .update({
+      metadata: { ...profile.metadata, ...metadataUpdates },
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", playerId);
+
+  if (error) {
+    console.error("Error updating player profile metadata:", error);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Everything this app holds about the calling player, as one plain object —
+ * the GDPR Art. 15 (access) and Art. 20 (portability) request, self-served.
+ *
+ * All six queries work under the own-row RLS policies from
+ * 20260822_gdpr_rls_lockdown.sql; none of them can return another player's
+ * rows even if the filters were wrong. `duel_matches` is the one exception to
+ * "filter by player_id" — a duel belongs to two people, so it matches on
+ * either side, and the opponent's id is part of what happened to you.
+ *
+ * Device-side data (the wordlune:* AsyncStorage keys) is added by the caller,
+ * since a repository has no business reading local storage.
+ */
+export async function exportMyData(): Promise<Record<string, any> | null> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const id = user.id;
+
+  const [profile, scores, attempts, results, duels] = await Promise.all([
+    supabase.from("player_profiles").select("*").eq("id", id).maybeSingle(),
+    supabase.from("game_scores").select("*").eq("player_id", id),
+    supabase.from("challenge_attempts").select("*").eq("player_id", id),
+    supabase
+      .from("challenge_results")
+      .select("*, competitive_challenges(name)")
+      .eq("player_id", id),
+    supabase
+      .from("duel_matches")
+      .select("*")
+      .or(`player1_id.eq.${id},player2_id.eq.${id}`),
+  ]);
+
+  return {
+    format_version: 1,
+    exported_at: new Date().toISOString(),
+    app: "Wordlune",
+    // Only the auth.users fields a client may legitimately read about itself.
+    // Never the password hash — it isn't exposed to the client at all, and
+    // wouldn't be useful or safe to hand over if it were.
+    account: {
+      id: user.id,
+      email: user.email ?? null,
+      is_anonymous: user.is_anonymous ?? false,
+      created_at: user.created_at ?? null,
+      last_sign_in_at: user.last_sign_in_at ?? null,
+      user_metadata: user.user_metadata ?? {},
+    },
+    profile: profile.data ?? null,
+    game_scores: scores.data ?? [],
+    challenge_attempts: attempts.data ?? [],
+    challenge_results: results.data ?? [],
+    duel_matches: duels.data ?? [],
   };
 }
 

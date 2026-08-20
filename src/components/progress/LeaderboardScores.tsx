@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { getGlobalLeaderboard, LeaderboardEntry } from "../../supabase/players-repository";
 import { useTheme } from "../../theme/ThemeProvider";
+import Avatar from "../Avatar";
 
 export default function LeaderboardScores() {
   const { t } = useTranslation();
@@ -40,10 +41,7 @@ export default function LeaderboardScores() {
         scores.map((entry, index) => (
           <View key={`${entry.player_id}-${index}`} style={[styles.row, { borderColor: colors.border }]}>
             <Text style={[styles.rank, { color: colors.textMuted }]}>{index + 1}</Text>
-            <Image
-              source={{ uri: entry.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${entry.display_name}` }}
-              style={styles.avatar}
-            />
+            <Avatar uri={entry.avatar_url} fallbackSeed={entry.display_name} size={32} />
             <View style={styles.rowMain}>
               <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
                 {entry.display_name}

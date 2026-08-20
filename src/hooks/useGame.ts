@@ -3,10 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { normalizeForCompare } from "../utils/wordUtils";
 import { useTranslation } from "react-i18next";
 import useWordPool from "./useWordPool";
+import { GAME_STATE_KEY as STORAGE_KEY } from "../utils/localStorageKeys";
 
 type LetterStatus = "absent" | "present" | "correct";
-
-const STORAGE_KEY = "wordlune:game:v1";
 
 interface PersistedState {
   secret: string;

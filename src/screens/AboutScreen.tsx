@@ -1,17 +1,20 @@
 import React from "react";
 import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import type { AppParamList } from "../navigation/types";
+import { SUPPORT_EMAIL } from "../constants/privacy";
 
-// Built by concatenation rather than a literal string, so the address doesn't
-// appear verbatim in the page source for simple scrapers to harvest.
-const SUPPORT_EMAIL = ["support", "appfinningar.se"].join("@");
+type Nav = NativeStackNavigationProp<AppParamList>;
 
 // Ported from Wordse's src/pages/About.tsx — same three sections (intro,
 // game modes, account/access tiers), same i18n keys.
 export default function AboutScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const navigation = useNavigation<Nav>();
 
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
@@ -162,6 +165,14 @@ export default function AboutScreen() {
           {SUPPORT_EMAIL}
         </Text>
       </View>
+
+      <Text
+        accessibilityRole="link"
+        onPress={() => navigation.navigate("PrivacyPolicy")}
+        style={[styles.supportText, styles.supportLink, styles.centered, { color: colors.accent }]}
+      >
+        {t("privacy_policy", { defaultValue: "Privacy Policy" })}
+      </Text>
     </ScrollView>
   );
 }
@@ -206,4 +217,5 @@ const styles = StyleSheet.create({
   supportRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center" },
   supportText: { fontSize: 14 },
   supportLink: { fontWeight: "700", textDecorationLine: "underline" },
+  centered: { textAlign: "center" },
 });

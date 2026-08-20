@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { Match } from "../supabase/matches-repository";
+import { LobbyMatch } from "../supabase/matches-repository";
 import { useTheme } from "../theme/ThemeProvider";
 import { flagFor } from "../utils/languageCycle";
 
@@ -19,13 +19,13 @@ function getChallengeName(id: string): string {
   return `${ADJECTIVES[adjIndex]} ${ANIMALS[animIndex]}`;
 }
 
-function getMatchDisplayName(match: Match): string {
+function getMatchDisplayName(match: LobbyMatch): string {
   if (match.p1_name && match.p1_name !== "Unknown") return match.p1_name;
   return getChallengeName(match.id);
 }
 
 interface Props {
-  match: Match;
+  match: LobbyMatch;
   onJoin: (id: string) => void;
   loading: boolean;
 }

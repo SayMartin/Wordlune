@@ -88,13 +88,14 @@ export default function useDuelMode({
   useEffect(() => {
     if (activeMatch && activeMatch.player1_id && session?.user?.id) {
       const fetchNames = async () => {
-        const ids = [activeMatch.player1_id];
-        if (activeMatch.player2_id) ids.push(activeMatch.player2_id);
-
-        const { data } = await supabase
-          .from("player_profiles")
-          .select("id, display_name")
-          .in("id", ids);
+        // Goes through match_player_names(), which checks the caller is a
+        // participant of this match before returning either name. Reading
+        // player_profiles directly no longer works — the base table is locked
+        // to own-row (20260822_gdpr_rls_lockdown.sql), which would leave the
+        // opponent showing as "Player 2" forever.
+        const { data } = await supabase.rpc("match_player_names", {
+          p_match_id: activeMatch.id,
+        });
 
         const map: Record<string, string> = {};
         data?.forEach((p: any) => (map[p.id] = p.display_name));

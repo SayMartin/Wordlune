@@ -3,7 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
-import { Match, createMatch, listWaitingMatches, joinMatch, abandonMatch } from "../supabase/matches-repository";
+import { Match, LobbyMatch, createMatch, listWaitingMatches, joinMatch, abandonMatch } from "../supabase/matches-repository";
 import { supabase } from "../supabaseClient";
 import { getFiveLetterHydrocarbon } from "../supabase/words-repository";
 import Toggle from "./Toggle";
@@ -23,7 +23,7 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
   const { session } = useAuth();
 
   const [loading, setLoading] = useState(false);
-  const [waitingMatches, setWaitingMatches] = useState<Match[]>([]);
+  const [waitingMatches, setWaitingMatches] = useState<LobbyMatch[]>([]);
   const [myMatchId, setMyMatchId] = useState<string | null>(null);
   const [duelLang, setDuelLang] = useState<"en" | "sv" | "fr">("en");
   const [showHint, setShowHint] = useState(false);

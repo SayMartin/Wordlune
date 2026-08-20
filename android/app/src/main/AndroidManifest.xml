@@ -1,9 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" tools:replace="android:maxSdkVersion"/>
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-  <uses-permission android:name="android.permission.VIBRATE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" tools:replace="android:maxSdkVersion"/>
+
+  <!-- INTERNET is the only permission this app actually needs. The four below
+       are React Native / Expo library defaults that get merged in from their
+       manifests, so simply omitting the lines is not enough — each needs an
+       explicit tools:node="remove" to be stripped from the merged manifest.
+       Verified unused: there is no file picker, no image save, no overlay, and
+       no Vibration/Haptic call anywhere in src/.
+
+       SYSTEM_ALERT_WINDOW ("Display over other apps") in particular draws
+       Google Play policy scrutiny, and a word game requesting storage access
+       is hard to justify under data minimisation.
+
+       Check the result after building with:
+         ./gradlew :app:processReleaseManifest
+         cat android/app/build/intermediates/merged_manifests/release/AndroidManifest.xml -->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" tools:node="remove"/>
+  <uses-permission android:name="android.permission.VIBRATE" tools:node="remove"/>
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>
@@ -11,7 +26,14 @@
       <data android:scheme="https"/>
     </intent>
   </queries>
-  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:supportsRtl="true" android:enableOnBackInvokedCallback="false">
+  <!-- allowBackup="false": Android Auto Backup would otherwise upload this
+       app's AsyncStorage to the user's Google Drive, and that store holds the
+       Supabase session token — which embeds the access token, the refresh
+       token, and the decoded user object including their email address.
+       Backing up live credentials to a third party is not something the
+       privacy policy describes, and there is nothing here worth restoring:
+       all real state lives server-side and comes back on sign-in. -->
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false" android:theme="@style/AppTheme" android:supportsRtl="true" android:enableOnBackInvokedCallback="false">
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
     <meta-data android:name="expo.modules.updates.ENABLE_BSDIFF_PATCH_SUPPORT" android:value="true"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
@@ -20,6 +42,17 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <!-- AuthContext.tsx already builds se.wordlune.app://reset-password and
+           ://auth-callback for the password-reset and email-confirmation
+           redirects, but without this filter nothing on Android could receive
+           them — the links simply failed to open the app. Pairs with
+           linking.prefixes in App.tsx. -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="se.wordlune.app"/>
       </intent-filter>
     </activity>
   </application>

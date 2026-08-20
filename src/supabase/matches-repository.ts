@@ -8,11 +8,29 @@ export interface Match {
   status: "waiting" | "playing" | "finished";
   secret_word: string;
   winner_id: string | null;
-  player1_email?: string; // Loaded via join if needed, or separate profile fetch
   language?: string;
   p1_name?: string;
   p2_name?: string;
   is_hint_enabled?: boolean;
+}
+
+/**
+ * An open invitation as shown in the lobby — what the `duel_lobby` view
+ * exposes, which is deliberately less than a full `Match`.
+ *
+ * Notably there is no `secret_word` here. The lobby used to `select *` from
+ * duel_matches, so any player could read the secret word of a duel they hadn't
+ * joined; the view drops the column so that isn't possible even by hand-rolling
+ * the request. `player2_id` is absent too — a waiting match has none.
+ */
+export interface LobbyMatch {
+  id: string;
+  created_at: string;
+  player1_id: string;
+  status: "waiting";
+  language?: string;
+  is_hint_enabled?: boolean;
+  p1_name?: string;
 }
 
 export async function createMatch(
@@ -44,16 +62,15 @@ export async function createMatch(
   return data;
 }
 
-export async function listWaitingMatches(): Promise<Match[]> {
-  // Only show matches from the last 5 minutes
-  const cutOffTime = new Date();
-  cutOffTime.setMinutes(cutOffTime.getMinutes() - 5);
-
+export async function listWaitingMatches(): Promise<LobbyMatch[]> {
+  // Reads the duel_lobby view rather than duel_matches directly. The view
+  // already applies the "waiting, last 5 minutes" filter and joins player 1's
+  // display name, so the separate cutoff computation and the follow-up
+  // player_profiles lookup this function used to do are both gone — and it
+  // never exposes secret_word. See 20260821_gdpr_privacy_helpers.sql.
   const { data, error } = await supabase
-    .from("duel_matches")
+    .from("duel_lobby")
     .select("*")
-    .eq("status", "waiting")
-    .gt("created_at", cutOffTime.toISOString())
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -61,28 +78,9 @@ export async function listWaitingMatches(): Promise<Match[]> {
     return [];
   }
 
-  // Enrich with Player1 display name
-  const p1Ids = data.map((m: any) => m.player1_id);
-  // Also collect player2 ids if any
-  const p2Ids = data.map((m: any) => m.player2_id).filter((id: any) => !!id);
-  const allIds = Array.from(new Set([...p1Ids, ...p2Ids]));
-
-  if (allIds.length === 0) return data;
-
-  const { data: profiles } = await supabase
-    .from("player_profiles")
-    .select("id, display_name")
-    .in("id", allIds);
-
-  const nameMap: Record<string, string> = {};
-  profiles?.forEach((p: any) => {
-    nameMap[p.id] = p.display_name;
-  });
-
-  return data.map((m: any) => ({
+  return (data || []).map((m: any) => ({
     ...m,
-    p1_name: nameMap[m.player1_id] || "Unknown",
-    p2_name: m.player2_id ? nameMap[m.player2_id] : undefined,
+    p1_name: m.p1_name || "Unknown",
   }));
 }
 

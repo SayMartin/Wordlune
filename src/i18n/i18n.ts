@@ -12,7 +12,7 @@ const resources = {
   fr: { translation: fr },
 };
 
-const LANG_STORAGE_KEY = "wordlune:lang";
+import { LANG_KEY as LANG_STORAGE_KEY } from "../utils/localStorageKeys";
 
 i18n.use(initReactI18next).init({
   resources,

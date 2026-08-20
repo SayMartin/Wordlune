@@ -19,7 +19,10 @@ import RootNavigator, { type RootStackParamList } from "./src/navigation/RootNav
 // explicit "*" -> NotFound mapping, an unrecognized URL falls through to the initial route
 // (Home) instead of showing the 404 screen, silently swallowing typos in the address bar.
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [],
+  // The custom scheme matches the intent-filter in AndroidManifest.xml and the
+  // redirect URLs AuthContext builds for password reset / email confirmation.
+  // The https origin lets the same paths work as web links.
+  prefixes: ["se.wordlune.app://", "https://wordlune.appfinningar.se"],
   config: {
     screens: {
       Main: {
@@ -35,6 +38,11 @@ const linking: LinkingOptions<RootStackParamList> = {
       Login: "login",
       Signout: "signout",
       ResetPassword: "reset-password",
+      // /privacy is the URL given to Google Play as the privacy policy, and
+      // /delete-account satisfies Play's separate account-deletion URL
+      // requirement. Both must stay above the "*" catch-all.
+      PrivacyPolicy: "privacy",
+      DeleteAccount: "delete-account",
       NotFound: "*",
     },
   },

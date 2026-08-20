@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import { localAvatarUrl } from "../components/Avatar";
 import { useAuth } from "../context/AuthContext";
 import { suggestUniqueDisplayName } from "../supabase/players-repository";
 import { PasswordInput } from "../components/PasswordInput";
@@ -77,7 +78,7 @@ export default function LoginScreen() {
     setError(null);
     try {
       const guestName = await suggestUniqueDisplayName("Guest");
-      const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(guestName)}`;
+      const avatarUrl = localAvatarUrl(guestName);
       const result = await loginAnonymously(guestName, avatarUrl);
       if (!result || !result.success) {
         setError(translateAuthError(t, result?.errorCode, result?.error, "guest_login_failed", "Guest login failed"));
@@ -207,6 +208,21 @@ export default function LoginScreen() {
           {t("play_as_guest", { defaultValue: "Play as Guest" })}
         </Text>
       </Pressable>
+
+      {/* Same notice as SessionGate's guest button — a guest sign-in creates a
+          real account, so the policy must be reachable at that moment too. */}
+      <View style={styles.guestNoticeRow}>
+        <Text style={[styles.guestNotice, { color: colors.textMuted }]}>
+          {t("privacy_policy_guest_notice", { defaultValue: "By continuing you accept our" })}{" "}
+        </Text>
+        <Text
+          accessibilityRole="link"
+          onPress={() => navigation.navigate("PrivacyPolicy")}
+          style={[styles.guestNotice, styles.guestNoticeLink, { color: colors.accent }]}
+        >
+          {t("privacy_policy", { defaultValue: "Privacy Policy" })}
+        </Text>
+      </View>
     </ScrollView>
   );
 }
@@ -217,6 +233,9 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", flexWrap: "wrap" },
   link: { color: "#3b82f6" },
   field: { gap: 6 },
+  guestNoticeRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center" },
+  guestNotice: { fontSize: 12, lineHeight: 17 },
+  guestNoticeLink: { fontWeight: "700", textDecorationLine: "underline" },
   forgotBox: { borderWidth: 1, borderRadius: 8, padding: 12, gap: 10 },
   label: { fontSize: 14, fontWeight: "500" },
   input: { borderWidth: 1, borderRadius: 8, padding: 10 },

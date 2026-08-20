@@ -20,6 +20,9 @@ RUN npm run build:web
 
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Included from every location block in default.conf — see the comment there
+# about add_header not being inherited into locations that set their own.
+COPY security-headers.conf /etc/nginx/security-headers.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80

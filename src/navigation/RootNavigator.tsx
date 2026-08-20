@@ -5,6 +5,8 @@ import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignoutScreen from "../screens/SignoutScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
+import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
+import DeleteAccountScreen from "../screens/DeleteAccountScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import WebCentered from "../components/WebCentered";
 import type { RootStackParamList } from "./types";
@@ -35,6 +37,16 @@ const CenteredResetPasswordScreen = () => (
     <ResetPasswordScreen />
   </WebCentered>
 );
+const CenteredPrivacyPolicyScreen = () => (
+  <WebCentered>
+    <PrivacyPolicyScreen />
+  </WebCentered>
+);
+const CenteredDeleteAccountScreen = () => (
+  <WebCentered>
+    <DeleteAccountScreen />
+  </WebCentered>
+);
 const CenteredNotFoundScreen = () => (
   <WebCentered>
     <NotFoundScreen />
@@ -59,6 +71,11 @@ export default function RootNavigator() {
       <Stack.Screen name="Login" component={CenteredLoginScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Signout" component={CenteredSignoutScreen} options={{ headerShown: true }} />
       <Stack.Screen name="ResetPassword" component={CenteredResetPasswordScreen} options={{ headerShown: true }} />
+      {/* Both reachable without a session — a visitor must be able to read the
+          policy before signing up, and Google Play's reviewers need both URLs
+          without credentials. Neither is wrapped in SessionGate. */}
+      <Stack.Screen name="PrivacyPolicy" component={CenteredPrivacyPolicyScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="DeleteAccount" component={CenteredDeleteAccountScreen} options={{ headerShown: true }} />
       <Stack.Screen name="NotFound" component={CenteredNotFoundScreen} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
