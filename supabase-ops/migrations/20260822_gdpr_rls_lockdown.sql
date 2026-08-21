@@ -82,10 +82,16 @@ create policy "Users can view own challenge results" on public.challenge_results
 -- owner-rights view that exposes only what a prospective opponent must see,
 -- and pointedly not secret_word.
 --
--- joinMatch() does `update ... .select().single()`. PostgREST evaluates the
--- SELECT policy against the NEW row, where player2_id = auth.uid(), so it
--- passes. This is the single riskiest change in the whole lockdown — verify
--- with two real accounts before considering it done.
+-- CORRECTION (see 20260825_join_duel_match_rpc.sql): an earlier version of
+-- this comment claimed joinMatch()'s `update ... .select().single()` would
+-- still work because the SELECT policy is evaluated against the NEW row. That
+-- is wrong. Postgres also applies SELECT policies when *finding* the row to
+-- update, and that check runs against the OLD row — where the joiner is not
+-- yet a participant. The update therefore matched nothing and returned 200
+-- with an empty body, silently. Joining now goes through the
+-- join_duel_match() security-definer RPC instead. Do not widen this policy to
+-- fix it: letting non-participants see waiting matches re-exposes
+-- secret_word, which is a cheat vector as well as a privacy problem.
 drop policy if exists "Anyone can view matches" on public.duel_matches;
 create policy "Players can view their own matches" on public.duel_matches
   for select to authenticated

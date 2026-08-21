@@ -85,28 +85,29 @@ export async function listWaitingMatches(): Promise<LobbyMatch[]> {
 }
 
 export async function joinMatch(matchId: string): Promise<Match | null> {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("User must be logged in to join a match");
-
-  // We optimistically update status to 'playing' and setting player2_id
-  const { data, error } = await supabase
-    .from("duel_matches")
-    .update({
-      player2_id: user.id,
-      status: "playing",
-    })
-    .eq("id", matchId)
-    .is("player2_id", null) // Ensure it's not taken
-    .select()
-    .single();
+  // Goes through the join_duel_match() RPC rather than updating duel_matches
+  // directly (20260825_join_duel_match_rpc.sql).
+  //
+  // A direct update cannot work any more: SELECT on duel_matches is restricted
+  // to participants, and Postgres applies that policy when *finding* the row
+  // to update — evaluated against the OLD row, where the joiner is not yet a
+  // participant. The update therefore matched nothing and returned success
+  // with an empty body, which is a particularly unhelpful way to fail.
+  //
+  // The RPC also makes the claim atomic, closing a race the old version had:
+  // two players pressing Join together could both pass the `is("player2_id",
+  // null)` filter, and the second silently overwrote the first.
+  const { data, error } = await supabase.rpc("join_duel_match", {
+    p_match_id: matchId,
+  });
 
   if (error) {
+    // Expected whenever someone else got there first, the match expired, or
+    // it was the caller's own invitation — not an exceptional condition.
     console.error("Error joining match:", error);
     return null;
   }
-  return data;
+  return data as Match;
 }
 
 export async function abandonMatch(matchId: string) {
