@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
 import type { AppParamList } from "../navigation/types";
 import { SUPPORT_EMAIL } from "../constants/privacy";
+import { APP_NAME } from "../constants/app";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 
@@ -22,8 +23,9 @@ export default function AboutScreen() {
         <Text style={[styles.pageTitle, { color: colors.text }]}>{t("about", { defaultValue: "About" })}</Text>
         <Text style={[styles.intro, { color: colors.textMuted }]}>
           {t("about_description", {
-            app: "Wordlune",
-            defaultValue: "Wordlune is a word puzzle game designed to test your vocabulary and problem-solving skills.",
+            app: APP_NAME,
+            defaultValue:
+              "{{app}} is a word game for anyone who likes playing with words. Guess the hidden word, explore new categories, and have fun in three languages.",
           })}
         </Text>
       </View>
