@@ -1,5 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import MainTabs from "./MainTabs";
 import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -64,19 +65,55 @@ const CenteredNotFoundScreen = () => (
 // path in App.tsx (any URL that doesn't match a configured route), matching
 // react-router's catch-all behavior in the old app.
 export default function RootNavigator() {
+  // Titles are resolved here rather than per screen so they can go through
+  // t(): without an explicit title the native stack header falls back to the
+  // route name, which surfaced raw identifiers like "PrivacyPolicy" and
+  // "ResetPassword" to users — untranslated and run together. Calling
+  // useTranslation() here also means the headers re-render on a language
+  // change, which a static options object would not.
+  const { t } = useTranslation();
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Main" component={MainTabs} />
-      <Stack.Screen name="Signup" component={CenteredSignupScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="Login" component={CenteredLoginScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="Signout" component={CenteredSignoutScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="ResetPassword" component={CenteredResetPasswordScreen} options={{ headerShown: true }} />
+      <Stack.Screen
+        name="Signup"
+        component={CenteredSignupScreen}
+        options={{ headerShown: true, title: t("signup", { defaultValue: "Sign Up" }) }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={CenteredLoginScreen}
+        options={{ headerShown: true, title: t("login", { defaultValue: "Log In" }) }}
+      />
+      <Stack.Screen
+        name="Signout"
+        component={CenteredSignoutScreen}
+        options={{ headerShown: true, title: t("logout", { defaultValue: "Log Out" }) }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={CenteredResetPasswordScreen}
+        options={{ headerShown: true, title: t("reset_password", { defaultValue: "Reset Password" }) }}
+      />
       {/* Both reachable without a session — a visitor must be able to read the
           policy before signing up, and Google Play's reviewers need both URLs
           without credentials. Neither is wrapped in SessionGate. */}
-      <Stack.Screen name="PrivacyPolicy" component={CenteredPrivacyPolicyScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="DeleteAccount" component={CenteredDeleteAccountScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="NotFound" component={CenteredNotFoundScreen} options={{ headerShown: true }} />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={CenteredPrivacyPolicyScreen}
+        options={{ headerShown: true, title: t("privacy_policy", { defaultValue: "Privacy Policy" }) }}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={CenteredDeleteAccountScreen}
+        options={{ headerShown: true, title: t("delete_account", { defaultValue: "Delete Account" }) }}
+      />
+      <Stack.Screen
+        name="NotFound"
+        component={CenteredNotFoundScreen}
+        options={{ headerShown: true, title: t("not_found_title", { defaultValue: "Not Found" }) }}
+      />
     </Stack.Navigator>
   );
 }

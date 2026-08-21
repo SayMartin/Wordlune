@@ -6,7 +6,7 @@
 
 import "./src/i18n/i18n";
 import React, { useEffect } from "react";
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer, type LinkingOptions } from "@react-navigation/native";
 import { ThemeProvider, useTheme } from "./src/theme/ThemeProvider";
@@ -14,10 +14,12 @@ import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { LoadingProvider } from "./src/context/LoadingContext";
 import RootNavigator, { type RootStackParamList } from "./src/navigation/RootNavigator";
 
-// Mirrors the old web app's react-router paths (src/router.jsx). Native has no URL bar so
-// this is web-only in effect, but the config lives here regardless of platform. Without an
-// explicit "*" -> NotFound mapping, an unrecognized URL falls through to the initial route
-// (Home) instead of showing the 404 screen, silently swallowing typos in the address bar.
+// Mirrors the old web app's react-router paths (src/router.jsx). On web these are real
+// URLs; on native the same paths are reachable as deep links through the custom scheme
+// (AndroidManifest.xml declares the matching intent-filter), which is what makes the
+// password-reset and email-confirmation redirects in AuthContext able to land in the app.
+//
+// The "*" -> NotFound mapping is web-only — see the comment on it below.
 const linking: LinkingOptions<RootStackParamList> = {
   // The custom scheme matches the intent-filter in AndroidManifest.xml and the
   // redirect URLs AuthContext builds for password reset / email confirmation.
@@ -43,7 +45,17 @@ const linking: LinkingOptions<RootStackParamList> = {
       // requirement. Both must stay above the "*" catch-all.
       PrivacyPolicy: "privacy",
       DeleteAccount: "delete-account",
-      NotFound: "*",
+      // Web only, deliberately. The catch-all exists to mirror react-router's
+      // 404 behaviour in an address bar — mistype a URL, get NotFound. Native
+      // has no address bar, and there any unrecognised deep link should simply
+      // open the app rather than dead-end on a 404 the user can't have caused.
+      //
+      // It also has to be web-only to be usable at all: the Expo dev client
+      // launches the app via `se.wordlune.app://expo-development-client/...`,
+      // which matches the scheme prefix above and resolves to no known route —
+      // so with "*" active on native, every `npm run android` start landed
+      // straight on NotFound.
+      ...(Platform.OS === "web" ? { NotFound: "*" as const } : {}),
     },
   },
 };
