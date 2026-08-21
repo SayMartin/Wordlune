@@ -13,6 +13,7 @@ import {
   getPlayerProfile,
   ensurePlayerProfile,
   deleteOwnAccount,
+  updatePlayerProfile,
   updatePlayerProfileMetadata,
   PlayerProfile,
 } from "../supabase/players-repository";
@@ -75,7 +76,14 @@ interface AuthContextType {
     password: string,
     displayName?: string,
     avatarUrl?: string,
-  ) => Promise<{ success: boolean; error?: string; errorCode?: string; checkEmail?: boolean }>;
+  ) => Promise<{
+    success: boolean;
+    error?: string;
+    errorCode?: string;
+    checkEmail?: boolean;
+    /** True when an existing guest account was converted in place rather than a new one created. */
+    upgraded?: boolean;
+  }>;
   /** Records that this account accepted PRIVACY_POLICY_VERSION. */
   recordPrivacyAcceptance: () => Promise<void>;
   login: (
@@ -123,12 +131,78 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  /**
+   * Converts the current guest account into a registered one, keeping all its
+   * data.
+   *
+   * Supabase does this in place: updateUser() on an anonymous session keeps the
+   * same auth.users.id, so every foreign key (player_profiles, game_scores,
+   * duel_matches, ...) follows automatically and nothing has to be migrated.
+   * The alternative — signUp(), which is what this used to do for everyone —
+   * mints a *new* id and silently strands the guest's scores on an orphaned
+   * account that the retention job deletes 14 days later.
+   *
+   * The trap: handle_new_user() is an AFTER INSERT trigger on auth.users. An
+   * upgrade is an UPDATE, so it never fires, and the display name / avatar the
+   * player just chose would stay whatever the guest row already had
+   * ("Guest52"). The profile row has to be written explicitly here.
+   *
+   * The account stays anonymous until the confirmation email is clicked —
+   * that's what flips is_anonymous to false — so callers should keep treating
+   * this as "check your email", exactly like a fresh signup.
+   */
+  const upgradeGuestAccount = async (
+    email: string,
+    password: string,
+    displayName?: string,
+    avatarUrl?: string,
+  ) => {
+    const userId = session?.user?.id;
+
+    const { error } = await supabase.auth.updateUser({
+      email,
+      password,
+      data: {
+        full_name: displayName,
+        avatar_url: avatarUrl,
+        metadata: { privacy_policy: privacyAcceptanceStamp() },
+      },
+    });
+    if (error) {
+      return { success: false, error: error.message, errorCode: error.code };
+    }
+
+    // Deliberately after the auth update, not before. If this fails the player
+    // still has a real account — just under their old guest name, which they
+    // can change in Settings. Doing it first would risk renaming someone whose
+    // upgrade then failed.
+    if (userId && (displayName || avatarUrl)) {
+      const updates: Record<string, string> = {};
+      if (displayName) updates.display_name = displayName;
+      if (avatarUrl) updates.avatar_url = avatarUrl;
+      try {
+        await updatePlayerProfile(userId, updates);
+        await refreshProfile();
+      } catch (e) {
+        console.error("upgradeGuestAccount: profile update failed", e);
+      }
+    }
+
+    return { success: true, checkEmail: true, upgraded: true };
+  };
+
   const signUpNewUser = async (
     email: string,
     password: string,
     displayName?: string,
     avatarUrl?: string,
   ) => {
+    // A signed-in guest gets converted in place rather than replaced, so their
+    // scores survive. This is the whole reason the branch exists.
+    if (session?.user?.is_anonymous) {
+      return upgradeGuestAccount(email, password, displayName, avatarUrl);
+    }
+
     // `metadata` rides along into player_profiles.metadata via the
     // on_auth_user_created trigger, which already does
     // `coalesce(new.raw_user_meta_data->'metadata', '{}')` — so recording the

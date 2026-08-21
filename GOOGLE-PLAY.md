@@ -183,6 +183,8 @@ Manually, on a real device with the release build:
 
 ## Loose ends worth deciding before launch
 
+- **Guest → registered upgrade is implemented but untested end to end.** `signUpNewUser()` branches on `session.user.is_anonymous` and takes an `updateUser({ email, password })` path, which converts the account in place and keeps the same `auth.users.id` — so scores, duels and profile carry over with no data migration. What has *not* been exercised on a real device is the confirmation step: the account stays `is_anonymous = true` until the emailed link is clicked, and on Android that link has to come back through the `se.wordlune.app://auth-callback` deep link. The intent-filter exists now, but the round trip has never been completed. **Test this before launch** — a half-finished upgrade leaves a player believing they have an account when they still have a guest session.
+
 - **Android App Links** (`assetlinks.json` on the domain) would make `https://wordlune.appfinningar.se/...` open the app directly rather than the browser. Not required — the custom scheme covers the auth redirects — but nice, and it makes the Play-registered URLs feel native.
 - **Email confirmation on native** still isn't wired end-to-end. The intent-filter now exists, so the redirect can land; it hasn't been tested on a device.
 - **Store listing assets** — feature graphic (1024×500), phone screenshots, short and full description. None exist yet. Worth writing in all three supported languages, since the app is en/sv/fr.

@@ -22,10 +22,29 @@ type Nav = NativeStackNavigationProp<AppParamList>;
 export default function DeleteAccountScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { session } = useAuth();
+  const { session, authState } = useAuth();
   const navigation = useNavigation<Nav>();
 
   const signedIn = !!session;
+  const isGuest = authState === "guest";
+
+  // Signed out, the full (registered) list is the right thing to show: this is
+  // the page registered with Google Play, the reader could be either kind of
+  // account, and the superset is the honest answer. Only once we know we're
+  // talking to a guest is it worth narrowing — a guest has no sign-in details
+  // and can never have challenge history, since Competitive Mode is
+  // registered-only.
+  const deletedItems = [
+    isGuest
+      ? t("delete_account_what_1_guest", { defaultValue: "Your guest account" })
+      : t("delete_account_what_1", { defaultValue: "Your account and sign-in details" }),
+    t("delete_account_what_2", { defaultValue: "Your profile — display name, avatar and settings" }),
+    t("delete_account_what_3", { defaultValue: "All your scores and practice history" }),
+    ...(isGuest
+      ? []
+      : [t("delete_account_what_4", { defaultValue: "Your challenge attempts and results" })]),
+    t("delete_account_what_5", { defaultValue: "Your duel matches" }),
+  ];
 
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
@@ -45,17 +64,19 @@ export default function DeleteAccountScreen() {
         <Text style={[styles.cardTitle, { color: "#6366f1" }]}>
           {t("delete_account_what_title", { defaultValue: "What gets deleted" })}
         </Text>
-        {[
-          t("delete_account_what_1", { defaultValue: "Your account and sign-in details" }),
-          t("delete_account_what_2", { defaultValue: "Your profile — display name, avatar and settings" }),
-          t("delete_account_what_3", { defaultValue: "All your scores and practice history" }),
-          t("delete_account_what_4", { defaultValue: "Your challenge attempts and results" }),
-          t("delete_account_what_5", { defaultValue: "Your duel matches" }),
-        ].map((item, i) => (
+        {deletedItems.map((item, i) => (
           <Text key={i} style={[styles.bulletItem, { color: colors.textMuted }]}>
             • {item}
           </Text>
         ))}
+        {isGuest && (
+          <Text style={[styles.note, { color: colors.textMuted }]}>
+            {t("delete_account_guest_note", {
+              defaultValue:
+                "A guest account has no email or password, so it can't be recovered afterwards — and it can't be signed into from another device even now. If you'd rather keep your scores, sign up instead: that turns this same account into a full one, with everything intact.",
+            })}
+          </Text>
+        )}
         <Text style={[styles.note, { color: colors.textMuted }]}>
           {t("delete_account_backups_note", {
             defaultValue:

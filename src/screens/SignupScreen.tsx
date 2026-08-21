@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -32,8 +32,14 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function SignupScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { signUpNewUser } = useAuth();
+  const { signUpNewUser, authState, profile } = useAuth();
   const navigation = useNavigation<Nav>();
+
+  // A signed-in guest is upgrading in place, not creating a second account —
+  // their scores, duels and profile carry over. Worth saying plainly on this
+  // screen: the whole reason someone hesitates to sign up is not knowing
+  // whether they'll lose what they've done.
+  const isUpgrade = authState === "guest";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,6 +57,21 @@ export default function SignupScreen() {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
 
+  // Prefill the guest's existing name so upgrading doesn't look like it's
+  // asking them to pick a new identity. Only until they type — the guard stops
+  // it clobbering their edit when `profile` refreshes.
+  useEffect(() => {
+    if (isUpgrade && profile?.display_name && !displayName) {
+      setDisplayName(profile.display_name);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpgrade, profile?.display_name]);
+
+  // Keeping your own current name must not count as a collision. Same guard
+  // Settings.tsx uses when saving a profile edit.
+  const isOwnCurrentName = (name: string) =>
+    isUpgrade && !!profile?.display_name && name === profile.display_name;
+
   const avatarUrl = useMemo(() => {
     const seed = useRandomAvatar ? avatarSeed : displayName || "guest";
     return localAvatarUrl(seed);
@@ -63,6 +84,7 @@ export default function SignupScreen() {
 
   const checkNameAvailability = async (name: string) => {
     if (!name || name.length < 3) return;
+    if (isOwnCurrentName(name)) return;
     setIsChecking(true);
     setNameError(null);
     try {
@@ -142,7 +164,9 @@ export default function SignupScreen() {
     setError(null);
 
     try {
-      const taken = await isDisplayNameTaken(displayName);
+      const taken = isOwnCurrentName(displayName)
+        ? false
+        : await isDisplayNameTaken(displayName);
       if (taken) {
         setLoading(false);
         const suggestion = await suggestUniqueDisplayName(displayName);
@@ -155,10 +179,15 @@ export default function SignupScreen() {
         setError(translateAuthError(t, result.errorCode, result.error, "signup_failed", "Signup failed"));
       } else if (result.checkEmail) {
         setSuccessMessage(
-          t("check_email_confirmation", {
-            defaultValue:
-              "Registration successful! We've sent a confirmation link to your email. Please check your inbox (and spam folder).",
-          }),
+          result.upgraded
+            ? t("upgrade_check_email", {
+                defaultValue:
+                  "Almost there! We've sent a confirmation link to your email — click it to finish turning this into a full account. Your scores and history are already safe, and you can keep playing in the meantime.",
+              })
+            : t("check_email_confirmation", {
+                defaultValue:
+                  "Registration successful! We've sent a confirmation link to your email. Please check your inbox (and spam folder).",
+              }),
         );
       } else {
         navigation.navigate("Main", { screen: "Home" });
@@ -179,9 +208,18 @@ export default function SignupScreen() {
         <Text style={{ color: colors.text, textAlign: "center", marginBottom: 24 }}>
           {successMessage}
         </Text>
-        <Pressable onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.link}>{t("go_to_signin", { defaultValue: "Go to Sign In" })}</Text>
-        </Pressable>
+        {/* After an upgrade the player is still signed in on their (as yet
+            unconfirmed) guest session and can carry on playing — sending them
+            to a login form would be both pointless and alarming. */}
+        {isUpgrade ? (
+          <Pressable onPress={() => navigation.navigate("Main", { screen: "Home" })}>
+            <Text style={styles.link}>{t("keep_playing", { defaultValue: "Keep playing" })}</Text>
+          </Pressable>
+        ) : (
+          <Pressable onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.link}>{t("go_to_signin", { defaultValue: "Go to Sign In" })}</Text>
+          </Pressable>
+        )}
       </View>
     );
   }
@@ -192,17 +230,30 @@ export default function SignupScreen() {
       contentContainerStyle={styles.container}
     >
       <Text style={[styles.title, { color: colors.text }]}>
-        {t("signup", { defaultValue: "Sign Up" })}
+        {isUpgrade
+          ? t("upgrade_account_title", { defaultValue: "Create your account" })
+          : t("signup", { defaultValue: "Sign Up" })}
       </Text>
 
-      <View style={styles.row}>
-        <Text style={{ color: colors.textMuted }}>
-          {t("has_account", { defaultValue: "Already have an account?" })}{" "}
-        </Text>
-        <Pressable onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.link}>{t("login", { defaultValue: "Log In" })}</Text>
-        </Pressable>
-      </View>
+      {isUpgrade ? (
+        <View style={[styles.upgradeNotice, { borderColor: "#16a34a55", backgroundColor: colors.surface }]}>
+          <Text style={[styles.upgradeText, { color: colors.text }]}>
+            {t("upgrade_guest_notice", {
+              defaultValue:
+                "You're playing as a guest. Signing up keeps everything you've already done — your scores, duels and history all carry over to the new account.",
+            })}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.row}>
+          <Text style={{ color: colors.textMuted }}>
+            {t("has_account", { defaultValue: "Already have an account?" })}{" "}
+          </Text>
+          <Pressable onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.link}>{t("login", { defaultValue: "Log In" })}</Text>
+          </Pressable>
+        </View>
+      )}
 
       <View style={styles.avatarSection}>
         <Avatar uri={avatarUrl} fallbackSeed={displayName} size={96} />
@@ -375,6 +426,8 @@ function Checkbox({
 
 const styles = StyleSheet.create({
   container: { padding: 24, paddingTop: 64, gap: 16, maxWidth: 420, width: "100%", alignSelf: "center" },
+  upgradeNotice: { borderWidth: 1, borderRadius: 10, padding: 12 },
+  upgradeText: { fontSize: 13, lineHeight: 19 },
   consentGroup: { gap: 12 },
   checkRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   checkbox: {

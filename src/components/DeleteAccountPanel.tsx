@@ -18,8 +18,16 @@ type Nav = NativeStackNavigationProp<AppParamList>;
 export default function DeleteAccountPanel() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { deleteAccount } = useAuth();
+  const { authState, deleteAccount } = useAuth();
   const navigation = useNavigation<Nav>();
+
+  // A guest account holds strictly less than a registered one: there are no
+  // sign-in details to delete (that's what makes it a guest), and no challenge
+  // history, since Competitive Mode is registered-only. Describing deletion
+  // with the registered wording would list things the reader doesn't have,
+  // which makes the warning read as boilerplate rather than as a statement
+  // about them.
+  const isGuest = authState === "guest";
 
   const [deleting, setDeleting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -48,10 +56,15 @@ export default function DeleteAccountPanel() {
           {t("danger_zone", { defaultValue: "Danger Zone" })}
         </Text>
         <Text style={{ color: colors.textMuted, fontSize: 13, marginBottom: 12 }}>
-          {t("delete_account_description", {
-            defaultValue:
-              "Permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
-          })}
+          {isGuest
+            ? t("delete_account_description_guest", {
+                defaultValue:
+                  "Permanently delete your guest account and everything on it — your name, avatar, scores and duels. A guest account has no email or password, so there is no way to recover it or sign in again afterwards.",
+              })
+            : t("delete_account_description", {
+                defaultValue:
+                  "Permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
+              })}
         </Text>
         {error && <Text style={styles.error}>{error}</Text>}
         <Pressable
@@ -67,10 +80,17 @@ export default function DeleteAccountPanel() {
         <ConfirmationOverlay
           variant="danger"
           title={t("confirm_delete_account_title", { defaultValue: "Delete Account?" })}
-          message={t("confirm_delete_account_msg", {
-            defaultValue:
-              "This will permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
-          })}
+          message={
+            isGuest
+              ? t("confirm_delete_account_msg_guest", {
+                  defaultValue:
+                    "This will permanently delete your guest account and everything on it — your name, avatar, scores and duels. There is no email or password to recover it with. This cannot be undone.",
+                })
+              : t("confirm_delete_account_msg", {
+                  defaultValue:
+                    "This will permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
+                })
+          }
           confirmText={
             deleting
               ? t("deleting", { defaultValue: "Deleting..." })
