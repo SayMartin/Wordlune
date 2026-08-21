@@ -153,12 +153,8 @@ export default function GameScreen() {
   } = useChallengeMode({
     profile,
     i18n,
-    gameMode,
     status,
     guesses,
-    secret,
-    effectiveMax,
-    overrideFive,
     startTime: startTime ?? null,
     endTime: endTime ?? null,
     resetGame,
@@ -248,7 +244,7 @@ export default function GameScreen() {
         onConfirm: async () => {
           try {
             await abandonMatch(activeMatch.id);
-          } catch (e) {
+          } catch {
             // already gone
           }
           backToLobby();

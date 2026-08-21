@@ -436,7 +436,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // try/finally above.
     try {
       await supabase.auth.signOut({ scope: "local" });
-    } catch (e) {
+    } catch {
       // ignore
     } finally {
       // null, not undefined — SessionGate treats `undefined` as "still
@@ -495,13 +495,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
-      setSession(session);
-      if (session) {
+    } = supabase.auth.onAuthStateChange(async (_event: any, nextSession: any) => {
+      // Named `nextSession`, not `session`: the outer `session` is this
+      // provider's state, and shadowing it here made it easy to misread the
+      // callback as operating on the already-committed value rather than on the
+      // one Supabase is handing us.
+      setSession(nextSession);
+      if (nextSession) {
         setIsAuthenticated(true);
         // Start fetching profile but don't block
         setProfileLoading(true);
-        fetchOrCreateProfile(session.user.id)
+        fetchOrCreateProfile(nextSession.user.id)
           .then((p) => setProfile(p))
           .catch((err) => console.error("fetchOrCreateProfile error", err))
           .finally(() => setProfileLoading(false));

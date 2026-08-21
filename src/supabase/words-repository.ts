@@ -44,8 +44,6 @@ export async function listHydrocarbonFiveLetterWords(
   lang = "en",
 ): Promise<string[]> {
   try {
-    const col = wordColumn(lang);
-
     // 1. Find subcategory id for "%hydrocarbons%"
     const { data: subData, error: subError } = await supabase
       .from("subcategories")
@@ -182,7 +180,7 @@ export async function listAllWords(
     };
     try {
       return await trySelect(col);
-    } catch (_) {
+    } catch {
       return await trySelect("word");
     }
   } catch (err) {
@@ -244,7 +242,7 @@ export async function listWordsByIds(
           .limit(limit);
         if (error) throw error;
         wordsData = wordsData.concat(data ?? []);
-      } catch (_) {
+      } catch {
         const { data, error } = await supabase
           .from("words")
           .select(`id, word`)
@@ -265,7 +263,6 @@ export async function listWordsByIds(
 
 // --- categories / subcategories helpers ---
 export async function listCategories(lang = "en") {
-  const col = `name_${lang}`;
   try {
     const { data, error } = await supabase
       .from("categories")
@@ -287,7 +284,6 @@ export async function listCategories(lang = "en") {
 }
 
 export async function listSubcategories(lang = "en", categoryIds?: string[]) {
-  const col = `name_${lang}`;
   try {
     let q = supabase.from("subcategories").select("*");
     if (categoryIds && categoryIds.length > 0)

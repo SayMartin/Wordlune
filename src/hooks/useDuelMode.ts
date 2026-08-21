@@ -49,9 +49,12 @@ export default function useDuelMode({
   const [oppScore, setOppScore] = useState(0);
   const myScore = useMemo(() => {
     if (!evaluations) return 0;
-    return evaluations.flat().reduce((acc: number, status: string) => {
-      if (status === "correct") return acc + 5;
-      if (status === "present") return acc + 2;
+    // `letterStatus`, not `status` — the hook already has a `status` prop
+    // holding the round state ("playing"/"won"/...), which is a different thing
+    // entirely from a per-letter evaluation.
+    return evaluations.flat().reduce((acc: number, letterStatus: string) => {
+      if (letterStatus === "correct") return acc + 5;
+      if (letterStatus === "present") return acc + 2;
       return acc;
     }, 0);
   }, [evaluations]);
@@ -299,8 +302,11 @@ export default function useDuelMode({
           }
         }
       })
-      .subscribe((status: string) => {
-        if (status === "SUBSCRIBED") {
+      // `channelStatus` is the Realtime subscription state, not the round's
+      // `status` prop and not the presence `status` tracked on the next line —
+      // three unrelated meanings of the word within as many lines.
+      .subscribe((channelStatus: string) => {
+        if (channelStatus === "SUBSCRIBED") {
           channel.track({ user: session?.user?.id, status: "online" });
           channelRef.current = channel;
         }

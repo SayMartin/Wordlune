@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  saveGameScore,
   saveChallengeResult,
   getChallengeWords,
   startChallenge,
@@ -21,12 +20,8 @@ interface ChallengeSession {
 interface ChallengeModeProps {
   profile: any;
   i18n: any;
-  gameMode: string;
   status: string;
   guesses: string[];
-  secret: string | null;
-  effectiveMax: number;
-  overrideFive: boolean;
   startTime: number | null;
   endTime: number | null;
   resetGame: (
@@ -44,12 +39,8 @@ interface ChallengeModeProps {
 export default function useChallengeMode({
   profile,
   i18n,
-  gameMode,
   status,
   guesses,
-  secret,
-  effectiveMax,
-  overrideFive,
   startTime,
   endTime,
   resetGame,
@@ -154,30 +145,10 @@ export default function useChallengeMode({
       // Standard scoring: Max 100, -10 per extra guess
       const scoreVal = won ? Math.max(10, 100 - (guesses.length - 1) * 10) : 0;
 
-      const scoreData = {
-        player_id: profile.id,
-        score: scoreVal,
-        word: secret,
-        max_letters: effectiveMax,
-        guesses_count: guesses.length,
-        is_always_five_letters: overrideFive,
-        game_mode: "competitive" as const,
-        is_public: false,
-        challenge_id: challengeSession.id,
-        duration_seconds: duration,
-        language: (i18n.language || "en").split("-")[0],
-      };
-
-      // In competitive mode, we might NOT save every individual score to 'games' table if we only want aggregate?
-      // But the original code was: "SKIP saving intermediate words... if gameMode !== competitive" (wait, check original)
-      // Original:
-      // if (gameMode !== "competitive") { saveGameScore(...) }
-      // Wait, handleNextChallengeWord is ONLY for competitive.
-      // The original code has:
-      // if (gameMode !== "competitive") { saveGameScore } ...
-      // This implies that inside "handleNextChallengeWord", if we ARE directly in competitive, we skipped standard save?
-      // Re-reading original: "SKIP saving intermediate words in competitive mode to avoid cluttering history"
-      // So yes, we DO NOT call saveGameScore here.
+      // No saveGameScore() here, deliberately: this path only ever runs in
+      // competitive mode, and the web app skips saving intermediate words there
+      // to avoid cluttering the player's history. Only the aggregate is
+      // persisted, by the challenge_results write at the end of the run.
 
       const newIndex = challengeSession.attempt.progress_index + 1;
       const isFinal = newIndex >= words.length;

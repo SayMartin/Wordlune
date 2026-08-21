@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "../theme/ThemeProvider";
 import BoardGrid from "./BoardGrid";
 import type { Match } from "../supabase/matches-repository";
 
@@ -18,7 +17,6 @@ interface Props {
 
 export default function HostBoard({ match, names, score, guesses, evaluations, currentGuess, secret, userId }: Props) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
   const myName = userId === match?.player1_id ? names.p1 : names.p2;
 
   return (

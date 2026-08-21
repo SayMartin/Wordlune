@@ -63,6 +63,20 @@ const ICONS: Record<keyof MainTabParamList, string> = {
   About: "ℹ️",
 };
 
+// React Navigation invokes these as plain functions (BottomTabView calls
+// `tabBar({...})`, Header calls `headerLeft({...})`/`headerRight({...})`, and
+// BottomTabItem calls `renderIcon(scene)`) — they are render props, never
+// mounted as component types. Defining them at module scope anyway keeps the
+// references stable across renders and keeps react/no-unstable-nested-components
+// quiet, so a genuine instance of that mistake still stands out.
+const renderWebTopNav = (props: React.ComponentProps<typeof WebTopNav>) => <WebTopNav {...props} />;
+const renderNoTitle = () => null;
+const renderHeaderLeft = () => <HeaderLeft />;
+const renderHeaderRight = () => <HeaderRight />;
+const makeTabBarIcon =
+  (routeName: keyof MainTabParamList) =>
+  ({ color }: { color: string }) => <Text style={[styles.tabIcon, { color }]}>{ICONS[routeName]}</Text>;
+
 function TabNavigator() {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -73,24 +87,22 @@ function TabNavigator() {
       // tab bar and each screen's per-page header — a single persistent top
       // nav, mirroring Wordse's HeaderCopy.tsx, instead of native's bottom
       // tabs + per-screen header.
-      tabBar={isWeb ? (props) => <WebTopNav {...props} /> : undefined}
+      tabBar={isWeb ? renderWebTopNav : undefined}
       screenOptions={({ route }) => ({
         headerShown: !isWeb,
         tabBarPosition: isWeb ? "top" : "bottom",
         // No title text in the native header — just the logo+flag (headerLeft)
         // and greeting+logout (headerRight) clusters, mirroring how the web
         // top nav doesn't show a "current page" label either.
-        headerTitle: () => null,
-        headerLeft: () => <HeaderLeft />,
-        headerRight: () => <HeaderRight />,
+        headerTitle: renderNoTitle,
+        headerLeft: renderHeaderLeft,
+        headerRight: renderHeaderRight,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
         headerStyle: { backgroundColor: colors.surface },
         headerTintColor: colors.text,
-        tabBarIcon: ({ color }: { color: string }) => (
-          <Text style={{ fontSize: 20, color }}>{ICONS[route.name as keyof MainTabParamList]}</Text>
-        ),
+        tabBarIcon: makeTabBarIcon(route.name as keyof MainTabParamList),
       })}
     >
       <Tab.Screen name="Home" component={GatedHomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
@@ -121,4 +133,5 @@ export default function MainTabs() {
 
 const styles = StyleSheet.create({
   webPage: { flex: 1 },
+  tabIcon: { fontSize: 20 },
 });

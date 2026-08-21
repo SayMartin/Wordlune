@@ -20,7 +20,7 @@ export async function readDeviceSettings(): Promise<Record<string, string | null
     for (const key of keys) {
       out[key] = await AsyncStorage.getItem(key);
     }
-  } catch (e) {
+  } catch {
     // Best-effort: a failed local read shouldn't sink the whole export.
   }
   return out;

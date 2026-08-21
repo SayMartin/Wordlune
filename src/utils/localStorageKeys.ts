@@ -59,7 +59,7 @@ export async function clearStoredKeys({
     if (toRemove.length > 0) {
       await AsyncStorage.removeMany(toRemove);
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
 }

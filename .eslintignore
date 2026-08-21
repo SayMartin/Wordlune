@@ -1,0 +1,10 @@
+# Build output and generated native projects — none of it is hand-written source.
+# dist/ in particular is the minified web export (`npm run build:web`), which on
+# its own produced ~27k warnings and drowned out every real finding in src/.
+dist/
+build/
+.expo/
+node_modules/
+android/
+ios/
+coverage/

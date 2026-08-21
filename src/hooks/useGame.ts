@@ -83,7 +83,7 @@ async function loadState(): Promise<PersistedState | null> {
     // simple validation
     if (!parsed.secret) return null;
     return parsed;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -100,8 +100,14 @@ function pickFromList(list: string[], seed?: string) {
   return list[(h >>> 0) % list.length];
 }
 
+// `_lang` is unused here (the secret is always supplied by the caller), but the
+// parameter is deliberately kept: every call site passes the current `lang`, and
+// that reference is what keeps `lang` an honest dependency of the effects and of
+// `resetGame` below — they are meant to rebuild state when the language changes.
+// Drop the parameter and those dep arrays lose `lang`, which silently stops a
+// language switch from resetting the round.
 function makeNew(
-  lang = "en",
+  _lang = "en",
   seed?: string,
   explicitSecret?: string,
   isCompetitive?: boolean,
@@ -330,7 +336,7 @@ export default function useGame(
         endTime: done ? Date.now() : undefined,
       };
     });
-  }, [candidatePool, lang, t]);
+  }, [candidatePool, t]);
 
   const resetGame = useCallback(
     (seed?: string, explicitWord?: string, isCompetitive?: boolean) => {
@@ -412,7 +418,7 @@ export default function useGame(
     const obj: Record<string, LetterStatus> = {};
     map.forEach((v, k) => (obj[k] = v));
     return obj;
-  }, [state.evaluations, state.guesses]);
+  }, [state.evaluations, state.guesses, state.secret]);
 
   const attemptsLeft = 6 - state.guesses.length;
 
