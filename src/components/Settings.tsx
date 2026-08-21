@@ -17,6 +17,7 @@ import {
 } from "../supabase/players-repository";
 import Toggle from "./Toggle";
 import ProfileSettingsSection from "./ProfileSettingsSection";
+import SessionsPanel from "./SessionsPanel";
 import DataPrivacyPanel from "./DataPrivacyPanel";
 import DeleteAccountPanel from "./DeleteAccountPanel";
 import { REDUCE_MOTION_KEY } from "../utils/localStorageKeys";
@@ -330,6 +331,8 @@ export default function Settings() {
       onSave={handleSaveSettings}
       onCancel={handleCancelSettings}
     />
+
+    <SessionsPanel />
 
     <DataPrivacyPanel />
 

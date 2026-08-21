@@ -615,44 +615,26 @@ export async function updateChallengeProgress(
   newIndex: number, // e.g. going from 0 -> 1
   isFinal: boolean, // if true, mark status=completed
 ): Promise<{ success: boolean; error: any }> {
-  // We need to fetch current totals first to increment safely?
-  // Or we can rely on caller passing correct cumulative, but an atomic increment is better.
-  // Supabase/Postgrest doesn't do "total_score = total_score + X" easily without RPC.
-  // For simplicity, we'll fetch then update, or trust the caller to pass the NEW TOTAL.
-  // Let's assume the caller tracks the session total state.
-  // actually, safer to just use RPC if possible, but let's stick to simple update for now.
-
-  const updates: any = {
-    progress_index: newIndex,
-    // Note: This replaces the value. Caller must provide the CUMULATIVE total.
-    // If we want delta updates, we need an RPC.
-    // For now, let's assume the client sends the *delta* and we do a fetch-update here?
-    // No, client state might be lost.
-    // Let's do a quick read-modify-write.
-  };
-
-  if (isFinal) {
-    updates.status = "completed";
-    updates.completed_at = new Date().toISOString();
-  }
-
-  // Read current to increment
-  const { data: current, error: readError } = await supabase
-    .from("challenge_attempts")
-    .select("total_score, total_duration, total_guesses")
-    .eq("id", attemptId)
-    .single();
-
-  if (readError) return { success: false, error: readError };
-
-  updates.total_score = (current.total_score || 0) + incrementScore;
-  updates.total_duration = (current.total_duration || 0) + incrementDuration;
-  updates.total_guesses = (current.total_guesses || 0) + incrementGuesses;
-
-  const { error } = await supabase
-    .from("challenge_attempts")
-    .update(updates)
-    .eq("id", attemptId);
+  // Goes through the record_challenge_progress() RPC
+  // (20260826_record_challenge_progress.sql), which does the read and the
+  // write in one statement.
+  //
+  // This used to be a client-side read-modify-write: select the current
+  // totals, add the increment, write it back. Two clients finishing a word at
+  // the same moment both read the same starting value and the second write
+  // silently discarded the first player's points. Two browser tabs were enough
+  // to reproduce it — it never needed two devices.
+  //
+  // The RPC also makes progress_index monotonic, so a delayed or out-of-order
+  // call can no longer move a challenge backwards.
+  const { error } = await supabase.rpc("record_challenge_progress", {
+    p_attempt_id: attemptId,
+    p_score: incrementScore,
+    p_duration: incrementDuration,
+    p_guesses: incrementGuesses,
+    p_new_index: newIndex,
+    p_final: isFinal,
+  });
 
   return { success: !error, error };
 }

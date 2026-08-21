@@ -89,6 +89,8 @@ interface AuthContextType {
   requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string; errorCode?: string }>;
   logout: () => Promise<void>;
+  /** Revokes every session on every device, including this one. */
+  logoutEverywhere: () => Promise<{ success: boolean }>;
   deleteAccount: () => Promise<{ success: boolean; error?: string }>;
 }
 
@@ -269,16 +271,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = async () => {
+  /**
+   * Shared by logout() and logoutEverywhere() — identical except for the
+   * sign-out scope.
+   *
+   * scope "local" only drops this device's tokens; "global" revokes every
+   * refresh token the user holds, signing them out on every device including
+   * this one. supabase-js defaults to "global", which is why both callers pass
+   * the scope explicitly rather than relying on the default: a plain "Log Out"
+   * that also signed you out on your phone would be a surprise.
+   *
+   * Returns whether the server actually confirmed the sign-out. Local cleanup
+   * happens either way — logout must never be able to hang or fail — but
+   * "everywhere" is a security action, so its caller needs to know whether the
+   * revocation really landed rather than being told it did regardless.
+   */
+  const performSignOut = async (
+    scope: "local" | "global",
+    timeoutMs: number,
+  ): Promise<boolean> => {
+    let confirmed = false;
     try {
-      // Create a timeout promise that resolves after 1000ms
       const timeoutPromise = new Promise((resolve) =>
-        setTimeout(() => resolve({ error: { message: "timeout" } }), 1000),
+        setTimeout(() => resolve({ error: { message: "timeout" } }), timeoutMs),
       );
 
-      // Race the signOut against the timeout
       const result: any = await Promise.race([
-        supabase.auth.signOut(),
+        supabase.auth.signOut({ scope }),
         timeoutPromise,
       ]);
 
@@ -287,6 +306,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           "Supabase signOut warning (proceeding with local cleanup):",
           result.error.message,
         );
+      } else {
+        confirmed = true;
       }
     } catch (err) {
       console.error("Unexpected error during signOut", err);
@@ -302,6 +323,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // preferences and deliberately survive — see localStorageKeys.ts.
       await clearStoredKeys({ devicePreferences: false });
     }
+    return confirmed;
+  };
+
+  // 1s: a plain logout must never hang, and being wrong costs little — the
+  // device's own tokens are wiped locally regardless.
+  const logout = async () => {
+    await performSignOut("local", 1000);
+  };
+
+  /**
+   * Revokes every session this account has, on every device — the thing to
+   * reach for after losing a phone or suspecting someone else got in. Signs
+   * this device out too, unavoidably: "everywhere" includes here.
+   *
+   * The longer timeout is the point of the distinction. Here the answer
+   * decides whether we can honestly tell the user their other sessions are
+   * gone, so the request gets room to finish rather than being cut off at 1s
+   * and reported as a failure it wasn't.
+   */
+  const logoutEverywhere = async () => {
+    const confirmed = await performSignOut("global", 8000);
+    return { success: confirmed };
   };
 
   const deleteAccount = async () => {
@@ -310,12 +353,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return result;
     }
 
-    // Account (and its auth.users row) is gone server-side at this point —
-    // best-effort signOut to invalidate the now-dangling refresh token, but
-    // local state must be cleared regardless of whether that call succeeds,
-    // same reasoning as logout()'s try/finally above.
+    // Account (and its auth.users row) is gone server-side at this point, so
+    // every token it ever had is already dead — there is nothing left to
+    // revoke. scope: "local" therefore just drops the client's copy, without
+    // the pointless round-trip a global sign-out would make with a token whose
+    // user no longer exists (that call can only fail). Local state must be
+    // cleared regardless of the outcome, same reasoning as logout()'s
+    // try/finally above.
     try {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut({ scope: "local" });
     } catch (e) {
       // ignore
     } finally {
@@ -415,6 +461,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         requestPasswordReset,
         updatePassword,
         logout,
+        logoutEverywhere,
         deleteAccount,
       }}
     >
