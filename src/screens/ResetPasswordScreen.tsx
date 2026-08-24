@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -60,7 +61,7 @@ export default function ResetPasswordScreen() {
 
   if (done) {
     return (
-      <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={[styles.container, styles.center]}>
+      <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={[styles.container, styles.center]}>
         <Text style={[styles.title, styles.successTitle]}>
           {t("password_updated", { defaultValue: "Password Updated!" })}
         </Text>
@@ -70,12 +71,12 @@ export default function ResetPasswordScreen() {
         <Pressable onPress={() => navigation.navigate("Login")}>
           <Text style={styles.link}>{t("go_to_signin", { defaultValue: "Go to Log In" })}</Text>
         </Pressable>
-      </ScrollView>
+      </PageScrollView>
     );
   }
 
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>
         {t("reset_password", { defaultValue: "Reset Password" })}
       </Text>
@@ -115,7 +116,7 @@ export default function ResetPasswordScreen() {
           <Text style={styles.primaryButtonText}>{t("update_password", { defaultValue: "Update Password" })}</Text>
         )}
       </Pressable>
-    </ScrollView>
+    </PageScrollView>
   );
 }
 

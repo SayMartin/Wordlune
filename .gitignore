@@ -72,6 +72,14 @@ yarn-error.log
 
 # env
 .env
+# The rule above matches only the exact name `.env`, so every other env file
+# needs listing. `.env.local` holds the local `supabase start` credentials.
+.env.local
+.env.*.local
+
+# Filled-in backup credentials on the server. The `.env` rule above does not
+# match this filename, so it needs listing explicitly.
+supabase-ops/scripts/backup.env
 
 # Yarn
 .yarn/*

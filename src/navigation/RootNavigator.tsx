@@ -16,36 +16,17 @@ export type { RootStackParamList, MainTabParamList, AppParamList } from "./types
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-// These full-screen stack routes (unlike MainTabs' screens) have no other
-// web-width handling of their own, so each gets the same 896px centering.
-const CenteredSignupScreen = () => (
-  <WebCentered>
-    <SignupScreen />
-  </WebCentered>
-);
-const CenteredLoginScreen = () => (
-  <WebCentered>
-    <LoginScreen />
-  </WebCentered>
-);
+// Signup/Login/ResetPassword/PrivacyPolicy/DeleteAccount are NOT wrapped in
+// WebCentered: they use PageScrollView, which puts the 896px column on the
+// content container instead. Wrapping them would shrink the scroll container
+// back to 896px, stranding the scrollbar mid-viewport and leaving the mouse
+// wheel dead everywhere outside the column.
+//
+// Signout and NotFound have no ScrollView of their own, so they still need the
+// wrapper to get the same measure.
 const CenteredSignoutScreen = () => (
   <WebCentered>
     <SignoutScreen />
-  </WebCentered>
-);
-const CenteredResetPasswordScreen = () => (
-  <WebCentered>
-    <ResetPasswordScreen />
-  </WebCentered>
-);
-const CenteredPrivacyPolicyScreen = () => (
-  <WebCentered>
-    <PrivacyPolicyScreen />
-  </WebCentered>
-);
-const CenteredDeleteAccountScreen = () => (
-  <WebCentered>
-    <DeleteAccountScreen />
   </WebCentered>
 );
 const CenteredNotFoundScreen = () => (
@@ -78,12 +59,12 @@ export default function RootNavigator() {
       <Stack.Screen name="Main" component={MainTabs} />
       <Stack.Screen
         name="Signup"
-        component={CenteredSignupScreen}
+        component={SignupScreen}
         options={{ headerShown: true, title: t("signup", { defaultValue: "Sign Up" }) }}
       />
       <Stack.Screen
         name="Login"
-        component={CenteredLoginScreen}
+        component={LoginScreen}
         options={{ headerShown: true, title: t("login", { defaultValue: "Log In" }) }}
       />
       <Stack.Screen
@@ -93,7 +74,7 @@ export default function RootNavigator() {
       />
       <Stack.Screen
         name="ResetPassword"
-        component={CenteredResetPasswordScreen}
+        component={ResetPasswordScreen}
         options={{ headerShown: true, title: t("reset_password", { defaultValue: "Reset Password" }) }}
       />
       {/* Both reachable without a session — a visitor must be able to read the
@@ -101,12 +82,12 @@ export default function RootNavigator() {
           without credentials. Neither is wrapped in SessionGate. */}
       <Stack.Screen
         name="PrivacyPolicy"
-        component={CenteredPrivacyPolicyScreen}
+        component={PrivacyPolicyScreen}
         options={{ headerShown: true, title: t("privacy_policy", { defaultValue: "Privacy Policy" }) }}
       />
       <Stack.Screen
         name="DeleteAccount"
-        component={CenteredDeleteAccountScreen}
+        component={DeleteAccountScreen}
         options={{ headerShown: true, title: t("delete_account", { defaultValue: "Delete Account" }) }}
       />
       <Stack.Screen

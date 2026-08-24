@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, type RouteProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -452,7 +453,7 @@ export default function GameScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <PageScrollView contentContainerStyle={styles.container}>
         {showPoolSelectors ? (
           <View style={[styles.filterCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <CategorySelector
@@ -631,7 +632,7 @@ export default function GameScreen() {
             )}
           </>
         )}
-      </ScrollView>
+      </PageScrollView>
 
       {gameMode === "practice" && showResultOverlay && (status === "won" || status === "lost") && (
         <PracticeResultOverlay

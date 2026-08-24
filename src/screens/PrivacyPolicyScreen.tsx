@@ -1,5 +1,6 @@
 import React from "react";
-import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, StyleSheet, Text, View } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import {
@@ -146,7 +147,7 @@ export default function PrivacyPolicyScreen() {
   ];
 
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
       <View>
         <Text style={[styles.pageTitle, { color: colors.text }]}>
           {t("privacy_policy", { defaultValue: "Privacy Policy" })}
@@ -331,7 +332,7 @@ export default function PrivacyPolicyScreen() {
           {SUPPORT_EMAIL}
         </Text>
       </View>
-    </ScrollView>
+    </PageScrollView>
   );
 }
 
