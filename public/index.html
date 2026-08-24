@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>Wordlune — Word Guessing Game</title>
+
+    <!--
+      Everything below the reset is what this file exists for. Expo generates a
+      bare index.html with no description and a one-word title; `public/` is the
+      documented way to supply a template instead (web.output is 'single' in
+      app.config.js). Expo injects the favicon link and the bundle script itself
+      at export time, so they are deliberately absent here.
+
+      No canonical link element: every route in this SPA is served the same
+      index.html, so a single hardcoded canonical would tell Google that /game,
+      /about and the rest are all really "/" and should not be indexed on their
+      own. A wrong canonical actively suppresses pages, so none is safer than a
+      static one. Per-route canonicals would need server-rendered HTML per route,
+      which this app (React Navigation, not Expo Router) does not produce.
+
+      lang="en" matches i18n.ts, which defaults to English and only switches when
+      the player picks a language — it is never detected from the device locale.
+    -->
+    <meta name="description" content="Guess the hidden word in English, Swedish or French. Play practice rounds, compete for a place on the leaderboard, or duel a friend in real time. Free to play, no ads." />
+
+    <!-- Boot theme is always dark (ThemeProvider ignores the persisted value on
+         start), so the browser chrome should match rather than flash light. -->
+    <meta name="theme-color" content="#0f172a" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Wordlune" />
+    <meta property="og:title" content="Wordlune — Word Guessing Game" />
+    <meta property="og:description" content="Guess the hidden word in English, Swedish or French. Practice, compete, or duel a friend in real time." />
+    <meta property="og:url" content="https://wordlune.appfinningar.se/" />
+    <meta property="og:image" content="https://wordlune.appfinningar.se/og-image.png" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="sv_SE" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+
+    <!-- `summary`, not `summary_large_image`: og-image.png is the 1024x1024
+         square app icon. A large-image card crops a square badly. -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Wordlune — Word Guessing Game" />
+    <meta name="twitter:description" content="Guess the hidden word in English, Swedish or French. Practice, compete, or duel a friend in real time." />
+    <meta name="twitter:image" content="https://wordlune.appfinningar.se/og-image.png" />
+
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+  </body>
+</html>

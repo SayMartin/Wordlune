@@ -1,5 +1,6 @@
 import React from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -23,7 +24,7 @@ export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
 
   return (
-    <ScrollView
+    <PageScrollView
       style={{ backgroundColor: colors.background }}
       contentContainerStyle={styles.container}
     >
@@ -89,7 +90,7 @@ export default function HomeScreen() {
           </View>
         ))}
       </View>
-    </ScrollView>
+    </PageScrollView>
   );
 }
 

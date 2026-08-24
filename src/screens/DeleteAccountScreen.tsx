@@ -1,5 +1,6 @@
 import React from "react";
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -47,7 +48,7 @@ export default function DeleteAccountScreen() {
   ];
 
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
       <View>
         <Text style={[styles.pageTitle, { color: colors.text }]}>
           {t("delete_account", { defaultValue: "Delete Account" })}
@@ -132,7 +133,7 @@ export default function DeleteAccountScreen() {
           {t("privacy_policy", { defaultValue: "Privacy Policy" })}
         </Text>
       </Pressable>
-    </ScrollView>
+    </PageScrollView>
   );
 }
 

@@ -12,7 +12,6 @@ import HeaderLeft from "../components/HeaderLeft";
 import SessionGate from "../components/SessionGate";
 import WebTopNav from "../components/WebTopNav";
 import WebFooter from "../components/WebFooter";
-import WebCentered from "../components/WebCentered";
 import { useTheme } from "../theme/ThemeProvider";
 import type { MainTabParamList } from "./types";
 
@@ -21,36 +20,26 @@ const isWeb = Platform.OS === "web";
 // Matches Wordse's router.jsx: /game, /progress, and /settings are wrapped in
 // SessionRequiredRoute (at least a guest session required); /home and
 // /about are open to visitors.
-const GatedHomeScreen = () => (
-  <WebCentered>
-    <HomeScreen />
-  </WebCentered>
-);
+// No WebCentered wrapper here: each of these screens uses PageScrollView, which
+// applies the 896px column to its *content container* rather than to the scroll
+// container. Wrapping them would shrink the scroll container back to 896px and
+// reintroduce the problem — a scrollbar stranded mid-viewport and a mouse wheel
+// that does nothing outside the column. SessionGate's visitor card centres
+// itself (maxWidth: 400), so it needs no wrapper either.
 const GatedGameScreen = () => (
-  <WebCentered>
-    <SessionGate>
-      <GameScreen />
-    </SessionGate>
-  </WebCentered>
+  <SessionGate>
+    <GameScreen />
+  </SessionGate>
 );
 const GatedProgressScreen = () => (
-  <WebCentered>
-    <SessionGate>
-      <ProgressScreen />
-    </SessionGate>
-  </WebCentered>
+  <SessionGate>
+    <ProgressScreen />
+  </SessionGate>
 );
 const GatedSettingsScreen = () => (
-  <WebCentered>
-    <SessionGate>
-      <SettingsScreen />
-    </SessionGate>
-  </WebCentered>
-);
-const GatedAboutScreen = () => (
-  <WebCentered>
-    <AboutScreen />
-  </WebCentered>
+  <SessionGate>
+    <SettingsScreen />
+  </SessionGate>
 );
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -105,11 +94,11 @@ function TabNavigator() {
         tabBarIcon: makeTabBarIcon(route.name as keyof MainTabParamList),
       })}
     >
-      <Tab.Screen name="Home" component={GatedHomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
       <Tab.Screen name="Game" component={GatedGameScreen} options={{ title: t("game", { defaultValue: "Game" }) }} />
       <Tab.Screen name="Progress" component={GatedProgressScreen} options={{ title: t("progress", { defaultValue: "Progress" }) }} />
       <Tab.Screen name="Settings" component={GatedSettingsScreen} options={{ title: t("settings", { defaultValue: "Settings" }) }} />
-      <Tab.Screen name="About" component={GatedAboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
+      <Tab.Screen name="About" component={AboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
     </Tab.Navigator>
   );
 }
@@ -122,7 +111,7 @@ export default function MainTabs() {
   }
 
   // Web: WebTopNav spans full width (each screen's own content is centered
-  // via WebCentered above); WebFooter matches Wordse's persistent page footer.
+  // via PageScrollView's content container); WebFooter matches Wordse's footer.
   return (
     <View style={[styles.webPage, { backgroundColor: colors.background }]}>
       <TabNavigator />

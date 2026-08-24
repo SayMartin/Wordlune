@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Deliberately short. Every route here is served the same client-rendered
+  index.html, so listing all of them (progress, settings, login, signup, ...)
+  would offer Google a pile of URLs whose HTML is byte-identical — which reads
+  as duplicate content and dilutes rather than helps.
+
+  These five are the ones worth a direct entry: the app itself, the two pages
+  with real prose, and the two URLs registered with Google Play.
+
+  Keep <lastmod> roughly current when the app changes materially; a date far in
+  the past tells Google to crawl it less often.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://wordlune.appfinningar.se/</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://wordlune.appfinningar.se/game</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wordlune.appfinningar.se/about</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://wordlune.appfinningar.se/privacy</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://wordlune.appfinningar.se/delete-account</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

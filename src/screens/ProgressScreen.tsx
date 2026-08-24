@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import JustPlayingScores from "../components/progress/JustPlayingScores";
@@ -20,7 +21,7 @@ export default function ProgressScreen() {
   const [activeTab, setActiveTab] = useState<Tab>("practice");
 
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>{t("progress", { defaultValue: "Progress" })}</Text>
 
       <View style={[styles.tabBar, { borderColor: colors.border }]}>
@@ -45,7 +46,7 @@ export default function ProgressScreen() {
       {activeTab === "practice" && <JustPlayingScores />}
       {activeTab === "competitive" && <CompetitiveScores />}
       {activeTab === "leaderboard" && <LeaderboardScores />}
-    </ScrollView>
+    </PageScrollView>
   );
 }
 

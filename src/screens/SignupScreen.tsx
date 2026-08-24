@@ -2,12 +2,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
+import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -225,7 +225,7 @@ export default function SignupScreen() {
   }
 
   return (
-    <ScrollView
+    <PageScrollView
       style={{ backgroundColor: colors.background }}
       contentContainerStyle={styles.container}
     >
@@ -384,7 +384,7 @@ export default function SignupScreen() {
           <Text style={styles.primaryButtonText}>{t("signup", { defaultValue: "Sign Up" })}</Text>
         )}
       </Pressable>
-    </ScrollView>
+    </PageScrollView>
   );
 }
 

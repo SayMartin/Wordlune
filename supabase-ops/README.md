@@ -48,5 +48,81 @@ Run from this directory (`supabase-ops/`) so the `migrations/...` relative paths
   ```
 - **`update_capitals_sv.py`** — one-off script that patches Swedish spellings into `migrations/seeds/capital-cities.csv` (or `migrations/capital-cities.csv`, depending on which file exists at run time).
 - **`console_utils.ts`** — not a runnable script; just documents the `jq -S` one-liners used to keep `src/locales/*/translation.json` sorted (a WordluneNative repo path, if reused).
+- **`backup.sh`** — nightly encrypted database backup to Cloudflare R2. Runs on the server from cron, not from a laptop, and reads its own `backup.env` rather than the `.env` the other scripts use. See [Backups](#backups) below.
 
-Neither script is wired into `package.json` — run them directly from this directory, with a `.env` here providing the service-role credentials (see `upload_seeds_to_staging.js` above for the one gotcha: it needs `--env-file=.env` explicitly, the others load `.env` on their own).
+None of these are wired into `package.json` — run them directly from this directory, with a `.env` here providing the service-role credentials (see `upload_seeds_to_staging.js` above for the one gotcha: it needs `--env-file=.env` explicitly, the others load `.env` on their own).
+
+## Backups
+
+`scripts/backup.sh` takes a nightly `pg_dump`, encrypts it with `age`, and uploads it to the `wordlune-backups` R2 bucket. It is adapted from cv-forge's `scripts/backup.sh` and keeps that design deliberately, including its **public-key** encryption: the server holds only the age *public* key, so it can create backups but never read them back. The private key belongs in a password manager, not on the server — putting it there gives up the entire property this design exists for.
+
+Setup, once, on the server:
+
+```sh
+sudo apt install age                       # the script's only host dependency
+age-keygen -o wordlune-backup.key          # run this somewhere ELSE, not the server
+cp scripts/backup.env.example scripts/backup.env
+$EDITOR scripts/backup.env                 # public recipient line + Supabase + R2 creds
+crontab -e
+```
+```
+30 3 * * * /home/martin/wordlune/supabase-ops/scripts/backup.sh >> /home/martin/backups/wordlune-backup.log 2>&1
+```
+
+03:30 sits between cv-forge's 03:15 backup and its 03:45 purge so the jobs never overlap.
+
+Two Supabase-specific traps, both spelled out in `backup.env.example`: connect to the **session pooler on port 5432** (the transaction pooler on 6543 has no prepared statements and `pg_dump` fails against it, and the direct `db.<ref>.supabase.co` host is IPv6-only), and give the R2 endpoint its **jurisdictional `.eu.` form** (an EU bucket is invisible on the plain address and fails as if it did not exist).
+
+The dump covers `public` **and `auth`**. Without the auth schema every account is gone and every foreign key in `public` points at rows that no longer exist — it would restore into a database nobody can log into.
+
+Retention is split: the script prunes local copies to `KEEP_LOCAL` (default 7), while remote expiry is an **R2 lifecycle rule set on the bucket in the dashboard** (30 days, matching cv-forge). Server-side expiry keeps working even when the script does not.
+
+### Restoring
+
+```sh
+age --decrypt -i wordlune-backup.key wordlune-<stamp>.dump.age > restore.dump
+pg_restore -l restore.dump | head -30      # sanity check: public AND auth objects
+pg_restore --no-owner --no-privileges -d "<target-database-url>" restore.dump
+```
+
+The dump keeps ownership and ACLs on purpose — `pg_restore` can drop them with `--no-owner` at restore time, but it cannot invent them if the dump never captured them. Decide at restore, not at backup.
+
+A backup nobody has restored is a hypothesis. Restore into the local `supabase start` stack occasionally and confirm `auth.users` and `player_profiles` have the row counts you expect.
+
+## Local development database
+
+`supabase/config.toml` (repo root) configures a full local stack — Postgres, GoTrue, PostgREST, Realtime, Storage, Studio — so migrations can be rehearsed against a disposable database instead of prod. It runs on the laptop and **does not consume a Supabase free-tier project slot**.
+
+```sh
+supabase start          # first run pulls images; prints the local URL + anon key
+supabase stop           # `--no-backup` to discard the volume entirely
+supabase db reset       # rebuild from migrations + seed, from scratch
+```
+
+Put the printed URL and anon key in a root `.env.local` (gitignored) to point the app at it.
+
+Three settings in `config.toml` are deliberately not the CLI defaults, and matter:
+
+- **`enable_anonymous_sign_ins = true`** — "Play as Guest" is a real anonymous Supabase session and `AuthContext` derives `authState` from `session.user.is_anonymous`. Left at the default `false`, guest mode fails locally in a way that looks like an app bug.
+- **`site_url` / `additional_redirect_urls`** — point at Expo's web dev server on 8081 plus the `se.wordlune.app://` scheme, so email confirmation and password reset resolve locally.
+- **`minimum_password_length = 8`** — matches `SignupScreen.tsx`'s own check.
+
+### The baseline
+
+The 49 files in `migrations/` were applied by hand through the SQL editor, and (see [Naming convention](#naming-convention)) their dates are invented, so sorting them is *not* run order. Renaming them into CLI-style 14-digit timestamps would encode that fiction as fact.
+
+So don't. Generate a single baseline from what prod actually looks like now, and leave `migrations/` as the historical record:
+
+```sh
+supabase db dump --db-url "<prod-session-pooler-url>" --schema public,auth \
+  -f supabase/migrations/$(date -u +%Y%m%d%H%M%S)_baseline.sql
+
+# word content, so the local app is playable
+pg_dump "<prod-session-pooler-url>" --data-only \
+  -t words -t categories -t subcategories -t words_subcategories \
+  > supabase/seed.sql
+```
+
+`supabase db reset` runs the baseline then `seed.sql` automatically. From here, write new migrations with `supabase migration new <name>`, test them with `db reset`, and only then apply to prod.
+
+**Limitation worth knowing:** `pg_cron` and `pg_net` are not in the local stack, so the scheduled cleanup jobs (`cleanup_anonymous_users`, the inactivity warnings) cannot be exercised end to end. Their SQL function bodies can be called by hand; the scheduling itself is only verifiable in prod.

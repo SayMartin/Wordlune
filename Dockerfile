@@ -18,6 +18,12 @@ ENV EXPO_PUBLIC_SUPABASE_ANON_KEY=$EXPO_PUBLIC_SUPABASE_ANON_KEY
 
 RUN npm run build:web
 
+# nginx.conf serves this as the body for unknown paths (error_page 404). It is
+# byte-identical to index.html — same bundle, same SPA shell — so the app boots
+# and React Navigation renders NotFoundScreen, while the response carries a real
+# 404 instead of the soft 404 a blanket SPA fallback would produce.
+RUN cp dist/index.html dist/404.html
+
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Included from every location block in default.conf — see the comment there
