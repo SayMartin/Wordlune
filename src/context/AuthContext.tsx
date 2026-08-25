@@ -29,13 +29,25 @@ async function fetchOrCreateProfile(userId: string): Promise<PlayerProfile | nul
 }
 
 // On web, redirect back to the page the user signed up from — matches the
-// original Wordse web app's `emailRedirectTo: window.location.origin`, and
-// Supabase's redirect allow-list is already scoped to
-// https://wordlune.se. On native, a custom URL scheme is needed
-// instead, which requires native config (iOS: CFBundleURLTypes in
-// Info.plist, Android: intent-filter in AndroidManifest.xml) that isn't set
-// up yet — signup with email confirmation won't complete the redirect on
-// native until that's added.
+// original Wordse web app's `emailRedirectTo: window.location.origin`.
+//
+// This only works if the resulting origin is in Supabase's redirect allow-list
+// (Dashboard → Authentication → URL Configuration). When it isn't, Supabase
+// does not fail loudly: it silently substitutes the project's **Site URL**, so
+// the emailed link points somewhere else entirely and the app looks like it
+// built the wrong address. That is exactly what happened on 2026-08-25 — Site
+// URL was still `https://wordse.appfinningar.se` from before the rename, a
+// subdomain that no longer resolves, so every reset link dead-ended on
+// DNS_PROBE_FINISHED_NXDOMAIN. The live origin is
+// `https://wordlune.appfinningar.se`, and the allow-list needs
+// `https://wordlune.appfinningar.se/**` — the double asterisk is what lets the
+// `/reset-password` path below match. (Do not assume `wordlune.se`: it was
+// bought and then cancelled under ångerrätt, and is not what the site serves.)
+//
+// On native, a custom URL scheme is needed instead, which requires native
+// config (iOS: CFBundleURLTypes in Info.plist, Android: intent-filter in
+// AndroidManifest.xml) that isn't set up yet — signup with email confirmation
+// won't complete the redirect on native until that's added.
 const AUTH_REDIRECT_URL =
   Platform.OS === "web" && (globalThis as any).window
     ? (globalThis as any).window.location.origin
