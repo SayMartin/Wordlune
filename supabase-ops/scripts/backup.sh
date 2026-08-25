@@ -92,11 +92,21 @@ cleanup() { rm -f "$PLAIN"; }
 trap cleanup EXIT
 
 echo "backup: dumping $PG_DB from $PG_HOST:$PG_PORT"
-# -e PGPASSWORD without a value passes it from this shell's environment (it was
-# exported by `set -a` above) instead of writing it into the container's argv,
-# where `ps` on this host would show the database password to any local user.
+# libpq reads the password from PGPASSWORD, but backup.env names it PG_PASSWORD,
+# so it has to be re-exported under the name libpq actually looks for. Without
+# this the container gets no password at all and pg_dump falls back to an
+# interactive prompt it can never satisfy ("fe_sendauth: no password supplied").
+export PGPASSWORD="$PG_PASSWORD"
+
+# `-e PGPASSWORD` with no value passes it from this shell's environment rather
+# than writing it into the container's argv, where `ps` on this host would show
+# the database password to any local user.
+#
+# -w makes pg_dump fail immediately instead of prompting: this runs from cron
+# with no terminal, and a prompt there would hang the job forever rather than
+# erroring out.
 docker run --rm -e PGPASSWORD "$PG_IMAGE" \
-  pg_dump -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
+  pg_dump -w -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
           -n public -n auth -Fc > "$PLAIN"
 
 # A pg_dump that fails mid-stream can still leave a small, well-formed-looking

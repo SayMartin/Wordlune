@@ -21,11 +21,26 @@ There is no migration-tracking table, so nothing enforces order or detects a par
 
 `20260818_cleanup_anonymous_users.sql` schedules a daily `pg_cron` job that deletes guest (`is_anonymous = true`) `auth.users` accounts inactive for 14+ days — nothing in the app itself ever deletes guest accounts, so without this they accumulate forever. Requires the `pg_cron` extension enabled (Database → Extensions in the dashboard, or the `create extension` line in the migration if you have the privileges). Also fixes `duel_matches`' foreign keys to `ON DELETE CASCADE` (they had no cascade before, which would've blocked deleting any guest who'd played a Duel). Applied and `pg_cron` enabled in the shared project as of 2026-08-18.
 
-`20260819_warn_and_cleanup_inactive_registered_users.sql` does the equivalent for **registered** (non-anonymous) accounts, split by email verification. Email-verified accounts get a warning first: a daily `pg_cron` job emails any player inactive 6+ months (via `pg_net` → the Resend API, no Edge Function involved), then a second daily job deletes anyone who's still inactive 14 days after that warning (auto-cancelled if they sign back in). Accounts that never confirmed their email get no warning — a third daily job deletes them 14 days after signup, since an unconfirmed signup has nothing to lose access to. Requires `pg_net` enabled alongside `pg_cron`, plus the existing "wordse-mail" Resend API key (Resend dashboard, `appfinningar.se` domain already verified there) stored in Supabase Vault as the `resend_api_key` secret (`select vault.create_secret(...)` — see the migration's step 2 comment; **not yet run against the shared project** as of 2026-08-19, needs the Vault secret set first).
+`20260819_warn_and_cleanup_inactive_registered_users.sql` does the equivalent for **registered** (non-anonymous) accounts, split by email verification. Email-verified accounts get a warning first: a daily `pg_cron` job emails any player inactive 6+ months (via `pg_net` → the Resend API, no Edge Function involved), then a second daily job deletes anyone who's still inactive 14 days after that warning (auto-cancelled if they sign back in). Accounts that never confirmed their email get no warning — a third daily job deletes them 14 days after signup, since an unconfirmed signup has nothing to lose access to. Requires `pg_net` enabled alongside `pg_cron`, plus the existing "wordse-mail" Resend API key (Resend dashboard, `appfinningar.se` domain already verified there) stored in Supabase Vault as the `resend_api_key` secret (`select vault.create_secret(...)` — see the migration's step 2 comment). **Applied against the shared project on 2026-08-19/20**, with the Vault secret set 2026-08-19 08:04 UTC. Verified 2026-08-25: all four `cron.job` rows active (this migration's three plus `cleanup-anonymous-users`), and the first warning run at 2026-08-20 02:00 UTC produced five `net._http_response` rows with `status_code = 200`, so Resend accepted them.
+
+Note that `net.http_post` is **asynchronous**: it queues the request and returns, so the function marks `deletion_warned_at` whether or not the mail is ever delivered, and the deletion job 14 days later only checks that mark. A revoked API key would therefore delete accounts that were never warned. After any change to the Resend key, check `net._http_response` for non-200 rows and clear `deletion_warned_at` before the grace period expires.
 
 `20260819_master_seed_with_french.sql` **supersedes `20260127_master_seed.sql`** for promoting `staging_import_rows` into `words`/`categories`/`subcategories` — the older one predates French support and silently left `word_fr`/`category_name_fr`/`subcategory_name_fr` unset on every row it touched. Same staging → upsert flow, just with `_fr` handled at every step alongside `_en`/`_sv`. Needs `staging_import_rows` to actually have the `word_fr`/`category_name_fr`/`subcategory_name_fr` columns first (`ALTER TABLE ... ADD COLUMN IF NOT EXISTS`, see the comment at the top of the migration) since that table predates the French migration too. Use this one going forward; keep the old file only for history.
 
 `20260820_fix_english_diacritics_oland_skanor.sql` patches 31 rows (30 in the "Villages on Öland" subcategory, plus "Skanör" in "Cities in Sweden") whose `word_en` was never transliterated to ASCII when English support was added — it was left identical to `word_sv`/`word_fr`, diacritics and all. Not just cosmetic: with English selected, the on-screen keyboard has no Å/Ä/Ö keys and the physical-keyboard input regex only matches `[A-Za-z]`, so a player who drew one of these as their secret could never type the required letter — an unsolvable round. `migrations/seeds/villages-öland.csv` and `migrations/seeds/cities-sweden.csv` are already fixed for future reseeding; this migration patches the same rows directly in the live `words` table. **Not yet applied against the shared project** as of 2026-08-20 — this was a scoped fix for the two files audited so far, not a full pass over every category/language (word_native itself is non-ASCII for "Skanör" too — `skanör`, not `skanor` — left as-is since it's not the display column and out of scope here).
+
+`20260825_fix_unspellable_words.sql` is the full audit `20260820` deliberately wasn't. `20260820` fixed 31 rows in two seed files; this checks *every* word column against the characters its language can actually produce (`Keyboard.tsx`'s `LAYOUTS` and `GameScreen.tsx`'s `LETTER_PATTERNS` — letters plus space and hyphen, nothing else) and fixes the 22 rows that fail. Diacritics turned out to be only one of four causes: apostrophes (`NUKU'ALOFA`, `ST GEORGE'S`, `ST JOHN'S`), an ampersand (`RIESE & MÜLLER`), and parentheses that were disambiguation metadata leaking into the answer (`BLASINGE (BORGHOLM)`, `ROYAL ENFIELD (APACHE)`) are the others. Where correct spelling and typeability conflict — `MOÇAMBIQUE`, `MÜSLI` — typeability wins, on the same reasoning `word_en` already applies to Swedish place names. Also repairs `CÔTE DEIVOIRE`, where "d'Ivoire" had its apostrophe replaced by an `E`.
+
+**Don't trust this paragraph for apply status — run the check.** The verification query is at the bottom of the migration itself and returns zero rows when it has been applied:
+
+```sql
+select 'en' as lang, word_en as word from words where word_en !~ '^[A-Za-z \-]+$'
+union all select 'sv', word_sv from words where word_sv !~ '^[A-Za-zÅÄÖåäö \-]+$'
+union all select 'fr', word_fr from words
+  where word_fr !~ '^[A-Za-zÀÂÄÅÇÉÈÊËÎÏÔÖÙÛÜŸÆŒàâäåçéèêëîïôöùûüÿæœ \-]+$';
+```
+
+`migrations/seeds/*.csv` were fixed to match, plus seven more the database doesn't have (`Škoda`, `Citroën`, `Cervélo`, `Motobécane`, `Sana'a`, `Søndreström`, and `\N'Djamena` — the last being PostgreSQL's `\N` NULL marker pasted into the data). A stray space in the `ri se_muller` row id was corrected to `riese_muller` at the same time.
 
 `20260821`–`20260826` are one body of work: the GDPR/privacy lockdown. **All applied against the shared project as of 2026-08-21**, and verified from outside with the public anon key (23/23 checks — own-row isolation, the duel flow end to end, and the data-export queries).
 
@@ -56,18 +71,35 @@ None of these are wired into `package.json` — run them directly from this dire
 
 `scripts/backup.sh` takes a nightly `pg_dump`, encrypts it with `age`, and uploads it to the `wordlune-backups` R2 bucket. It is adapted from cv-forge's `scripts/backup.sh` and keeps that design deliberately, including its **public-key** encryption: the server holds only the age *public* key, so it can create backups but never read them back. The private key belongs in a password manager, not on the server — putting it there gives up the entire property this design exists for.
 
-Setup, once, on the server:
+Setup, once, on the server.
+
+Note that smurfserver has **no checkout of this repo** — unlike cv-forge, whose `~/cv-forge` is both a git working copy and the compose directory, `~/wordlune/` holds only `docker-compose.yml` (itself untracked). The server pulls a finished image from GHCR and never needs the source. So the script has to be copied over rather than pulled; the repo is private, so `git clone` on the server would need GitHub credentials for the sake of two files.
+
+From the laptop:
+
+```sh
+ssh martin@192.168.50.131 'mkdir -p ~/wordlune/scripts ~/backups/wordlune'
+scp supabase-ops/scripts/backup.sh supabase-ops/scripts/backup.env.example \
+    martin@192.168.50.131:~/wordlune/scripts/
+```
+
+Then on the server:
 
 ```sh
 sudo apt install age                       # the script's only host dependency
 age-keygen -o wordlune-backup.key          # run this somewhere ELSE, not the server
-cp scripts/backup.env.example scripts/backup.env
-$EDITOR scripts/backup.env                 # public recipient line + Supabase + R2 creds
+cd ~/wordlune/scripts
+cp backup.env.example backup.env
+chmod 600 backup.env                       # it holds the database password
+$EDITOR backup.env                         # public recipient line + Supabase + R2 creds
+./backup.sh                                # test run: should end with "backup: done"
 crontab -e
 ```
 ```
-30 3 * * * /home/martin/wordlune/supabase-ops/scripts/backup.sh >> /home/martin/backups/wordlune-backup.log 2>&1
+30 3 * * * /home/martin/wordlune/scripts/backup.sh >> /home/martin/backups/wordlune-backup.log 2>&1
 ```
+
+Re-copy `backup.sh` whenever it changes here — nothing on the server pulls it automatically.
 
 03:30 sits between cv-forge's 03:15 backup and its 03:45 purge so the jobs never overlap.
 
@@ -86,6 +118,10 @@ pg_restore --no-owner --no-privileges -d "<target-database-url>" restore.dump
 ```
 
 The dump keeps ownership and ACLs on purpose — `pg_restore` can drop them with `--no-owner` at restore time, but it cannot invent them if the dump never captured them. Decide at restore, not at backup.
+
+**Prove the key before you file it away.** Generate it, take a backup, restore that backup, and only then move the key file to the password manager and delete it from disk. Encryption to a key you have never decrypted with is an assumption, not a backup — and the moment you discover it was wrong is the moment you needed it.
+
+If the local file is already gone, you do not need to guess: write the saved key back to a file and run `age-keygen -y` on it. It prints the public key, which must equal `AGE_RECIPIENT` in `backup.env`. Same pair means every dump encrypted to it is readable.
 
 A backup nobody has restored is a hypothesis. Restore into the local `supabase start` stack occasionally and confirm `auth.users` and `player_profiles` have the row counts you expect.
 
