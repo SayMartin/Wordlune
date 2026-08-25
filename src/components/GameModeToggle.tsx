@@ -17,6 +17,9 @@ const MODES: { key: Mode; emoji: string; labelKey: string; fallback: string; ava
   { key: "duel", emoji: "⚔️", labelKey: "duel", fallback: "Duel", available: true },
 ];
 
+const BUTTON_SIZE = 40;
+const BUTTON_GAP = 6;
+
 export default function GameModeToggle({ mode, onChange, disabled = false }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -25,20 +28,36 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
   // which is the desired behavior (touch has no equivalent to hover).
   const [hoveredKey, setHoveredKey] = useState<Mode | null>(null);
 
+  const labelFor = (m: (typeof MODES)[number]) =>
+    t(m.labelKey, { defaultValue: m.fallback }) + (!m.available ? " 🔒" : "");
+
+  const hoveredIndex = MODES.findIndex((m) => m.key === hoveredKey);
+  const hovered = hoveredIndex === -1 ? undefined : MODES[hoveredIndex];
+
+  // The bubble's RIGHT edge lines up with the hovered button's right edge, and
+  // it grows leftward from there.
+  //
+  // Which way it grows isn't a style choice — it's dictated by where this
+  // control lives. The group sits at the far right of the filter card, with
+  // about 10px to its right and the whole card to its left, and Card clips
+  // (`overflow: "hidden"`). Anything growing rightward is cut; anything growing
+  // leftward has room to spare, in every language.
+  //
+  // Anchoring per button matters as much as the direction: pinning one bubble
+  // to the group's right edge put "Practice" under the Duel button, which reads
+  // as a label for the wrong thing.
+  const tooltipRight =
+    hoveredIndex === -1 ? 0 : (MODES.length - 1 - hoveredIndex) * (BUTTON_SIZE + BUTTON_GAP);
+
   return (
     <View style={styles.container}>
-      {MODES.map((m) => {
-        const isActive = mode === m.key;
-        const isDisabled = disabled || !m.available;
-        const label = t(m.labelKey, { defaultValue: m.fallback }) + (!m.available ? " 🔒" : "");
-        return (
-          <View key={m.key} style={styles.buttonWrapper}>
-            {hoveredKey === m.key && (
-              <View style={[styles.tooltip, { backgroundColor: colors.text }]} pointerEvents="none">
-                <Text style={[styles.tooltipText, { color: colors.background }]}>{label}</Text>
-              </View>
-            )}
+      <View style={styles.row}>
+        {MODES.map((m) => {
+          const isActive = mode === m.key;
+          const isDisabled = disabled || !m.available;
+          return (
             <Pressable
+              key={m.key}
               style={[
                 styles.button,
                 { borderColor: colors.border },
@@ -49,14 +68,41 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
               onHoverIn={() => setHoveredKey(m.key)}
               onHoverOut={() => setHoveredKey(null)}
               disabled={isDisabled}
-              accessibilityLabel={label}
+              accessibilityLabel={labelFor(m)}
               accessibilityState={{ selected: isActive }}
             >
-              <Text style={[styles.icon, { color: isActive ? "#ffffff" : colors.text }]}>{m.emoji}</Text>
+              <Text style={[styles.icon, { color: isActive ? colors.onAccent : colors.text }]}>
+                {m.emoji}
+              </Text>
             </Pressable>
-          </View>
-        );
-      })}
+          );
+        })}
+      </View>
+
+      {/* One tooltip, rendered as a sibling of the button row rather than one
+          per button inside it.
+
+          Per-button bubbles could not come forward at all: react-native-web
+          emits every View with `position: relative; z-index: 0`, which makes
+          each one its own stacking context — so a bubble's z-index was trapped
+          inside its own button's wrapper and lost to the sibling buttons drawn
+          after it. Raising the number does nothing.
+
+          It also opens downward, not up: above the buttons there are ~15px
+          before Card's `overflow: hidden` cuts, and the bubble needs about
+          twice that. Below it there is the whole card. */}
+      {hovered && (
+        <View
+          style={[
+            styles.tooltip,
+            { right: tooltipRight, backgroundColor: colors.surfaceSolid, borderColor: colors.border },
+          ]}
+        >
+          <Text style={[styles.tooltipText, { color: colors.text }]} numberOfLines={1}>
+            {labelFor(hovered)}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -66,15 +112,15 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
 // across browsers/fonts, so padding math alone doesn't reliably line the two
 // controls up.
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    gap: 6,
-    flexShrink: 0,
-  },
-  buttonWrapper: { position: "relative" },
+  // `elevated` so the tooltip clears the rows below it inside the same card.
+  // Because of the stacking-context note above, this has to be repeated on
+  // every ancestor between here and the tooltip's nearest common parent with
+  // whatever it needs to cover — see CategorySelector's headerRow.
+  container: { flexShrink: 0, zIndex: 20 },
+  row: { flexDirection: "row", gap: BUTTON_GAP },
   button: {
-    height: 40,
-    width: 40,
+    height: BUTTON_SIZE,
+    width: BUTTON_SIZE,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 8,
@@ -85,20 +131,17 @@ const styles = StyleSheet.create({
   // custom disabled color.
   disabledState: { opacity: 0.4 },
   tooltip: {
+    // No width and no `left`: the bubble sizes to its label, and `right` is set
+    // per hovered button at render time so it grows leftward from there.
     position: "absolute",
-    bottom: "100%",
-    left: "50%",
-    // RN's transform doesn't support percentage values, so centering uses a
-    // fixed-width tooltip (see minWidth/maxWidth) offset by half of it
-    // instead of `translateX(-50%)`.
-    marginLeft: -60,
-    marginBottom: 6,
-    minWidth: 120,
-    maxWidth: 120,
+    top: "100%",
+    marginTop: 6,
     paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     borderRadius: 6,
-    zIndex: 10,
+    borderWidth: 1,
+    zIndex: 20,
+    pointerEvents: "none",
   },
   tooltipText: { fontSize: 12, fontWeight: "600", textAlign: "center" },
 });

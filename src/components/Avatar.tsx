@@ -124,7 +124,10 @@ export function AvatarInitial({ seed, size = 32 }: { seed?: string | null; size?
 }
 
 function avatarStyle(size: number) {
-  return { width: size, height: size, borderRadius: size / 2, backgroundColor: "#e5e7eb" };
+  // Neutral rather than a fixed pale grey: this only shows as a placeholder
+  // behind the legacy remote-image branch, where a light plate flashed against
+  // the dark theme before whatever loaded on top of it.
+  return { width: size, height: size, borderRadius: size / 2, backgroundColor: "rgba(148,163,184,0.2)" };
 }
 
 export const styles = StyleSheet.create({});

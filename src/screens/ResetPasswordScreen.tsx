@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import { PageTitle } from "../components/ui/Heading";
 import { useAuth } from "../context/AuthContext";
 import { PasswordInput } from "../components/PasswordInput";
 import { translateAuthError } from "../utils/authErrors";
@@ -61,25 +64,26 @@ export default function ResetPasswordScreen() {
 
   if (done) {
     return (
-      <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={[styles.container, styles.center]}>
-        <Text style={[styles.title, styles.successTitle]}>
+      <PageScrollView contentContainerStyle={[styles.container, styles.center]}>
+        <Text style={[styles.title, { color: colors.success }]}>
           {t("password_updated", { defaultValue: "Password Updated!" })}
         </Text>
         <Text style={{ color: colors.text, textAlign: "center", marginBottom: 24 }}>
           {t("password_updated_msg", { defaultValue: "Your password has been changed. You can now log in with it." })}
         </Text>
         <Pressable onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.link}>{t("go_to_signin", { defaultValue: "Go to Log In" })}</Text>
+          <Text style={[styles.link, { color: colors.accent }]}>
+            {t("go_to_signin", { defaultValue: "Go to Log In" })}
+          </Text>
         </Pressable>
       </PageScrollView>
     );
   }
 
   return (
-    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>
-        {t("reset_password", { defaultValue: "Reset Password" })}
-      </Text>
+    <PageScrollView contentContainerStyle={styles.container}>
+      <Card style={styles.card}>
+      <PageTitle>{t("reset_password", { defaultValue: "Reset Password" })}</PageTitle>
 
       <Text style={{ color: colors.textMuted }}>
         {t("reset_password_new_prompt", { defaultValue: "Choose a new password for your account." })}
@@ -103,33 +107,25 @@ export default function ResetPasswordScreen() {
         placeholder={t("confirm_password_placeholder", { defaultValue: "Re-enter your password" }) as string}
       />
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
 
-      <Pressable
-        style={[styles.button, styles.primaryButton, loading && styles.disabled]}
+      <Button
+        fullWidth
+        loading={loading}
+        label={t("update_password", { defaultValue: "Update Password" })}
         onPress={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#ffffff" />
-        ) : (
-          <Text style={styles.primaryButtonText}>{t("update_password", { defaultValue: "Update Password" })}</Text>
-        )}
-      </Pressable>
+      />
+      </Card>
     </PageScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, paddingTop: 64, gap: 16, maxWidth: 420, width: "100%", alignSelf: "center" },
+  container: { padding: 16, paddingTop: 40, paddingBottom: 48, maxWidth: 460, width: "100%", alignSelf: "center" },
+  card: { padding: 24, gap: 16 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   title: { fontSize: 22, fontWeight: "700" },
-  successTitle: { color: "#16a34a" },
-  link: { color: "#3b82f6" },
+  link: { fontWeight: "600" },
   hint: { fontSize: 12 },
-  error: { color: "#ef4444", fontSize: 14 },
-  button: { borderRadius: 8, paddingVertical: 12, alignItems: "center" },
-  primaryButton: { backgroundColor: "#2563eb" },
-  primaryButtonText: { color: "#ffffff", fontWeight: "600" },
-  disabled: { opacity: 0.5 },
+  error: { fontSize: 14 },
 });

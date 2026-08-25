@@ -23,7 +23,7 @@ export default function PracticeResultOverlay({
   isSaved,
 }: Props) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, radii } = useTheme();
   const isWon = status === "won";
   const minutes = Math.floor(durationSeconds / 60);
   const seconds = durationSeconds % 60;
@@ -32,14 +32,20 @@ export default function PracticeResultOverlay({
   return (
     <Modal transparent animationType="fade" visible onRequestClose={onClose}>
       <View style={styles.backdrop}>
+        {/* Opaque, not the glass surface — a modal you can see the board
+            through reads as a bug rather than as depth. */}
         <View
           style={[
             styles.card,
-            { backgroundColor: colors.surface, borderColor: isWon ? "#4ade80" : colors.border },
+            {
+              backgroundColor: colors.surfaceSolid,
+              borderColor: isWon ? colors.success : colors.border,
+              borderRadius: radii.lg,
+            },
           ]}
         >
           <Text style={styles.emoji}>{isWon ? "🏆" : "🐌"}</Text>
-          <Text style={[styles.title, { color: isWon ? "#16a34a" : colors.text }]}>
+          <Text style={[styles.title, { color: isWon ? colors.success : colors.text }]}>
             {isWon ? t("you_won", { defaultValue: "You Won!" }) : t("game_over", { defaultValue: "Game Over" })}
           </Text>
           <Text style={{ color: colors.textMuted, marginBottom: 8 }}>
@@ -49,7 +55,7 @@ export default function PracticeResultOverlay({
           <Text style={[styles.wordLabel, { color: colors.textMuted }]}>
             {t("correct_word", { defaultValue: "Correct Word" })}
           </Text>
-          <Text style={[styles.word, { color: isWon ? colors.text : "#dc2626" }]}>{secret}</Text>
+          <Text style={[styles.word, { color: isWon ? colors.text : colors.danger }]}>{secret}</Text>
 
           <View style={styles.statsRow}>
             <View style={styles.statCell}>
@@ -58,7 +64,7 @@ export default function PracticeResultOverlay({
             </View>
             <View style={styles.statCell}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("points", { defaultValue: "Points" })}</Text>
-              <Text style={[styles.statValue, { color: "#d97706" }]}>{score}</Text>
+              <Text style={[styles.statValue, { color: colors.warning }]}>{score}</Text>
             </View>
             <View style={styles.statCell}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("time", { defaultValue: "Time" })}</Text>
@@ -67,14 +73,18 @@ export default function PracticeResultOverlay({
           </View>
 
           {isSaved && (
-            <Text style={styles.saved}>✓ {t("score_saved", { defaultValue: "Score saved" })}</Text>
+            <Text style={[styles.saved, { color: colors.success }]}>
+              ✓ {t("score_saved", { defaultValue: "Score saved" })}
+            </Text>
           )}
 
           <Pressable
-            style={[styles.button, { backgroundColor: isWon ? "#16a34a" : "#1f2937" }]}
+            style={[styles.button, { backgroundColor: isWon ? colors.success : colors.surfaceHover }]}
             onPress={onClose}
           >
-            <Text style={styles.buttonText}>{t("ok", { defaultValue: "OK" })}</Text>
+            <Text style={[styles.buttonText, { color: isWon ? colors.onAccent : colors.text }]}>
+              {t("ok", { defaultValue: "OK" })}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -84,16 +94,18 @@ export default function PracticeResultOverlay({
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", padding: 16 },
-  card: { width: "100%", maxWidth: 360, borderRadius: 20, borderWidth: 2, padding: 24, alignItems: "center", gap: 4 },
+  card: { width: "100%", maxWidth: 360, borderWidth: 1, padding: 24, alignItems: "center", gap: 4 },
   emoji: { fontSize: 44, marginBottom: 4 },
   title: { fontSize: 22, fontWeight: "900" },
   wordLabel: { fontSize: 11, textTransform: "uppercase", marginTop: 8 },
   word: { fontSize: 20, fontWeight: "800", textTransform: "uppercase", marginBottom: 8, letterSpacing: 1 },
   statsRow: { flexDirection: "row", gap: 8, width: "100%", marginTop: 4 },
   statCell: { flex: 1, alignItems: "center", gap: 2, paddingVertical: 8, borderRadius: 8, backgroundColor: "rgba(148,163,184,0.15)" },
+  // rgba grey works on both themes here: it darkens a light card and lightens
+  // a dark one, which is exactly what a stat well wants to do.
   statLabel: { fontSize: 10, textTransform: "uppercase", fontWeight: "700" },
   statValue: { fontSize: 16, fontWeight: "800" },
-  saved: { color: "#16a34a", fontWeight: "600", marginTop: 8 },
-  button: { width: "100%", paddingVertical: 12, borderRadius: 12, alignItems: "center", marginTop: 16 },
-  buttonText: { color: "#ffffff", fontWeight: "700" },
+  saved: { fontWeight: "600", marginTop: 8 },
+  button: { width: "100%", paddingVertical: 12, borderRadius: 999, alignItems: "center", marginTop: 16 },
+  buttonText: { fontWeight: "700" },
 });

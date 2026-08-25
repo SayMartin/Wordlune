@@ -492,5 +492,7 @@
   "you_won": "🎉 Vous avez gagné !",
   "you_won_duel": "Vous avez trouvé le mot en premier !",
   "zero_score_brag_message": "Voulez-vous vraiment publier un score de ZÉRO ? Se vanter d'un échec est une stratégie audacieuse. Êtes-vous sûr ?",
-  "zero_score_brag_title": "Sérieusement ? 🤡"
+  "zero_score_brag_title": "Sérieusement ? 🤡",
+  "free_to_play": "Gratuit",
+  "home_modes_heading": "Façons de jouer"
 }

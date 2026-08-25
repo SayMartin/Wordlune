@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { getMyScores, GameScore, deleteGameScores } from "../../supabase/players-repository";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../theme/ThemeProvider";
+import Card from "../ui/Card";
 import ConfirmationOverlay from "../ConfirmationOverlay";
 import OverlayMessage from "../OverlayMessage";
 
@@ -44,7 +45,7 @@ export default function JustPlayingScores() {
   }
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <Card style={styles.card}>
       {message && (
         <OverlayMessage message={message.text} type={message.type} onClose={() => setMessage(null)} duration={3000} />
       )}
@@ -76,7 +77,7 @@ export default function JustPlayingScores() {
         scores.map((score) => (
           <View key={score.id} style={[styles.row, { borderColor: colors.border }]}>
             <View style={styles.rowMain}>
-              <Text style={[styles.word, { color: "#4f46e5" }]}>{score.word}</Text>
+              <Text style={[styles.word, { color: colors.accent }]}>{score.word}</Text>
               <Text style={{ color: colors.textMuted, fontSize: 12 }}>
                 {score.guesses_count} {t("guesses", { defaultValue: "guesses" })} · {score.duration_seconds ?? 0}s
               </Text>
@@ -91,12 +92,12 @@ export default function JustPlayingScores() {
           </View>
         ))
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, overflow: "hidden" },
+  card: { overflow: "hidden" },
   header: { padding: 14, borderBottomWidth: 1 },
   headerTitle: { fontSize: 16, fontWeight: "700", marginBottom: 2 },
   row: { flexDirection: "row", alignItems: "center", padding: 12, borderBottomWidth: 1, gap: 10 },

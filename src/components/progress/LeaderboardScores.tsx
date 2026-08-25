@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { getGlobalLeaderboard, LeaderboardEntry } from "../../supabase/players-repository";
 import { useTheme } from "../../theme/ThemeProvider";
+import Card from "../ui/Card";
 import Avatar from "../Avatar";
 
 export default function LeaderboardScores() {
@@ -23,9 +24,9 @@ export default function LeaderboardScores() {
   }
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <Card style={styles.card}>
       <View style={[styles.header, { borderColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: "#2563eb" }]}>
+        <Text style={[styles.headerTitle, { color: colors.accent }]}>
           🌍 {t("global_leaderboard", { defaultValue: "Global Leaderboard" })}
         </Text>
         <Text style={{ color: colors.textMuted, fontSize: 12 }}>
@@ -51,7 +52,7 @@ export default function LeaderboardScores() {
               )}
             </View>
             <View style={styles.rowEnd}>
-              <Text style={[styles.score, { color: "#2563eb" }]}>{entry.score}</Text>
+              <Text style={[styles.score, { color: colors.accent }]}>{entry.score}</Text>
               {entry.completed_at && (
                 <Text style={[styles.date, { color: colors.textMuted }]}>
                   {new Date(entry.completed_at).toLocaleDateString()}
@@ -61,17 +62,17 @@ export default function LeaderboardScores() {
           </View>
         ))
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, overflow: "hidden" },
+  card: { overflow: "hidden" },
   header: { padding: 14, borderBottomWidth: 1 },
   headerTitle: { fontSize: 16, fontWeight: "700", marginBottom: 2 },
   row: { flexDirection: "row", alignItems: "center", padding: 12, borderBottomWidth: 1, gap: 10 },
   rank: { width: 20, textAlign: "center", fontWeight: "700" },
-  avatar: { width: 32, height: 32, borderRadius: 16, backgroundColor: "#e5e7eb" },
+  avatar: { width: 32, height: 32, borderRadius: 16 },
   rowMain: { flex: 1 },
   name: { fontWeight: "600" },
   rowEnd: { alignItems: "flex-end" },

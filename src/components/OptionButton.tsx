@@ -16,17 +16,26 @@ export default function OptionButton({ active, onPress, children }: Props) {
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
       style={[
         styles.optionButton,
-        { borderColor: active ? "#4f46e5" : colors.border },
-        active && { backgroundColor: "#eef2ff" },
+        {
+          borderColor: active ? colors.accent : colors.border,
+          // The selected pill used to be a fixed pale indigo, which was
+          // invisible against a dark surface. accentSoft tints whatever
+          // surface it lands on instead.
+          backgroundColor: active ? colors.accentSoft : colors.surfaceHover,
+        },
       ]}
     >
-      <Text style={{ color: active ? "#4338ca" : colors.text, fontWeight: "600", fontSize: 13 }}>{children}</Text>
+      <Text style={{ color: active ? colors.accent : colors.text, fontWeight: "600", fontSize: 13 }}>
+        {children}
+      </Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  optionButton: { borderWidth: 1, borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12 },
+  optionButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 14 },
 });

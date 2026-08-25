@@ -15,10 +15,14 @@ interface Props {
   score?: number;
 }
 
+// Same three colours as your own board (BoardGrid.tsx). They were a different
+// slate/yellow/green set before, which meant the opponent's mirrored board had
+// to be decoded separately from your own — the one place the colours most need
+// to mean the same thing at a glance.
 const STATUS_COLORS: Record<LetterStatus, string> = {
-  absent: "#94a3b8",
-  present: "#eab308",
-  correct: "#22c55e",
+  absent: "#78787e4d",
+  present: "#c9b458",
+  correct: "#6aaa64",
 };
 
 export default function OpponentBoard({
@@ -38,8 +42,10 @@ export default function OpponentBoard({
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.label} numberOfLines={1}>{displayName}</Text>
-        <Text style={styles.label}>
+        <Text style={[styles.label, { color: colors.accent2 }]} numberOfLines={1}>
+          {displayName}
+        </Text>
+        <Text style={[styles.label, { color: colors.accent2 }]}>
           {score} {t("points_short", { defaultValue: "pts" })}
         </Text>
       </View>
@@ -62,7 +68,7 @@ export default function OpponentBoard({
                     borderColor = STATUS_COLORS[status];
                   }
                 } else if (isActiveRow && colIndex < currentInputLength) {
-                  bg = colors.background;
+                  bg = colors.surfaceSunken;
                   borderColor = colors.textMuted;
                 }
 
@@ -79,7 +85,7 @@ export default function OpponentBoard({
 const styles = StyleSheet.create({
   container: { alignItems: "center", gap: 6 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", width: "100%", paddingHorizontal: 4 },
-  label: { fontSize: 11, fontWeight: "700", color: "#ea580c", maxWidth: 100 },
+  label: { fontSize: 11, fontWeight: "700", maxWidth: 100 },
   row: { flexDirection: "row", gap: 4 },
   tile: { width: 22, height: 22, borderRadius: 3, borderWidth: 2 },
 });

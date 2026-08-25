@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useTheme } from "../theme/ThemeProvider";
 
 interface Props {
   message: string;
@@ -8,14 +9,18 @@ interface Props {
   onClose?: () => void;
 }
 
-const COLORS: Record<NonNullable<Props["type"]>, string> = {
-  success: "#16a34a",
-  error: "#dc2626",
-  warning: "#d97706",
-  info: "#334155",
-};
-
 export default function OverlayMessage({ message, type = "info", duration = 2000, onClose }: Props) {
+  const { colors } = useTheme();
+  // Read from the palette rather than a module-level table so the toast
+  // follows a theme switch — the old constants were tuned for light mode and
+  // sat almost invisibly on the dark background.
+  const backgrounds: Record<NonNullable<Props["type"]>, string> = {
+    success: colors.success,
+    error: colors.danger,
+    warning: colors.warning,
+    info: colors.accent,
+  };
+
   useEffect(() => {
     if (!duration) return;
     const id = setTimeout(() => onClose && onClose(), duration);
@@ -23,9 +28,9 @@ export default function OverlayMessage({ message, type = "info", duration = 2000
   }, [duration, onClose]);
 
   return (
-    <View style={styles.wrapper} pointerEvents="none">
-      <View style={[styles.toast, { backgroundColor: COLORS[type] }]}>
-        <Text style={styles.text}>{message}</Text>
+    <View style={styles.wrapper}>
+      <View style={[styles.toast, { backgroundColor: backgrounds[type] }]}>
+        <Text style={[styles.text, { color: colors.onAccent }]}>{message}</Text>
       </View>
     </View>
   );
@@ -33,6 +38,7 @@ export default function OverlayMessage({ message, type = "info", duration = 2000
 
 const styles = StyleSheet.create({
   wrapper: {
+    pointerEvents: "none",
     position: "absolute",
     top: 16,
     left: 0,
@@ -46,5 +52,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     maxWidth: "90%",
   },
-  text: { color: "#ffffff", fontWeight: "700", textAlign: "center" },
+  text: { fontWeight: "700", textAlign: "center" },
 });

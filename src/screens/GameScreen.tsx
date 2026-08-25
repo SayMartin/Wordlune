@@ -21,6 +21,7 @@ import ControlDashboard from "../components/ControlDashboard";
 import PracticeResultOverlay from "../components/PracticeResultOverlay";
 import CompetitiveResultOverlay from "../components/CompetitiveResultOverlay";
 import ChallengeSelector from "../components/ChallengeSelector";
+import Card from "../components/ui/Card";
 import ConfirmationOverlay from "../components/ConfirmationOverlay";
 import OverlayMessage from "../components/OverlayMessage";
 import DuelLobby from "../components/DuelLobby";
@@ -452,10 +453,10 @@ export default function GameScreen() {
   const showBoardArea = showPoolSelectors || isDuelActive || isCompetitiveActive;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.screen}>
       <PageScrollView contentContainerStyle={styles.container}>
         {showPoolSelectors ? (
-          <View style={[styles.filterCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Card style={styles.filterCard}>
             <CategorySelector
               onChange={handleSelectionChange}
               onCountChange={handleCountChange}
@@ -489,7 +490,7 @@ export default function GameScreen() {
               hintLabel={t("enable_hints", { defaultValue: "Enable Hints" })}
               hintNames={isPracticeHintEnabled ? practiceHintSubcategories.map((s) => s.name) : []}
             />
-          </View>
+          </Card>
         ) : (
           <GameModeToggle mode={gameMode} onChange={handleModeChange} />
         )}
@@ -503,12 +504,12 @@ export default function GameScreen() {
         )}
 
         {gameMode === "competitive" && challengeSession && !showChallengeSelector && (
-          <View style={[styles.challengeBanner, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Card style={styles.challengeBanner}>
             <Text style={[styles.challengeBannerTitle, { color: colors.text }]}>
               🎯 {t("word_n_of_m", { n: challengeSession.attempt.progress_index + 1, m: challengeSession.words.length, defaultValue: `Word ${challengeSession.attempt.progress_index + 1} of ${challengeSession.words.length}` })}
             </Text>
             {status === "playing" && (
-              <Text style={styles.challengeLink} onPress={() => setCompetitiveConfirm({
+              <Text style={[styles.challengeLink, { color: colors.accent }]} onPress={() => setCompetitiveConfirm({
                 title: t("confirm_skip_title", { defaultValue: "Skip Word?" }),
                 message: t("confirm_skip_msg", { defaultValue: "You will get 0 points for this word, but can continue the challenge." }),
                 onConfirm: () => {
@@ -520,17 +521,17 @@ export default function GameScreen() {
                 {t("show_word_skip", { defaultValue: "Show Word / Skip" })}
               </Text>
             )}
-            <Text style={[styles.challengeLink, styles.challengeGiveUp]} onPress={handleChallengeGiveUp}>
+            <Text style={[styles.challengeLink, { color: colors.danger }]} onPress={handleChallengeGiveUp}>
               {t("game_give_up_challenge", { defaultValue: "Give Up Challenge" })}
             </Text>
-          </View>
+          </Card>
         )}
 
         {showBoardArea && (
           <>
             {usingFallback && (
-              <View style={[styles.banner, { backgroundColor: "#fef3c7" }]}>
-                <Text style={{ color: "#92400e" }}>{t("offline_mode", { defaultValue: "Offline mode" })}</Text>
+              <View style={[styles.banner, { backgroundColor: colors.warningSoft, borderColor: colors.warning }]}>
+                <Text style={{ color: colors.warning }}>{t("offline_mode", { defaultValue: "Offline mode" })}</Text>
               </View>
             )}
 
@@ -574,10 +575,17 @@ export default function GameScreen() {
                 <Pressable
                   onPress={handlePracticeGiveUp}
                   disabled={status !== "playing"}
-                  style={[styles.giveUpButton, status !== "playing" && styles.giveUpButtonDisabled]}
+                  style={[
+                    styles.giveUpButton,
+                    { borderColor: status !== "playing" ? colors.border : colors.danger },
+                    status !== "playing" && styles.giveUpButtonDisabled,
+                  ]}
                 >
                   <Text
-                    style={[styles.giveUpButtonText, status !== "playing" && styles.giveUpButtonTextDisabled]}
+                    style={[
+                      styles.giveUpButtonText,
+                      { color: status !== "playing" ? colors.textMuted : colors.danger },
+                    ]}
                   >
                     {t("give_up", { defaultValue: "Give Up" })}
                   </Text>
@@ -621,7 +629,13 @@ export default function GameScreen() {
             {gameMode === "practice" && status === "won" && isAuthenticated && (
               <View style={styles.saveRow}>
                 <Text
-                  style={[styles.saveButton, { backgroundColor: scoreSavedForSecret === secret ? "#16a34a" : "#4f46e5" }]}
+                  style={[
+                    styles.saveButton,
+                    {
+                      backgroundColor: scoreSavedForSecret === secret ? colors.success : colors.accent,
+                      color: colors.onAccent,
+                    },
+                  ]}
                   onPress={handleSaveScore}
                 >
                   {scoreSavedForSecret === secret
@@ -714,36 +728,36 @@ export default function GameScreen() {
 }
 
 const styles = StyleSheet.create({
+  screen: { flex: 1 },
   container: { paddingVertical: 16, paddingHorizontal: 8, gap: 16, alignItems: "stretch" },
   // Matches ControlDashboard's `bar` card recipe so the filter panel and the
   // play controls read as the same family of surface instead of the filters
   // floating without a background while everything below them is carded.
-  filterCard: { borderWidth: 1, borderRadius: 12, paddingVertical: 14, paddingHorizontal: 8, gap: 14 },
-  banner: { padding: 10, borderRadius: 8 },
+  // Less padding at the bottom than the top: the last row here is often the
+  // hint line, which is short and centred, and the symmetric 14 left it
+  // looking marooned above the card's edge.
+  filterCard: { paddingTop: 14, paddingBottom: 10, paddingHorizontal: 10, gap: 14 },
+  banner: { padding: 10, borderRadius: 8, borderWidth: 1 },
   duelBoards: { flexDirection: "row", justifyContent: "space-around", gap: 12 },
-  challengeBanner: { borderWidth: 1, borderRadius: 10, padding: 12, gap: 6, alignItems: "center" },
+  challengeBanner: { padding: 14, gap: 6, alignItems: "center" },
   challengeBannerTitle: { fontWeight: "700", fontSize: 14, textAlign: "center" },
-  challengeLink: { color: "#4f46e5", fontSize: 12, fontWeight: "600" },
-  challengeGiveUp: { color: "#dc2626" },
+  challengeLink: { fontSize: 12, fontWeight: "600" },
   saveRow: { alignItems: "center", marginTop: 4 },
   saveButton: {
-    color: "#ffffff",
     fontWeight: "700",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: 999,
     overflow: "hidden",
   },
   giveUpButton: {
     borderWidth: 1,
-    borderColor: "#dc2626",
-    borderRadius: 8,
+    borderRadius: 999,
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
   },
-  giveUpButtonText: { color: "#dc2626", fontWeight: "700", fontSize: 12 },
+  giveUpButtonText: { fontWeight: "700", fontSize: 12 },
   // Shared disabled recipe across the app: neutral border + uniform opacity
   // fade, no per-button custom disabled color.
-  giveUpButtonDisabled: { borderColor: "#94a3b8", opacity: 0.4 },
-  giveUpButtonTextDisabled: { color: "#94a3b8" },
+  giveUpButtonDisabled: { opacity: 0.4 },
 });

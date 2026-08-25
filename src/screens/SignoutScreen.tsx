@@ -41,7 +41,7 @@ export default function SignoutScreen() {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       <ActivityIndicator size="large" color={colors.accent} />
       <Text style={{ color: colors.textMuted, marginTop: 16 }}>
         {t("logging_out", { defaultValue: "Logging out..." })}

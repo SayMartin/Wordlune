@@ -1,17 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import { PageTitle } from "../components/ui/Heading";
 import Avatar, { localAvatarUrl } from "../components/Avatar";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -201,8 +197,8 @@ export default function SignupScreen() {
 
   if (successMessage) {
     return (
-      <View style={[styles.container, styles.center, { backgroundColor: colors.background }]}>
-        <Text style={[styles.title, styles.successTitle]}>
+      <View style={[styles.container, styles.center]}>
+        <Text style={[styles.title, { color: colors.success }]}>
           {t("success", { defaultValue: "Success!" })}
         </Text>
         <Text style={{ color: colors.text, textAlign: "center", marginBottom: 24 }}>
@@ -213,11 +209,15 @@ export default function SignupScreen() {
             to a login form would be both pointless and alarming. */}
         {isUpgrade ? (
           <Pressable onPress={() => navigation.navigate("Main", { screen: "Home" })}>
-            <Text style={styles.link}>{t("keep_playing", { defaultValue: "Keep playing" })}</Text>
+            <Text style={[styles.link, { color: colors.accent }]}>
+              {t("keep_playing", { defaultValue: "Keep playing" })}
+            </Text>
           </Pressable>
         ) : (
           <Pressable onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.link}>{t("go_to_signin", { defaultValue: "Go to Sign In" })}</Text>
+            <Text style={[styles.link, { color: colors.accent }]}>
+              {t("go_to_signin", { defaultValue: "Go to Sign In" })}
+            </Text>
           </Pressable>
         )}
       </View>
@@ -225,18 +225,16 @@ export default function SignupScreen() {
   }
 
   return (
-    <PageScrollView
-      style={{ backgroundColor: colors.background }}
-      contentContainerStyle={styles.container}
-    >
-      <Text style={[styles.title, { color: colors.text }]}>
+    <PageScrollView contentContainerStyle={styles.container}>
+      <Card style={styles.card}>
+      <PageTitle>
         {isUpgrade
           ? t("upgrade_account_title", { defaultValue: "Create your account" })
           : t("signup", { defaultValue: "Sign Up" })}
-      </Text>
+      </PageTitle>
 
       {isUpgrade ? (
-        <View style={[styles.upgradeNotice, { borderColor: "#16a34a55", backgroundColor: colors.surface }]}>
+        <View style={[styles.upgradeNotice, { borderColor: colors.success, backgroundColor: colors.successSoft }]}>
           <Text style={[styles.upgradeText, { color: colors.text }]}>
             {t("upgrade_guest_notice", {
               defaultValue:
@@ -250,7 +248,9 @@ export default function SignupScreen() {
             {t("has_account", { defaultValue: "Already have an account?" })}{" "}
           </Text>
           <Pressable onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.link}>{t("login", { defaultValue: "Log In" })}</Text>
+            <Text style={[styles.link, { color: colors.accent }]}>
+              {t("login", { defaultValue: "Log In" })}
+            </Text>
           </Pressable>
         </View>
       )}
@@ -258,7 +258,9 @@ export default function SignupScreen() {
       <View style={styles.avatarSection}>
         <Avatar uri={avatarUrl} fallbackSeed={displayName} size={96} />
         <Pressable onPress={randomizeAvatar}>
-          <Text style={styles.link}>{t("randomize_avatar", { defaultValue: "Randomize" })}</Text>
+          <Text style={[styles.link, { color: colors.accent }]}>
+            {t("randomize_avatar", { defaultValue: "Randomize" })}
+          </Text>
         </Pressable>
       </View>
 
@@ -279,11 +281,15 @@ export default function SignupScreen() {
           placeholderTextColor={colors.textMuted}
           style={[
             styles.input,
-            { borderColor: nameError ? "#ef4444" : colors.border, color: colors.text },
+            {
+              borderColor: nameError ? colors.danger : colors.border,
+              color: colors.text,
+              backgroundColor: colors.surfaceSunken,
+            },
           ]}
         />
         {displayName.length === MAX_DISPLAY_NAME_LENGTH && (
-          <Text style={styles.warning}>
+          <Text style={[styles.warning, { color: colors.warning }]}>
             {t("username_max_length", {
               defaultValue: `Maximum ${MAX_DISPLAY_NAME_LENGTH} characters allowed`,
               length: MAX_DISPLAY_NAME_LENGTH,
@@ -291,7 +297,7 @@ export default function SignupScreen() {
           </Text>
         )}
         {isChecking && <Text style={{ color: colors.textMuted, fontSize: 12 }}>{t("checking_availability", { defaultValue: "Checking availability..." })}</Text>}
-        {nameError && <Text style={styles.error}>{nameError}</Text>}
+        {nameError && <Text style={[styles.error, { color: colors.danger }]}>{nameError}</Text>}
       </View>
 
       <View style={styles.field}>
@@ -305,7 +311,10 @@ export default function SignupScreen() {
           placeholderTextColor={colors.textMuted}
           autoCapitalize="none"
           keyboardType="email-address"
-          style={[styles.input, { borderColor: colors.border, color: colors.text }]}
+          style={[
+            styles.input,
+            { borderColor: colors.border, color: colors.text, backgroundColor: colors.surfaceSunken },
+          ]}
         />
       </View>
 
@@ -365,25 +374,21 @@ export default function SignupScreen() {
             opens the policy or toggles the box, and word order varies enough
             across en/sv/fr that an inline link is awkward to translate. */}
         <Pressable onPress={() => navigation.navigate("PrivacyPolicy")}>
-          <Text style={[styles.link, styles.consentLink]}>
+          <Text style={[styles.link, styles.consentLink, { color: colors.accent }]}>
             {t("privacy_policy_read_link", { defaultValue: "Read the Privacy Policy" })}
           </Text>
         </Pressable>
       </View>
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
 
-      <Pressable
-        style={[styles.button, styles.primaryButton, loading && styles.disabled]}
+      <Button
+        fullWidth
+        loading={loading}
+        label={t("signup", { defaultValue: "Sign Up" })}
         onPress={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#ffffff" />
-        ) : (
-          <Text style={styles.primaryButtonText}>{t("signup", { defaultValue: "Sign Up" })}</Text>
-        )}
-      </Pressable>
+      />
+      </Card>
     </PageScrollView>
   );
 }
@@ -397,7 +402,7 @@ function Checkbox({
   checked: boolean;
   onToggle: () => void;
   label: string;
-  colors: { text: string; border: string; accent: string };
+  colors: { text: string; border: string; accent: string; onAccent: string };
 }) {
   return (
     <Pressable
@@ -417,7 +422,7 @@ function Checkbox({
           checked && { backgroundColor: colors.accent },
         ]}
       >
-        {checked && <Text style={styles.checkMark}>✓</Text>}
+        {checked && <Text style={[styles.checkMark, { color: colors.onAccent }]}>✓</Text>}
       </View>
       <Text style={[styles.checkLabel, { color: colors.text }]}>{label}</Text>
     </Pressable>
@@ -425,7 +430,8 @@ function Checkbox({
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, paddingTop: 64, gap: 16, maxWidth: 420, width: "100%", alignSelf: "center" },
+  container: { padding: 16, paddingTop: 40, paddingBottom: 48, maxWidth: 460, width: "100%", alignSelf: "center" },
+  card: { padding: 24, gap: 16 },
   upgradeNotice: { borderWidth: 1, borderRadius: 10, padding: 12 },
   upgradeText: { fontSize: 13, lineHeight: 19 },
   consentGroup: { gap: 12 },
@@ -439,24 +445,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 1,
   },
-  checkMark: { color: "#ffffff", fontSize: 14, fontWeight: "900", lineHeight: 18 },
+  checkMark: { fontSize: 14, fontWeight: "900", lineHeight: 18 },
   checkLabel: { flex: 1, fontSize: 14, lineHeight: 20 },
   consentLink: { fontSize: 14, marginLeft: 32 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   title: { fontSize: 22, fontWeight: "700" },
-  successTitle: { color: "#16a34a" },
   row: { flexDirection: "row", flexWrap: "wrap" },
-  link: { color: "#3b82f6" },
+  link: { fontWeight: "600" },
   avatarSection: { alignItems: "center", gap: 8 },
-  avatar: { width: 96, height: 96, borderRadius: 48, backgroundColor: "#e5e7eb" },
   field: { gap: 6 },
   label: { fontSize: 14, fontWeight: "500" },
   input: { borderWidth: 1, borderRadius: 8, padding: 10 },
-  error: { color: "#ef4444", fontSize: 12 },
-  warning: { color: "#ea580c", fontSize: 12 },
+  error: { fontSize: 12 },
+  warning: { fontSize: 12 },
   hint: { fontSize: 12 },
-  button: { borderRadius: 8, paddingVertical: 12, alignItems: "center" },
-  primaryButton: { backgroundColor: "#2563eb" },
-  primaryButtonText: { color: "#ffffff", fontWeight: "600" },
-  disabled: { opacity: 0.5 },
 });

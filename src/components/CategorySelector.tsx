@@ -192,12 +192,15 @@ export default function CategorySelector({
                             style={[
                               styles.checkbox,
                               { borderColor: colors.border },
-                              selectedSubs[sub.id] && styles.checkboxChecked,
+                              selectedSubs[sub.id] && {
+                                backgroundColor: colors.accent,
+                                borderColor: colors.accent,
+                              },
                             ]}
                           />
                           <Text
                             style={{
-                              color: isHighlighted ? "#f59e0b" : colors.text,
+                              color: isHighlighted ? colors.warning : colors.text,
                               fontWeight: isHighlighted ? "700" : "400",
                               fontSize: 13,
                             }}
@@ -219,8 +222,24 @@ export default function CategorySelector({
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 8 },
-  headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 8 },
+  // Both of these are raised so GameModeToggle's hover tooltip, which drops
+  // below the buttons in headerRow, paints over the rows that follow it inside
+  // the same card (the category list, and LetterSlider next to us in
+  // GameScreen's filter card).
+  //
+  // It has to be repeated at every level rather than set once on the tooltip:
+  // react-native-web emits every View with `position: relative; z-index: 0`,
+  // which makes each one its own stacking context, so a descendant's z-index
+  // can never lift it past an ancestor's sibling. See GameModeToggle.tsx.
+  container: { gap: 8, zIndex: 20 },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    rowGap: 8,
+    zIndex: 20,
+  },
   expandButton: {
     height: 40,
     justifyContent: "center",
@@ -239,5 +258,4 @@ const styles = StyleSheet.create({
   subGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   subRow: { flexDirection: "row", alignItems: "center", gap: 6, width: "45%" },
   checkbox: { width: 16, height: 16, borderWidth: 1.5, borderRadius: 4 },
-  checkboxChecked: { backgroundColor: "#2563eb", borderColor: "#2563eb" },
 });

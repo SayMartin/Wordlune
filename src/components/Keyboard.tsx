@@ -35,11 +35,14 @@ const SPACE_HYPHEN_ON_ENTER_ROW: Record<string, boolean> = {
   fr: true,
 };
 
+// Wordle's own colours, deliberately outside the palette — see BoardGrid.tsx.
 const STATUS_COLORS: Record<LetterStatus, string> = {
   absent: "#78787e80",
   present: "#c9b458",
   correct: "#6aaa64",
 };
+
+const KEY_TEXT_ON_STATUS = "#ffffff";
 
 export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlightControlKeys, language }: Props) {
   const { t, i18n } = useTranslation();
@@ -51,9 +54,13 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
 
   const keyStyle = (ch: string) => {
     const st = state[ch];
-    return st ? { backgroundColor: STATUS_COLORS[st], borderColor: STATUS_COLORS[st] } : { borderColor: colors.border };
+    return st
+      ? { backgroundColor: STATUS_COLORS[st], borderColor: STATUS_COLORS[st] }
+      : // Untouched keys need a fill of their own now the page behind them is
+        // a gradient: border-only keys read as outlines floating on the glow.
+        { backgroundColor: colors.surfaceHover, borderColor: colors.border };
   };
-  const keyTextColor = (ch: string) => (state[ch] ? "#ffffff" : colors.text);
+  const keyTextColor = (ch: string) => (state[ch] ? KEY_TEXT_ON_STATUS : colors.text);
 
   return (
     <View style={styles.container}>
@@ -100,21 +107,28 @@ export default function Keyboard({ onKey, onEnter, onDelete, state = {}, highlig
             styles.enterKey,
             highlightControlKeys
               ? { borderColor: colors.accent, backgroundColor: colors.accent }
-              : { borderColor: colors.border, backgroundColor: colors.surface, opacity: 0.4 },
+              : { borderColor: colors.border, backgroundColor: colors.surfaceHover, opacity: 0.4 },
           ]}
           onPress={onEnter}
         >
           <Text
             style={[
               styles.keyText,
-              { color: highlightControlKeys ? "#ffffff" : colors.text, fontWeight: "700" },
+              { color: highlightControlKeys ? colors.onAccent : colors.text, fontWeight: "700" },
             ]}
           >
             {t("enter", { defaultValue: "Enter" })} ⏎
           </Text>
         </Pressable>
         <View style={[styles.enterSide, styles.enterSideRight]}>
-          <Pressable style={[styles.sideKey, styles.deleteSideKey, { borderColor: colors.border }]} onPress={onDelete}>
+          <Pressable
+            style={[
+              styles.sideKey,
+              styles.deleteSideKey,
+              { borderColor: colors.border, backgroundColor: colors.surfaceHover },
+            ]}
+            onPress={onDelete}
+          >
             <Text style={[styles.keyText, { color: colors.text }]}>⌫</Text>
           </Pressable>
         </View>

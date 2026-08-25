@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import { PageTitle } from "../components/ui/Heading";
 import { localAvatarUrl } from "../components/Avatar";
 import { useAuth } from "../context/AuthContext";
 import { suggestUniqueDisplayName } from "../supabase/players-repository";
@@ -93,20 +89,18 @@ export default function LoginScreen() {
   };
 
   return (
-    <PageScrollView
-      style={{ backgroundColor: colors.background }}
-      contentContainerStyle={styles.container}
-    >
-      <Text style={[styles.title, { color: colors.text }]}>
-        {t("login", { defaultValue: "Log In" })}
-      </Text>
+    <PageScrollView contentContainerStyle={styles.container}>
+      <Card style={styles.card}>
+      <PageTitle>{t("login", { defaultValue: "Log In" })}</PageTitle>
 
       <View style={styles.row}>
         <Text style={{ color: colors.textMuted }}>
           {t("no_account", { defaultValue: "Don't have an account?" })}{" "}
         </Text>
         <Pressable onPress={() => navigation.navigate("Signup")}>
-          <Text style={styles.link}>{t("signup", { defaultValue: "Sign Up" })}</Text>
+          <Text style={[styles.link, { color: colors.accent }]}>
+            {t("signup", { defaultValue: "Sign Up" })}
+          </Text>
         </Pressable>
       </View>
 
@@ -121,7 +115,10 @@ export default function LoginScreen() {
           placeholderTextColor={colors.textMuted}
           autoCapitalize="none"
           keyboardType="email-address"
-          style={[styles.input, { borderColor: colors.border, color: colors.text }]}
+          style={[
+            styles.input,
+            { borderColor: colors.border, color: colors.text, backgroundColor: colors.surfaceSunken },
+          ]}
         />
       </View>
 
@@ -141,12 +138,14 @@ export default function LoginScreen() {
             setResetError(null);
           }}
         >
-          <Text style={styles.link}>{t("forgot_password", { defaultValue: "Forgot your password?" })}</Text>
+          <Text style={[styles.link, { color: colors.accent }]}>
+            {t("forgot_password", { defaultValue: "Forgot your password?" })}
+          </Text>
         </Pressable>
       </View>
 
       {showForgotPassword && (
-        <View style={[styles.forgotBox, { borderColor: colors.border }]}>
+        <View style={[styles.forgotBox, { borderColor: colors.border, backgroundColor: colors.surfaceSunken }]}>
           {resetSent ? (
             <Text style={{ color: colors.text }}>
               {t("reset_password_email_sent", {
@@ -160,38 +159,27 @@ export default function LoginScreen() {
                   defaultValue: "Enter your email above, then send yourself a reset link.",
                 })}
               </Text>
-              {resetError && <Text style={styles.error}>{resetError}</Text>}
-              <Pressable
-                style={[styles.button, styles.secondaryButton, resetLoading && styles.disabled]}
+              {resetError && <Text style={[styles.error, { color: colors.danger }]}>{resetError}</Text>}
+              <Button
+                variant="ghost"
+                fullWidth
+                loading={resetLoading}
+                label={t("send_reset_link", { defaultValue: "Send Reset Link" })}
                 onPress={handleForgotPassword}
-                disabled={resetLoading}
-              >
-                {resetLoading ? (
-                  <ActivityIndicator color="#ffffff" />
-                ) : (
-                  <Text style={styles.secondaryButtonText}>
-                    {t("send_reset_link", { defaultValue: "Send Reset Link" })}
-                  </Text>
-                )}
-              </Pressable>
+              />
             </>
           )}
         </View>
       )}
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
 
-      <Pressable
-        style={[styles.button, styles.primaryButton, loading && styles.disabled]}
+      <Button
+        fullWidth
+        loading={loading}
+        label={t("login", { defaultValue: "Log In" })}
         onPress={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#ffffff" />
-        ) : (
-          <Text style={styles.primaryButtonText}>{t("login", { defaultValue: "Log In" })}</Text>
-        )}
-      </Pressable>
+      />
 
       <View style={styles.dividerRow}>
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
@@ -199,15 +187,13 @@ export default function LoginScreen() {
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
       </View>
 
-      <Pressable
-        style={[styles.button, styles.secondaryButton, loading && styles.disabled]}
-        onPress={handleGuestLogin}
+      <Button
+        variant="ghost"
+        fullWidth
         disabled={loading}
-      >
-        <Text style={styles.secondaryButtonText}>
-          {t("play_as_guest", { defaultValue: "Play as Guest" })}
-        </Text>
-      </Pressable>
+        label={t("play_as_guest", { defaultValue: "Play as Guest" })}
+        onPress={handleGuestLogin}
+      />
 
       {/* Same notice as SessionGate's guest button — a guest sign-in creates a
           real account, so the policy must be reachable at that moment too. */}
@@ -223,15 +209,16 @@ export default function LoginScreen() {
           {t("privacy_policy", { defaultValue: "Privacy Policy" })}
         </Text>
       </View>
+      </Card>
     </PageScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, paddingTop: 64, gap: 16, maxWidth: 420, width: "100%", alignSelf: "center" },
-  title: { fontSize: 22, fontWeight: "700" },
+  container: { padding: 16, paddingTop: 40, paddingBottom: 48, maxWidth: 460, width: "100%", alignSelf: "center" },
+  card: { padding: 24, gap: 16 },
   row: { flexDirection: "row", flexWrap: "wrap" },
-  link: { color: "#3b82f6" },
+  link: { fontWeight: "600" },
   field: { gap: 6 },
   guestNoticeRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center" },
   guestNotice: { fontSize: 12, lineHeight: 17 },
@@ -239,13 +226,7 @@ const styles = StyleSheet.create({
   forgotBox: { borderWidth: 1, borderRadius: 8, padding: 12, gap: 10 },
   label: { fontSize: 14, fontWeight: "500" },
   input: { borderWidth: 1, borderRadius: 8, padding: 10 },
-  error: { color: "#ef4444", fontSize: 14 },
-  button: { borderRadius: 8, paddingVertical: 12, alignItems: "center" },
-  primaryButton: { backgroundColor: "#2563eb" },
-  primaryButtonText: { color: "#ffffff", fontWeight: "600" },
-  secondaryButton: { backgroundColor: "#4b5563" },
-  secondaryButtonText: { color: "#ffffff", fontWeight: "600" },
-  disabled: { opacity: 0.5 },
+  error: { fontSize: 14 },
   dividerRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   divider: { flex: 1, height: 1 },
 });

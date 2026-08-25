@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -7,6 +7,8 @@ import { useTheme } from "../theme/ThemeProvider";
 import type { AppParamList } from "../navigation/types";
 import { exportMyData } from "../supabase/players-repository";
 import { exportFilename, readDeviceSettings, saveJsonExport } from "../utils/exportDownload";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 
@@ -49,8 +51,8 @@ export default function DataPrivacyPanel() {
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-      <Text style={[styles.cardTitle, { color: "#6366f1" }]}>
+    <Card style={styles.card}>
+      <Text style={[styles.cardTitle, { color: colors.accent }]}>
         {t("data_privacy_title", { defaultValue: "Data & Privacy" })}
       </Text>
       <Text style={[styles.body, { color: colors.textMuted }]}>
@@ -60,22 +62,15 @@ export default function DataPrivacyPanel() {
         })}
       </Text>
 
-      {error && <Text style={styles.error}>{error}</Text>}
-      {done && <Text style={styles.success}>{done}</Text>}
+      {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
+      {done && <Text style={[styles.success, { color: colors.success }]}>{done}</Text>}
 
-      <Pressable
-        style={[styles.primaryButton, { backgroundColor: colors.accent }, exporting && styles.disabled]}
+      <Button
+        fullWidth
+        loading={exporting}
+        label={t("export_my_data", { defaultValue: "Download my data" })}
         onPress={handleExport}
-        disabled={exporting}
-      >
-        {exporting ? (
-          <ActivityIndicator color="#ffffff" />
-        ) : (
-          <Text style={styles.primaryButtonText}>
-            {t("export_my_data", { defaultValue: "Download my data" })}
-          </Text>
-        )}
-      </Pressable>
+      />
 
       <Pressable onPress={() => navigation.navigate("PrivacyPolicy")} style={styles.linkRow}>
         <Text style={[styles.link, { color: colors.accent }]}>
@@ -88,20 +83,17 @@ export default function DataPrivacyPanel() {
           defaultValue: "To delete your account and all of this data, use the Danger Zone below.",
         })}
       </Text>
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 10 },
+  card: { padding: 18, gap: 10 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 2 },
   body: { fontSize: 13, lineHeight: 19 },
-  primaryButton: { padding: 12, borderRadius: 8, alignItems: "center" },
-  primaryButtonText: { color: "#ffffff", fontWeight: "700" },
-  disabled: { opacity: 0.6 },
   linkRow: { alignItems: "center" },
   link: { fontSize: 14, fontWeight: "700", textDecorationLine: "underline" },
   footnote: { fontSize: 12, lineHeight: 17 },
-  error: { color: "#dc2626", fontSize: 13 },
-  success: { color: "#16a34a", fontSize: 13 },
+  error: { fontSize: 13 },
+  success: { fontSize: 13 },
 });

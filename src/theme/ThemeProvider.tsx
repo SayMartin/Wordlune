@@ -1,40 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { THEME_KEY as STORAGE_KEY } from "../utils/localStorageKeys";
+import { palettes, radii, type Palette, type ThemeName } from "./palettes";
+import { applyWebTheme } from "./webTheme";
 
-type Theme = "light" | "dark";
+export type { Palette, ThemeName } from "./palettes";
+export { radii } from "./palettes";
 
-interface Palette {
-  background: string;
-  surface: string;
-  text: string;
-  textMuted: string;
-  border: string;
-  accent: string;
-}
-
-const palettes: Record<Theme, Palette> = {
-  dark: {
-    background: "#0f172a",
-    surface: "#1e293b",
-    text: "#f8fafc",
-    textMuted: "#94a3b8",
-    border: "#334155",
-    accent: "#22c55e",
-  },
-  light: {
-    background: "#f8fafc",
-    surface: "#ffffff",
-    text: "#0f172a",
-    textMuted: "#475569",
-    border: "#e2e8f0",
-    accent: "#16a34a",
-  },
-};
+type Theme = ThemeName;
 
 interface ThemeContextValue {
   theme: Theme;
   colors: Palette;
+  radii: typeof radii;
   toggleTheme: () => void;
   setTheme: (t: Theme) => void;
 }
@@ -54,6 +32,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
   }, [theme]);
 
+  // Web only: the parts of the look that have no React Native expression —
+  // the fixed gradient on <body>, the grain over it, and backdrop-filter on
+  // glass surfaces. No-op on native, where AppBackground draws the gradient
+  // with react-native-svg instead. See webTheme.ts.
+  useEffect(() => {
+    applyWebTheme(theme);
+  }, [theme]);
+
   const setTheme = (t: Theme) => {
     setThemeState(t);
   };
@@ -64,7 +50,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider
-      value={{ theme, colors: palettes[theme], toggleTheme, setTheme }}
+      value={{ theme, colors: palettes[theme], radii, toggleTheme, setTheme }}
     >
       {children}
     </ThemeContext.Provider>

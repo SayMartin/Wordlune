@@ -8,6 +8,8 @@ import { supabase } from "../supabaseClient";
 import { getFiveLetterHydrocarbon } from "../supabase/words-repository";
 import Toggle from "./Toggle";
 import OptionButton from "./OptionButton";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 import DuelIcon from "./DuelIcon";
 import DuelLeaderboard from "./DuelLeaderboard";
 import DuelChallengeCard from "./DuelChallengeCard";
@@ -122,58 +124,68 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
 
   if (!session) {
     return (
-      <View style={[styles.centerCard, { backgroundColor: colors.surface }]}>
+      <Card style={styles.centerCard}>
         <Text style={[styles.title, { color: colors.text }]}>{t("duel_mode", { defaultValue: "Duel Mode" })}</Text>
         <Text style={{ color: colors.textMuted, textAlign: "center" }}>
           {t("visitor_duel_warning", { defaultValue: "Please sign in to play Duel mode." })}
         </Text>
-      </View>
+      </Card>
     );
   }
 
   if (myMatchId) {
     return (
-      <View style={[styles.centerCard, { backgroundColor: colors.surface }]}>
+      <Card style={styles.centerCard}>
         <View style={styles.waitingHeader}>
           <DuelIcon size={32} />
           <Text style={[styles.title, { color: colors.text }]}>{t("waiting_for_opponent", { defaultValue: "Waiting for opponent..." })}</Text>
         </View>
-        <ActivityIndicator size="large" color="#4f46e5" />
+        <ActivityIndicator size="large" color={colors.accent} />
         <Text style={{ color: colors.textMuted, textAlign: "center" }}>
           {t("waiting_for_player_accept", { defaultValue: "Your challenge is live. Waiting for someone to accept." })}
         </Text>
-        {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
-        <Pressable style={styles.cancelButton} onPress={handleCancelMyMatch} disabled={loading}>
-          <Text style={styles.cancelButtonText}>
-            {loading ? t("cancelling", { defaultValue: "Cancelling..." }) : t("cancel_challenge", { defaultValue: "Cancel & Exit" })}
-          </Text>
-        </Pressable>
-      </View>
+        {errorMsg && <Text style={[styles.error, { color: colors.danger }]}>{errorMsg}</Text>}
+        <Button
+          variant="ghost"
+          disabled={loading}
+          label={
+            loading
+              ? t("cancelling", { defaultValue: "Cancelling..." })
+              : t("cancel_challenge", { defaultValue: "Cancel & Exit" })
+          }
+          onPress={handleCancelMyMatch}
+        />
+      </Card>
     );
   }
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <Card style={styles.card}>
       <View style={styles.headerRow}>
         <View style={styles.headerTitleRow}>
           <DuelIcon size={32} />
           <Text style={[styles.title, { color: colors.text }]}>{t("duel_arena", { defaultValue: "Duel Arena" })}</Text>
         </View>
         {onExit && (
-          <Pressable style={styles.exitButton} onPress={onExit}>
-            <Text style={styles.exitButtonText}>{t("quit_duel_lobby", { defaultValue: "Quit" })}</Text>
+          <Pressable
+            style={[styles.exitButton, { borderColor: colors.warning, backgroundColor: colors.warningSoft }]}
+            onPress={onExit}
+          >
+            <Text style={[styles.exitButtonText, { color: colors.warning }]}>
+              {t("quit_duel_lobby", { defaultValue: "Quit" })}
+            </Text>
           </Pressable>
         )}
       </View>
 
       <View style={[styles.tabBar, { borderColor: colors.border }]}>
         <Pressable style={styles.tabButton} onPress={() => setView("lobby")}>
-          <Text style={{ color: view === "lobby" ? "#4f46e5" : colors.textMuted, fontWeight: view === "lobby" ? "700" : "500" }}>
+          <Text style={{ color: view === "lobby" ? colors.accent : colors.textMuted, fontWeight: view === "lobby" ? "700" : "500" }}>
             {t("lobby", { defaultValue: "Lobby" })}
           </Text>
         </Pressable>
         <Pressable style={styles.tabButton} onPress={() => setView("leaderboard")}>
-          <Text style={{ color: view === "leaderboard" ? "#4f46e5" : colors.textMuted, fontWeight: view === "leaderboard" ? "700" : "500" }}>
+          <Text style={{ color: view === "leaderboard" ? colors.accent : colors.textMuted, fontWeight: view === "leaderboard" ? "700" : "500" }}>
             {t("leaderboard", { defaultValue: "Leaderboard" })}
           </Text>
         </Pressable>
@@ -183,7 +195,7 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
         <DuelLeaderboard />
       ) : (
         <ScrollView>
-          <View style={[styles.optionRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <View style={[styles.optionRow, { backgroundColor: colors.surfaceSunken, borderColor: colors.border }]}>
             <OptionButton active={duelLang === "en"} onPress={() => setDuelLang("en")}>
               🇬🇧 EN
             </OptionButton>
@@ -195,22 +207,24 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
             </OptionButton>
           </View>
 
-          <View style={[styles.optionRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <View style={[styles.optionRow, { backgroundColor: colors.surfaceSunken, borderColor: colors.border }]}>
             <Text style={{ fontSize: 18, opacity: showHint ? 1 : 0.3 }}>💡</Text>
             <Text style={{ color: colors.textMuted }}>{t("no_hint", { defaultValue: "No hint" })}</Text>
             <Toggle checked={showHint} onChange={setShowHint} />
-            <Text style={{ color: showHint ? "#4f46e5" : colors.textMuted, fontWeight: showHint ? "700" : "400" }}>
+            <Text style={{ color: showHint ? colors.accent : colors.textMuted, fontWeight: showHint ? "700" : "400" }}>
               {t("show_hint", { defaultValue: "Show hint" })}
             </Text>
           </View>
 
-          <Pressable style={[styles.createButton, loading && styles.disabled]} onPress={handleCreateMatch} disabled={loading}>
-            <Text style={styles.createButtonText}>
-              {loading ? t("creating", { defaultValue: "Creating..." }) : `+ ${t("create_new_duel", { defaultValue: "Create New Duel" })}`}
-            </Text>
-          </Pressable>
+          <Button
+            fullWidth
+            style={styles.createButton}
+            loading={loading}
+            label={`+ ${t("create_new_duel", { defaultValue: "Create New Duel" })}`}
+            onPress={handleCreateMatch}
+          />
 
-          {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
+          {errorMsg && <Text style={[styles.error, { color: colors.danger }]}>{errorMsg}</Text>}
 
           <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>
             {t("open_challenges", { defaultValue: "Open Challenges" })}
@@ -229,27 +243,23 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
           )}
         </ScrollView>
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  centerCard: { borderRadius: 16, padding: 24, alignItems: "center", gap: 12 },
+  centerCard: { padding: 24, alignItems: "center", gap: 12 },
   title: { fontSize: 18, fontWeight: "800" },
   waitingHeader: { flexDirection: "row", alignItems: "center", gap: 8 },
-  error: { color: "#dc2626", fontSize: 13, textAlign: "center", fontWeight: "600" },
-  cancelButton: { borderWidth: 1, borderColor: "#fecaca", backgroundColor: "#fef2f2", borderRadius: 8, paddingVertical: 8, paddingHorizontal: 16 },
-  cancelButtonText: { color: "#dc2626", fontWeight: "700", fontSize: 13 },
-  card: { borderRadius: 16, borderWidth: 1, padding: 16, gap: 12 },
+  error: { fontSize: 13, textAlign: "center", fontWeight: "600" },
+  card: { padding: 18, gap: 12 },
   headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   headerTitleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  exitButton: { borderWidth: 1, borderColor: "#fed7aa", backgroundColor: "#fff7ed", borderRadius: 8, paddingVertical: 6, paddingHorizontal: 10 },
-  exitButtonText: { color: "#c2410c", fontWeight: "700", fontSize: 12 },
+  exitButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
+  exitButtonText: { fontWeight: "700", fontSize: 12 },
   tabBar: { flexDirection: "row", borderBottomWidth: 1 },
   tabButton: { flex: 1, alignItems: "center", paddingVertical: 10 },
   optionRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10, padding: 12, borderWidth: 1, borderRadius: 10, marginBottom: 10 },
-  createButton: { backgroundColor: "#4f46e5", borderRadius: 10, paddingVertical: 14, alignItems: "center", marginBottom: 10 },
-  disabled: { opacity: 0.6 },
-  createButtonText: { color: "#ffffff", fontWeight: "700" },
+  createButton: { marginBottom: 10 },
   sectionLabel: { fontSize: 11, fontWeight: "700", textTransform: "uppercase", marginBottom: 8, marginTop: 4 },
 });

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "./ui/Card";
 import { useAuth } from "../context/AuthContext";
 import { getChallengeMenu, ChallengeMetadata, ChallengeAttempt, getMyChallengeAttempts } from "../supabase/players-repository";
 import ConfirmationOverlay from "./ConfirmationOverlay";
@@ -11,10 +12,13 @@ interface Props {
   onCancel: () => void;
 }
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  Easy: "#16a34a",
-  Medium: "#d97706",
-  Hard: "#dc2626",
+// Palette keys rather than literals, resolved against the active theme at
+// render time — the old fixed green/amber/red were tuned for a white card and
+// went nearly unreadable on a dark one.
+const DIFFICULTY_TOKENS: Record<string, "success" | "warning" | "danger"> = {
+  Easy: "success",
+  Medium: "warning",
+  Hard: "danger",
 };
 
 function getLocalizedDesc(desc: any, lang: string): string | string[] {
@@ -87,9 +91,9 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
   }
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <Card style={styles.card}>
       <View style={[styles.header, { borderColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: "#b45309" }]}>{t("select_challenge", { defaultValue: "Select a Challenge" })}</Text>
+        <Text style={[styles.headerTitle, { color: colors.warning }]}>{t("select_challenge", { defaultValue: "Select a Challenge" })}</Text>
         <Pressable onPress={onCancel}>
           <Text style={{ color: colors.textMuted, fontSize: 13 }}>{t("cancel", { defaultValue: "Cancel" })}</Text>
         </Pressable>
@@ -113,7 +117,7 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
                   key={c.id}
                   style={[
                     styles.challengeCard,
-                    { borderColor: colors.border, backgroundColor: colors.background },
+                    { borderColor: colors.border, backgroundColor: colors.surfaceSunken },
                     isDone && styles.doneCard,
                   ]}
                   onPress={() => handleSelect(c)}
@@ -122,18 +126,29 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
                   <View style={styles.titleRow}>
                     <Text style={[styles.challengeName, { color: colors.text }]}>{c.name}</Text>
                     {c.is_five_chars && (
-                      <View style={styles.fiveBadge}>
-                        <Text style={styles.fiveBadgeText}>5x5</Text>
+                      <View
+                        style={[
+                          styles.fiveBadge,
+                          { backgroundColor: colors.successSoft, borderColor: colors.success },
+                        ]}
+                      >
+                        <Text style={[styles.fiveBadgeText, { color: colors.success }]}>5x5</Text>
                       </View>
                     )}
                   </View>
                   {c.description && (
-                    <Text style={styles.description} numberOfLines={2}>
+                    <Text style={[styles.description, { color: colors.textMuted }]} numberOfLines={2}>
                       {renderDescription(c.description, i18n.language)}
                     </Text>
                   )}
                   <View style={styles.footerRow}>
-                    <Text style={{ color: DIFFICULTY_COLORS[c.difficulty] || colors.textMuted, fontWeight: "700", fontSize: 11 }}>
+                    <Text
+                      style={{
+                        color: colors[DIFFICULTY_TOKENS[c.difficulty]] || colors.textMuted,
+                        fontWeight: "700",
+                        fontSize: 11,
+                      }}
+                    >
                       {c.difficulty}
                     </Text>
                     <Text style={{ color: colors.textMuted, fontSize: 11 }}>
@@ -156,12 +171,12 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
           variant="info"
         />
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, padding: 14, gap: 12 },
+  card: { padding: 16, gap: 12 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, paddingBottom: 10 },
   headerTitle: { fontSize: 16, fontWeight: "800" },
   challengeCard: { borderWidth: 1, borderRadius: 10, padding: 12, gap: 4, position: "relative" },
@@ -169,8 +184,8 @@ const styles = StyleSheet.create({
   doneBadge: { position: "absolute", top: 8, right: 10, fontSize: 16 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: 6 },
   challengeName: { fontWeight: "700", fontSize: 14 },
-  fiveBadge: { backgroundColor: "#dcfce7", borderRadius: 999, paddingHorizontal: 6, paddingVertical: 1 },
-  fiveBadgeText: { color: "#15803d", fontSize: 9, fontWeight: "800" },
-  description: { color: "#6366f1", fontSize: 11 },
+  fiveBadge: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 6, paddingVertical: 1 },
+  fiveBadgeText: { fontSize: 9, fontWeight: "800" },
+  description: { fontSize: 11 },
   footerRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 4 },
 });

@@ -3,6 +3,7 @@ import { Linking, StyleSheet, Text, View } from "react-native";
 import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "../components/ui/Card";
 import {
   CONTROLLER_NAME,
   MINIMUM_AGE,
@@ -147,7 +148,7 @@ export default function PrivacyPolicyScreen() {
   ];
 
   return (
-    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView contentContainerStyle={styles.container}>
       <View>
         <Text style={[styles.pageTitle, { color: colors.text }]}>
           {t("privacy_policy", { defaultValue: "Privacy Policy" })}
@@ -342,14 +343,14 @@ function Section({
   children,
 }: {
   title: string;
-  colors: { surface: string; border: string };
+  colors: { accent: string };
   children: React.ReactNode;
 }) {
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-      <Text style={[styles.cardTitle, { color: "#6366f1" }]}>{title}</Text>
+    <Card style={styles.card}>
+      <Text style={[styles.cardTitle, { color: colors.accent }]}>{title}</Text>
       {children}
-    </View>
+    </Card>
   );
 }
 
@@ -389,7 +390,7 @@ const styles = StyleSheet.create({
   pageTitle: { fontSize: 26, fontWeight: "800", marginBottom: 4 },
   lastUpdated: { fontSize: 13, marginBottom: 10 },
   intro: { fontSize: 16, lineHeight: 22 },
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 10 },
+  card: { padding: 18, gap: 10 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 2 },
   body: { fontSize: 14, lineHeight: 20 },
   categoryBlock: { gap: 4 },

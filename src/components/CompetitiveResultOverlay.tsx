@@ -25,7 +25,7 @@ export default function CompetitiveResultOverlay({
   isForfeit,
 }: Props) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, radii } = useTheme();
   const isWon = status === "won";
 
   let title = "";
@@ -48,7 +48,7 @@ export default function CompetitiveResultOverlay({
       message = t("word_solved_msg", { defaultValue: "Congratulations on one word correctly set" });
       icon = "⭐";
     }
-    accent = "#16a34a";
+    accent = colors.success;
   } else {
     if (isLastWord) {
       title = t("game_over", { defaultValue: "Game Over" });
@@ -59,7 +59,7 @@ export default function CompetitiveResultOverlay({
       title = t("word_missed", { defaultValue: "Word Missed" });
       message = t("keep_going", { defaultValue: "Keep going! The next word awaits." });
       icon = "💪";
-      accent = "#ea580c";
+      accent = colors.warning;
     }
   }
 
@@ -76,13 +76,19 @@ export default function CompetitiveResultOverlay({
   return (
     <Modal transparent animationType="fade" visible onRequestClose={onNext}>
       <View style={styles.backdrop}>
-        <View style={[styles.card, { backgroundColor: colors.surface, borderColor: accent }]}>
+        {/* Opaque, not the glass surface — see PracticeResultOverlay. */}
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.surfaceSolid, borderColor: accent, borderRadius: radii.lg },
+          ]}
+        >
           <Text style={styles.icon}>{icon}</Text>
           <Text style={[styles.title, { color: accent }]}>{title}</Text>
           <Text style={{ color: colors.textMuted, marginBottom: 8, textAlign: "center" }}>{message}</Text>
 
           <Text style={[styles.wordLabel, { color: colors.textMuted }]}>{t("correct_word", { defaultValue: "Correct Word" })}</Text>
-          <Text style={[styles.word, { color: isWon ? colors.text : "#dc2626" }]}>{secret}</Text>
+          <Text style={[styles.word, { color: isWon ? colors.text : colors.danger }]}>{secret}</Text>
 
           <View style={styles.statsRow}>
             <View style={styles.statCell}>
@@ -91,7 +97,7 @@ export default function CompetitiveResultOverlay({
             </View>
             <View style={styles.statCell}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("points", { defaultValue: "Points" })}</Text>
-              <Text style={[styles.statValue, { color: "#d97706" }]}>{score}</Text>
+              <Text style={[styles.statValue, { color: colors.warning }]}>{score}</Text>
             </View>
             <View style={styles.statCell}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("time", { defaultValue: "Time" })}</Text>
@@ -99,8 +105,13 @@ export default function CompetitiveResultOverlay({
             </View>
           </View>
 
-          <Pressable style={[styles.button, { backgroundColor: isWon ? "#16a34a" : "#1f2937" }]} onPress={onNext}>
-            <Text style={styles.buttonText}>{buttonLabel}</Text>
+          <Pressable
+            style={[styles.button, { backgroundColor: isWon ? colors.success : colors.surfaceHover }]}
+            onPress={onNext}
+          >
+            <Text style={[styles.buttonText, { color: isWon ? colors.onAccent : colors.text }]}>
+              {buttonLabel}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -110,7 +121,7 @@ export default function CompetitiveResultOverlay({
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", padding: 16 },
-  card: { width: "100%", maxWidth: 360, borderRadius: 20, borderWidth: 2, padding: 24, alignItems: "center", gap: 4 },
+  card: { width: "100%", maxWidth: 360, borderWidth: 1, padding: 24, alignItems: "center", gap: 4 },
   icon: { fontSize: 44, marginBottom: 4 },
   title: { fontSize: 22, fontWeight: "900" },
   wordLabel: { fontSize: 11, textTransform: "uppercase", marginTop: 8 },
@@ -119,6 +130,6 @@ const styles = StyleSheet.create({
   statCell: { flex: 1, alignItems: "center", gap: 2, paddingVertical: 8, borderRadius: 8, backgroundColor: "rgba(148,163,184,0.15)" },
   statLabel: { fontSize: 10, textTransform: "uppercase", fontWeight: "700" },
   statValue: { fontSize: 16, fontWeight: "800" },
-  button: { width: "100%", paddingVertical: 12, borderRadius: 12, alignItems: "center", marginTop: 16 },
-  buttonText: { color: "#ffffff", fontWeight: "700" },
+  button: { width: "100%", paddingVertical: 12, borderRadius: 999, alignItems: "center", marginTop: 16 },
+  buttonText: { fontWeight: "700" },
 });

@@ -17,6 +17,8 @@ import {
 } from "../supabase/players-repository";
 import Toggle from "./Toggle";
 import ProfileSettingsSection from "./ProfileSettingsSection";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 import SessionsPanel from "./SessionsPanel";
 import DataPrivacyPanel from "./DataPrivacyPanel";
 import DeleteAccountPanel from "./DeleteAccountPanel";
@@ -140,19 +142,24 @@ export default function Settings() {
 
   if (!isAuthenticated) {
     return (
-      <Text style={styles.center}>{t("login_to_view_profile", { defaultValue: "Please log in to view your profile." })}</Text>
+      <Text style={[styles.center, { color: colors.textMuted }]}>
+        {t("login_to_view_profile", { defaultValue: "Please log in to view your profile." })}
+      </Text>
     );
   }
 
   if (!profile) {
     return (
       <View style={styles.center}>
-        <Text style={styles.error}>
+        <Text style={[styles.error, { color: colors.danger }]}>
           {t("profile_load_failed", { defaultValue: "Couldn't load your profile." })}
         </Text>
-        <Pressable style={styles.secondaryButton} onPress={refreshProfile}>
-          <Text style={styles.secondaryButtonText}>{t("retry", { defaultValue: "Retry" })}</Text>
-        </Pressable>
+        <Button
+          size="sm"
+          variant="ghost"
+          label={t("retry", { defaultValue: "Retry" })}
+          onPress={refreshProfile}
+        />
       </View>
     );
   }
@@ -221,14 +228,16 @@ export default function Settings() {
 
   return (
     <>
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-      <Text style={[styles.cardTitle, { color: "#6366f1" }]}>{t("my_profile", { defaultValue: "My Profile" })}</Text>
+    <Card style={styles.card}>
+      <Text style={[styles.cardTitle, { color: colors.accent }]}>{t("my_profile", { defaultValue: "My Profile" })}</Text>
       <View style={styles.headerRow}>
         <View style={styles.avatarCol}>
           <Avatar uri={currentAvatarSrc} fallbackSeed={profile?.display_name} size={64} />
           {isEditing && (
             <Pressable onPress={randomizeAvatar}>
-              <Text style={styles.link}>{t("randomize", { defaultValue: "Randomize" })}</Text>
+              <Text style={[styles.link, { color: colors.accent }]}>
+                {t("randomize", { defaultValue: "Randomize" })}
+              </Text>
             </Pressable>
           )}
         </View>
@@ -242,15 +251,23 @@ export default function Settings() {
                 onChangeText={setEditName}
                 maxLength={MAX_DISPLAY_NAME_LENGTH}
                 editable={!loading}
-                style={styles.input}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.surfaceSunken,
+                    borderColor: colors.border,
+                    color: colors.text,
+                  },
+                ]}
+                placeholderTextColor={colors.textMuted}
                 placeholder={t("display_name", { defaultValue: "Display Name" }) as string}
               />
               {editName.length === MAX_DISPLAY_NAME_LENGTH && (
-                <Text style={styles.warning}>
+                <Text style={[styles.warning, { color: colors.warning }]}>
                   {t("username_max_length", { defaultValue: `Maximum ${MAX_DISPLAY_NAME_LENGTH} characters allowed`, length: MAX_DISPLAY_NAME_LENGTH })}
                 </Text>
               )}
-              {error && <Text style={styles.error}>{error}</Text>}
+              {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
               <View style={{ marginTop: 8 }}>
                 <Toggle checked={isPublic} onChange={setIsPublic} label={t("make_public_label", { defaultValue: "Make profile public (Highscores visible)" })} />
               </View>
@@ -267,7 +284,7 @@ export default function Settings() {
       <View style={styles.statsSection}>
         <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
           <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("privacy_status", { defaultValue: "Leaderboard Visibility" })}</Text>
-          <Text style={[styles.statValue, { color: profileIsPublic ? "#16a34a" : colors.text }]}>
+          <Text style={[styles.statValue, { color: profileIsPublic ? colors.success : colors.text }]}>
             {profileIsPublic ? t("public", { defaultValue: "Public" }) : t("private", { defaultValue: "Private" })}
           </Text>
         </View>
@@ -284,39 +301,59 @@ export default function Settings() {
       <View style={styles.actions}>
         {isEditing ? (
           <View style={styles.row}>
-            <Pressable style={[styles.primaryButton, loading && styles.disabled]} onPress={handleSave} disabled={loading}>
-              <Text style={styles.primaryButtonText}>
-                {loading ? t("saving", { defaultValue: "Saving..." }) : t("save_profile", { defaultValue: "Save Profile" })}
-              </Text>
-            </Pressable>
-            <Pressable style={styles.secondaryButton} onPress={() => { setIsEditing(false); setError(null); }} disabled={loading}>
-              <Text style={styles.secondaryButtonText}>{t("cancel", { defaultValue: "Cancel" })}</Text>
-            </Pressable>
+            <Button
+              size="sm"
+              loading={loading}
+              label={t("save_profile", { defaultValue: "Save Profile" })}
+              onPress={handleSave}
+            />
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={loading}
+              label={t("cancel", { defaultValue: "Cancel" })}
+              onPress={() => {
+                setIsEditing(false);
+                setError(null);
+              }}
+            />
           </View>
         ) : (
-          <Pressable style={styles.secondaryButton} onPress={handleEditClick}>
-            <Text style={styles.secondaryButtonText}>{t("edit_profile", { defaultValue: "Edit Profile" })}</Text>
-          </Pressable>
+          <Button
+            size="sm"
+            variant="ghost"
+            label={t("edit_profile", { defaultValue: "Edit Profile" })}
+            onPress={handleEditClick}
+          />
         )}
       </View>
 
       {showGuestHint && (
-        <View style={styles.guestOverlay}>
-          <Text style={styles.guestTitle}>{t("guest_limitation_title", { defaultValue: "Guest Limitation" })}</Text>
-          <Text style={styles.guestMessage}>
+        // Covers the card it belongs to, so it must be opaque — the whole point
+        // is that the profile fields behind it are not available right now.
+        <View style={[styles.guestOverlay, { backgroundColor: colors.surfaceSolid }]}>
+          <Text style={[styles.guestTitle, { color: colors.text }]}>
+            {t("guest_limitation_title", { defaultValue: "Guest Limitation" })}
+          </Text>
+          <Text style={[styles.guestMessage, { color: colors.textMuted }]}>
             {t("guest_limitation_msg", { defaultValue: "You need to be a registered user to edit your profile." })}
           </Text>
           <View style={styles.row}>
-            <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("Signup")}>
-              <Text style={styles.primaryButtonText}>{t("signup", { defaultValue: "Sign Up" })}</Text>
-            </Pressable>
-            <Pressable style={styles.linkButton} onPress={() => setShowGuestHint(false)}>
-              <Text style={styles.link}>{t("close", { defaultValue: "Close" })}</Text>
-            </Pressable>
+            <Button
+              size="sm"
+              label={t("signup", { defaultValue: "Sign Up" })}
+              onPress={() => navigation.navigate("Signup")}
+            />
+            <Button
+              size="sm"
+              variant="subtle"
+              label={t("close", { defaultValue: "Close" })}
+              onPress={() => setShowGuestHint(false)}
+            />
           </View>
         </View>
       )}
-    </View>
+    </Card>
 
     <ProfileSettingsSection
       currentLanguage={i18n.language}
@@ -342,47 +379,37 @@ export default function Settings() {
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24, color: "#94a3b8", gap: 12 },
+  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24, gap: 12 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 8 },
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 4, position: "relative" },
+  card: { padding: 18, gap: 4, position: "relative" },
   headerRow: { flexDirection: "row", gap: 14, marginBottom: 12 },
   avatarCol: { alignItems: "center", gap: 6 },
-  avatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: "#e5e7eb" },
   headerMain: { flex: 1, justifyContent: "center" },
   displayName: { fontSize: 20, fontWeight: "800" },
   email: { fontSize: 13 },
   fieldLabel: { fontSize: 11, fontWeight: "700" },
-  input: { backgroundColor: "#ffffff", borderRadius: 6, paddingHorizontal: 10, paddingVertical: 8, color: "#111827" },
-  warning: { color: "#fdba74", fontSize: 11 },
-  error: { color: "#fca5a5", fontSize: 13 },
-  link: { color: "#bfdbfe", textDecorationLine: "underline", fontSize: 12 },
-  linkButton: { marginTop: 4 },
+  input: { borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8 },
+  warning: { fontSize: 11 },
+  error: { fontSize: 13 },
+  link: { textDecorationLine: "underline", fontSize: 12 },
   statsSection: { marginTop: 8, gap: 8 },
   statRow: { flexDirection: "row", justifyContent: "space-between", borderBottomWidth: 1, paddingBottom: 8 },
   statLabel: { fontWeight: "600" },
   statValue: { fontWeight: "700" },
   actions: { marginTop: 16 },
-  row: { flexDirection: "row", gap: 8 },
-  primaryButton: { backgroundColor: "#2563eb", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
-  primaryButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 13 },
-  secondaryButton: { backgroundColor: "#6b7280", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
-  secondaryButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 13 },
-  dangerCard: { marginTop: 8 },
-  dangerButton: { backgroundColor: "#dc2626", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8, alignSelf: "flex-start" },
-  disabled: { opacity: 0.5 },
+  row: { flexDirection: "row", gap: 8, flexWrap: "wrap", alignItems: "center" },
   guestOverlay: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(15,23,42,0.95)",
-    borderRadius: 12,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
     gap: 8,
   },
-  guestTitle: { color: "#ffffff", fontWeight: "800", fontSize: 16 },
-  guestMessage: { color: "#e2e8f0", textAlign: "center", fontSize: 13 },
+  guestTitle: { fontWeight: "800", fontSize: 16 },
+  guestMessage: { textAlign: "center", fontSize: 13 },
 });

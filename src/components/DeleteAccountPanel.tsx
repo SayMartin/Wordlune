@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -7,6 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
 import type { AppParamList } from "../navigation/types";
 import ConfirmationOverlay from "./ConfirmationOverlay";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 
@@ -51,8 +53,8 @@ export default function DeleteAccountPanel() {
 
   return (
     <>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: "#dc2626" }]}>
-        <Text style={[styles.cardTitle, { color: "#dc2626" }]}>
+      <Card style={styles.card} borderColor={colors.danger}>
+        <Text style={[styles.cardTitle, { color: colors.danger }]}>
           {t("danger_zone", { defaultValue: "Danger Zone" })}
         </Text>
         <Text style={{ color: colors.textMuted, fontSize: 13, marginBottom: 12 }}>
@@ -66,15 +68,15 @@ export default function DeleteAccountPanel() {
                   "Permanently delete your account and all related data — profile, scores, challenge history, and duel matches. This cannot be undone.",
               })}
         </Text>
-        {error && <Text style={styles.error}>{error}</Text>}
-        <Pressable
-          style={[styles.dangerButton, deleting && styles.disabled]}
-          onPress={() => setShowConfirm(true)}
+        {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
+        <Button
+          variant="danger"
+          fullWidth
           disabled={deleting}
-        >
-          <Text style={styles.dangerButtonText}>{t("delete_account", { defaultValue: "Delete Account" })}</Text>
-        </Pressable>
-      </View>
+          label={t("delete_account", { defaultValue: "Delete Account" })}
+          onPress={() => setShowConfirm(true)}
+        />
+      </Card>
 
       {showConfirm && (
         <ConfirmationOverlay
@@ -107,10 +109,7 @@ export default function DeleteAccountPanel() {
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 4 },
+  card: { padding: 18, gap: 4 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 8 },
-  dangerButton: { backgroundColor: "#dc2626", padding: 12, borderRadius: 8, alignItems: "center" },
-  dangerButtonText: { color: "#fff", fontWeight: "700" },
-  disabled: { opacity: 0.6 },
-  error: { color: "#dc2626", fontSize: 13, marginBottom: 8 },
+  error: { fontSize: 13, marginBottom: 8 },
 });

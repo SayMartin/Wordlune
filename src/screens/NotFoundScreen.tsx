@@ -13,7 +13,7 @@ export default function NotFoundScreen() {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>
         {t("not_found_title", { defaultValue: "Not Found" })}
       </Text>

@@ -13,12 +13,6 @@ interface Props {
   variant?: "danger" | "warning" | "info";
 }
 
-const VARIANT_COLORS: Record<NonNullable<Props["variant"]>, string> = {
-  danger: "#dc2626",
-  warning: "#ea580c",
-  info: "#1f2937",
-};
-
 export default function ConfirmationOverlay({
   title,
   message,
@@ -29,26 +23,31 @@ export default function ConfirmationOverlay({
   variant = "warning",
 }: Props) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
-  const accent = VARIANT_COLORS[variant];
+  const { colors, radii } = useTheme();
+  const accent = { danger: colors.danger, warning: colors.warning, info: colors.accent }[variant];
 
   return (
     <Modal transparent animationType="fade" visible onRequestClose={onCancel}>
       <View style={styles.backdrop}>
-        <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+        {/* Opaque, not the glass surface: a modal with the page showing
+            through it reads as a rendering fault, not as depth. */}
+        <View style={[styles.card, { backgroundColor: colors.surfaceSolid, borderColor: accent, borderRadius: radii.lg }]}>
           <Text style={[styles.title, { color: accent }]}>{title}</Text>
           <Text style={[styles.message, { color: colors.textMuted }]}>{message}</Text>
 
           <View style={styles.buttonRow}>
             {onCancel && (
-              <Pressable style={[styles.button, { backgroundColor: colors.background }]} onPress={onCancel}>
+              <Pressable
+                style={[styles.button, { backgroundColor: colors.surfaceHover, borderColor: colors.border }]}
+                onPress={onCancel}
+              >
                 <Text style={{ color: colors.text, fontWeight: "700" }}>
                   {cancelText || t("cancel", { defaultValue: "Cancel" })}
                 </Text>
               </Pressable>
             )}
             <Pressable style={[styles.button, { backgroundColor: accent }]} onPress={onConfirm}>
-              <Text style={{ color: "#ffffff", fontWeight: "700" }}>
+              <Text style={{ color: colors.onAccent, fontWeight: "700" }}>
                 {confirmText || t("confirm", { defaultValue: "Confirm" })}
               </Text>
             </Pressable>
@@ -61,9 +60,9 @@ export default function ConfirmationOverlay({
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", padding: 16 },
-  card: { width: "100%", maxWidth: 360, borderRadius: 16, borderWidth: 2, padding: 20 },
+  card: { width: "100%", maxWidth: 360, borderWidth: 1, padding: 20 },
   title: { fontSize: 18, fontWeight: "900", textAlign: "center", marginBottom: 6 },
   message: { fontSize: 13, textAlign: "center", marginBottom: 20 },
   buttonRow: { flexDirection: "row", gap: 10 },
-  button: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: "center" },
+  button: { flex: 1, paddingVertical: 12, borderRadius: 999, borderWidth: 1, borderColor: "transparent", alignItems: "center" },
 });

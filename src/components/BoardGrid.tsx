@@ -12,11 +12,18 @@ interface Props {
   word?: string;
 }
 
+// Wordle's own green/yellow/grey, deliberately left out of the palette: these
+// aren't decoration, they're the rules of the game, and anyone who has played
+// a Wordle already reads them. Restyling them to match the brand would cost
+// comprehension and buy nothing. See palettes.ts.
 const STATUS_COLORS: Record<LetterStatus, { bg: string; border: string }> = {
   absent: { bg: "#78787e4d", border: "#78787e4d" },
   present: { bg: "#c9b458", border: "#c9b458" },
   correct: { bg: "#6aaa64", border: "#6aaa64" },
 };
+
+// White on all three fills, which each carry enough contrast for it.
+const TILE_TEXT_ON_STATUS = "#ffffff";
 
 function glyphFor(ch: string) {
   if (ch === " ") return "␣";
@@ -68,15 +75,24 @@ export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6
                   key={`${rowIdx}-${i}`}
                   style={[
                     styles.tile,
-                    { width: tileSize, height: tileSize, borderColor: colors.border },
+                    {
+                      width: tileSize,
+                      height: tileSize,
+                      borderColor: colors.border,
+                      // An unfilled tile needs a fill of its own now that the
+                      // page behind it is a gradient — without one the board
+                      // dissolves into the background instead of reading as a
+                      // grid of empty squares.
+                      backgroundColor: colors.surfaceSunken,
+                    },
                     tileColors && { backgroundColor: tileColors.bg, borderColor: tileColors.border },
-                    isFocus && { borderColor: "#2563eb" },
+                    isFocus && { borderColor: colors.accent },
                   ]}
                 >
                   <Text
                     style={[
                       styles.tileText,
-                      { fontSize, color: tileColors ? "#ffffff" : colors.text },
+                      { fontSize, color: tileColors ? TILE_TEXT_ON_STATUS : colors.text },
                     ]}
                   >
                     {isCharFromGuess ? glyphFor(ch) : ""}

@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import DuelIcon from "./DuelIcon";
+import Card from "./ui/Card";
 import { getExtensionsForWord, getAllHydrocarbonSubcategories } from "../supabase/words-repository";
 import { flagFor } from "../utils/languageCycle";
 
@@ -36,13 +37,15 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
   }, [secret, language]);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <Card style={styles.container}>
       <View style={styles.topRow}>
         <View style={styles.identity}>
           <DuelIcon size={36} />
           <View>
-            <Text style={styles.vsLabel}>{t("dueling_against", { defaultValue: "Dueling vs" })}</Text>
-            <Text style={styles.opponentName}>{duelOpponentName}</Text>
+            <Text style={[styles.vsLabel, { color: colors.textMuted }]}>
+              {t("dueling_against", { defaultValue: "Dueling vs" })}
+            </Text>
+            <Text style={[styles.opponentName, { color: colors.accent2 }]}>{duelOpponentName}</Text>
           </View>
           <View style={styles.statusCol}>
             {language && (
@@ -55,8 +58,13 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
         </View>
 
         {onDuelForfeit && (
-          <Pressable style={styles.forfeitButton} onPress={onDuelForfeit}>
-            <Text style={styles.forfeitText}>🏳️ {t("surrender", { defaultValue: "Surrender" })}</Text>
+          <Pressable
+            style={[styles.forfeitButton, { borderColor: colors.danger, backgroundColor: colors.dangerSoft }]}
+            onPress={onDuelForfeit}
+          >
+            <Text style={[styles.forfeitText, { color: colors.danger }]}>
+              🏳️ {t("surrender", { defaultValue: "Surrender" })}
+            </Text>
           </Pressable>
         )}
       </View>
@@ -72,32 +80,41 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
                 key={sub.id}
                 style={[
                   styles.chip,
-                  isActive ? styles.chipActive : { backgroundColor: colors.background, borderColor: colors.border },
+                  isActive
+                    ? { backgroundColor: colors.warningSoft, borderColor: colors.warning }
+                    : { backgroundColor: colors.surfaceSunken, borderColor: colors.border },
                 ]}
               >
-                <Text style={[styles.chipText, isActive && styles.chipTextActive]}>{displayName || sub.name_en}</Text>
+                <Text
+                  style={[
+                    styles.chipText,
+                    { color: isActive ? colors.warning : colors.textMuted },
+                    isActive && styles.chipTextActive,
+                  ]}
+                >
+                  {displayName || sub.name_en}
+                </Text>
               </View>
             );
           })}
         </View>
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { borderWidth: 1, borderRadius: 12, padding: 12, gap: 10 },
+  container: { padding: 14, gap: 10 },
   topRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
   identity: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
-  vsLabel: { fontSize: 10, fontWeight: "700", color: "#16a34a", textTransform: "uppercase" },
-  opponentName: { fontSize: 16, fontWeight: "800", color: "#ea580c" },
+  vsLabel: { fontSize: 10, fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.6 },
+  opponentName: { fontSize: 16, fontWeight: "800" },
   statusCol: { alignItems: "center", gap: 4, marginLeft: 8 },
   langBadge: { fontSize: 10, fontWeight: "700", borderWidth: 1, borderRadius: 4, paddingHorizontal: 4, paddingVertical: 1 },
-  forfeitButton: { borderWidth: 1, borderColor: "#fecaca", backgroundColor: "#fef2f2", borderRadius: 8, paddingVertical: 6, paddingHorizontal: 10 },
-  forfeitText: { color: "#dc2626", fontWeight: "700", fontSize: 11 },
+  forfeitButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
+  forfeitText: { fontWeight: "700", fontSize: 11 },
   chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, borderTopWidth: 1, paddingTop: 8 },
   chip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 4 },
-  chipActive: { backgroundColor: "#facc15", borderColor: "#eab308" },
-  chipText: { fontSize: 10, color: "#64748b" },
-  chipTextActive: { color: "#713f12", fontWeight: "800" },
+  chipText: { fontSize: 10 },
+  chipTextActive: { fontWeight: "800" },
 });

@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "../components/ui/Card";
+import { PageTitle } from "../components/ui/Heading";
 import type { AppParamList } from "../navigation/types";
 import { SUPPORT_EMAIL } from "../constants/privacy";
 import { APP_NAME } from "../constants/app";
@@ -19,9 +21,9 @@ export default function AboutScreen() {
   const navigation = useNavigation<Nav>();
 
   return (
-    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
-      <View>
-        <Text style={[styles.pageTitle, { color: colors.text }]}>{t("about", { defaultValue: "About" })}</Text>
+    <PageScrollView contentContainerStyle={styles.container}>
+      <View style={styles.introBlock}>
+        <PageTitle>{t("about", { defaultValue: "About" })}</PageTitle>
         <Text style={[styles.intro, { color: colors.textMuted }]}>
           {t("about_description", {
             app: APP_NAME,
@@ -31,8 +33,8 @@ export default function AboutScreen() {
         </Text>
       </View>
 
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#6366f1" }]}>
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>
           {t("game_modes_title", { defaultValue: "Game Modes" })}
         </Text>
 
@@ -90,15 +92,15 @@ export default function AboutScreen() {
             ]}
           />
         </View>
-      </View>
+      </Card>
 
-      <View style={[styles.card, styles.accessCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#3b82f6" }]}>
+      <Card style={[styles.card, styles.accessCard]}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>
           {t("account_types_title", { defaultValue: "Account & Access" })}
         </Text>
 
         <View style={styles.tierGrid}>
-          <View style={[styles.tierCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <View style={[styles.tierCard, { backgroundColor: colors.surfaceSunken, borderColor: colors.border }]}>
             <Text style={[styles.tierTitle, { color: colors.textMuted }]}>
               👋 {t("visitor", { defaultValue: "Visitor" })}
             </Text>
@@ -111,8 +113,8 @@ export default function AboutScreen() {
             />
           </View>
 
-          <View style={[styles.tierCard, { backgroundColor: colors.background, borderColor: "#16a34a55" }]}>
-            <Text style={[styles.tierTitle, { color: "#16a34a" }]}>
+          <View style={[styles.tierCard, { backgroundColor: colors.successSoft, borderColor: colors.success }]}>
+            <Text style={[styles.tierTitle, { color: colors.success }]}>
               👤 {t("guest", { defaultValue: "Guest" })}
             </Text>
             <BulletList
@@ -135,8 +137,8 @@ export default function AboutScreen() {
             />
           </View>
 
-          <View style={[styles.tierCard, { backgroundColor: colors.background, borderColor: "#6366f155" }]}>
-            <Text style={[styles.tierTitle, { color: "#6366f1" }]}>
+          <View style={[styles.tierCard, { backgroundColor: colors.accentSoft, borderColor: colors.accent }]}>
+            <Text style={[styles.tierTitle, { color: colors.accent }]}>
               ⭐ {t("registered", { defaultValue: "Registered" })}
             </Text>
             <BulletList
@@ -154,7 +156,7 @@ export default function AboutScreen() {
             />
           </View>
         </View>
-      </View>
+      </Card>
 
       <View style={styles.supportRow}>
         <Text style={[styles.supportText, { color: colors.textMuted }]}>
@@ -201,10 +203,10 @@ function BulletList({
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, gap: 20 },
-  pageTitle: { fontSize: 26, fontWeight: "800", marginBottom: 8 },
-  intro: { fontSize: 16, lineHeight: 22 },
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 4 },
+  container: { padding: 16, gap: 20, paddingBottom: 40 },
+  introBlock: { gap: 10 },
+  intro: { fontSize: 16, lineHeight: 23, maxWidth: 560 },
+  card: { padding: 20, gap: 4 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 8 },
   modeBlock: { gap: 6 },
   modeBlockDivider: { borderTopWidth: 1, paddingTop: 14, marginTop: 8 },

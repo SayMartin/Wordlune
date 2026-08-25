@@ -7,6 +7,8 @@ import { useTheme } from "../theme/ThemeProvider";
 import { localAvatarUrl } from "./Avatar";
 import { useAuth } from "../context/AuthContext";
 import { suggestUniqueDisplayName } from "../supabase/players-repository";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 import WavingHand from "./WavingHand";
 import type { AppParamList } from "../navigation/types";
 
@@ -24,7 +26,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
 
   if (session === undefined) {
     return (
-      <View style={[styles.center, { backgroundColor: colors.background }]}>
+      <View style={styles.center}>
         <ActivityIndicator color={colors.accent} />
       </View>
     );
@@ -45,9 +47,9 @@ export default function SessionGate({ children }: { children: React.ReactNode })
     };
 
     return (
-      <View style={[styles.center, { backgroundColor: colors.background }]}>
-        <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <View style={[styles.header, { backgroundColor: colors.background, borderColor: colors.border }]}>
+      <View style={styles.center}>
+        <Card style={styles.card}>
+          <View style={[styles.header, { backgroundColor: colors.surfaceSunken, borderColor: colors.border }]}>
             <WavingHand size={32} />
             <Text style={[styles.title, { color: colors.text }]}>
               {t("welcome_player", { defaultValue: "Welcome Player!" })}
@@ -62,19 +64,12 @@ export default function SessionGate({ children }: { children: React.ReactNode })
               })}
             </Text>
 
-            <Pressable
-              style={[styles.button, styles.guestButton]}
+            <Button
+              fullWidth
+              loading={signingIn}
+              label={t("play_as_guest", { defaultValue: "Play as Guest" })}
               onPress={handleGuestLogin}
-              disabled={signingIn}
-            >
-              {signingIn ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.buttonTextLight}>
-                  {t("play_as_guest", { defaultValue: "Play as Guest" })}
-                </Text>
-              )}
-            </Pressable>
+            />
 
             {/* "Play as Guest" creates a real auth.users row, so it is real
                 processing and needs notice. No checkbox here on purpose —
@@ -104,22 +99,17 @@ export default function SessionGate({ children }: { children: React.ReactNode })
             </View>
 
             <View style={styles.row}>
-              <Pressable
-                style={[styles.button, styles.outlineButton, { borderColor: colors.border }]}
+              <Button
+                variant="ghost"
+                style={styles.rowButton}
+                label={t("login", { defaultValue: "Log In" })}
                 onPress={() => navigation.navigate("Login")}
-              >
-                <Text style={[styles.buttonTextDark, { color: colors.text }]}>
-                  {t("login", { defaultValue: "Log In" })}
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.signupButton, { backgroundColor: colors.accent }]}
+              />
+              <Button
+                style={styles.rowButton}
+                label={t("signup", { defaultValue: "Sign Up" })}
                 onPress={() => navigation.navigate("Signup")}
-              >
-                <Text style={styles.buttonTextLight}>
-                  {t("signup", { defaultValue: "Sign Up" })}
-                </Text>
-              </Pressable>
+              />
             </View>
 
             <Pressable onPress={() => navigation.navigate("Home")}>
@@ -134,7 +124,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
               </Text>
             </Pressable>
           </View>
-        </View>
+        </Card>
       </View>
     );
   }
@@ -144,18 +134,13 @@ export default function SessionGate({ children }: { children: React.ReactNode })
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 16 },
-  card: { width: "100%", maxWidth: 400, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
+  card: { width: "100%", maxWidth: 400 },
   header: { padding: 16, borderBottomWidth: 1, alignItems: "center", gap: 6 },
   title: { fontSize: 18, fontWeight: "800" },
   body: { padding: 20, gap: 12, alignItems: "stretch" },
   message: { fontSize: 15, lineHeight: 21, textAlign: "center", marginBottom: 4 },
-  button: { paddingVertical: 12, borderRadius: 8, alignItems: "center", justifyContent: "center" },
-  guestButton: { backgroundColor: "#16a34a" },
-  signupButton: { flex: 1 },
-  outlineButton: { flex: 1, borderWidth: 1 },
   row: { flexDirection: "row", gap: 10 },
-  buttonTextLight: { color: "#fff", fontWeight: "700", fontSize: 15 },
-  buttonTextDark: { fontWeight: "700", fontSize: 15 },
+  rowButton: { flex: 1 },
   dividerRow: { flexDirection: "row", alignItems: "center", gap: 10, marginVertical: 4 },
   dividerLine: { flex: 1, height: 1 },
   dividerText: { fontSize: 13 },

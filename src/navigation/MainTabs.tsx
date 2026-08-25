@@ -1,6 +1,7 @@
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import HomeScreen from "../screens/HomeScreen";
 import GameScreen from "../screens/GameScreen";
@@ -26,20 +27,65 @@ const isWeb = Platform.OS === "web";
 // reintroduce the problem — a scrollbar stranded mid-viewport and a mouse wheel
 // that does nothing outside the column. SessionGate's visitor card centres
 // itself (maxWidth: 400), so it needs no wrapper either.
+/**
+ * Hides a tab's scene while it isn't the focused one. Web only.
+ *
+ * @react-navigation/bottom-tabs delegates that to react-native-screens, whose
+ * ENABLE_SCREENS defaults to `Platform.OS` being ios/android/windows — so on
+ * web it is off, MaybeScreen falls back to a plain View, and BottomTabView
+ * separates the scenes with nothing but `zIndex: -1` (see its MaybeScreen call).
+ * Every tab you have visited therefore stays mounted *and painted*, stacked
+ * behind the focused one.
+ *
+ * That was invisible for as long as every scene painted an opaque
+ * `theme.colors.background` over the ones underneath. It stopped being true
+ * when the gradient moved behind the whole app and the scenes went transparent
+ * (App.tsx), and showed up as a stale screen — most visibly SessionGate's
+ * sign-in card — lingering behind whatever tab you switched to.
+ *
+ * `display: none` rather than returning null: the children stay mounted, so a
+ * half-finished game or a scroll position survives the trip to another tab,
+ * exactly as it did before.
+ *
+ * The root stack needs none of this — NativeStackView sets an explicit
+ * per-screen `display` on web.
+ */
+function TabScene({ children }: { children: React.ReactNode }) {
+  const isFocused = useIsFocused();
+  if (!isWeb) return <>{children}</>;
+  return <View style={[styles.scene, !isFocused && styles.sceneHidden]}>{children}</View>;
+}
+
+const TabHomeScreen = () => (
+  <TabScene>
+    <HomeScreen />
+  </TabScene>
+);
+const TabAboutScreen = () => (
+  <TabScene>
+    <AboutScreen />
+  </TabScene>
+);
 const GatedGameScreen = () => (
-  <SessionGate>
-    <GameScreen />
-  </SessionGate>
+  <TabScene>
+    <SessionGate>
+      <GameScreen />
+    </SessionGate>
+  </TabScene>
 );
 const GatedProgressScreen = () => (
-  <SessionGate>
-    <ProgressScreen />
-  </SessionGate>
+  <TabScene>
+    <SessionGate>
+      <ProgressScreen />
+    </SessionGate>
+  </TabScene>
 );
 const GatedSettingsScreen = () => (
-  <SessionGate>
-    <SettingsScreen />
-  </SessionGate>
+  <TabScene>
+    <SessionGate>
+      <SettingsScreen />
+    </SessionGate>
+  </TabScene>
 );
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -86,26 +132,27 @@ function TabNavigator() {
         headerTitle: renderNoTitle,
         headerLeft: renderHeaderLeft,
         headerRight: renderHeaderRight,
+        // Transparent so App.tsx's gradient shows through the scene; the tab
+        // bar and header stay opaque, since content scrolls underneath them.
+        sceneStyle: { backgroundColor: "transparent" },
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        headerStyle: { backgroundColor: colors.surface },
+        tabBarStyle: { backgroundColor: colors.surfaceSolid, borderTopColor: colors.border },
+        headerStyle: { backgroundColor: colors.surfaceSolid },
         headerTintColor: colors.text,
         tabBarIcon: makeTabBarIcon(route.name as keyof MainTabParamList),
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
+      <Tab.Screen name="Home" component={TabHomeScreen} options={{ title: t("home", { defaultValue: "Home" }) }} />
       <Tab.Screen name="Game" component={GatedGameScreen} options={{ title: t("game", { defaultValue: "Game" }) }} />
       <Tab.Screen name="Progress" component={GatedProgressScreen} options={{ title: t("progress", { defaultValue: "Progress" }) }} />
       <Tab.Screen name="Settings" component={GatedSettingsScreen} options={{ title: t("settings", { defaultValue: "Settings" }) }} />
-      <Tab.Screen name="About" component={AboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
+      <Tab.Screen name="About" component={TabAboutScreen} options={{ title: t("about", { defaultValue: "About" }) }} />
     </Tab.Navigator>
   );
 }
 
 export default function MainTabs() {
-  const { colors } = useTheme();
-
   if (!isWeb) {
     return <TabNavigator />;
   }
@@ -113,7 +160,7 @@ export default function MainTabs() {
   // Web: WebTopNav spans full width (each screen's own content is centered
   // via PageScrollView's content container); WebFooter matches Wordse's footer.
   return (
-    <View style={[styles.webPage, { backgroundColor: colors.background }]}>
+    <View style={styles.webPage}>
       <TabNavigator />
       <WebFooter />
     </View>
@@ -122,5 +169,7 @@ export default function MainTabs() {
 
 const styles = StyleSheet.create({
   webPage: { flex: 1 },
+  scene: { flex: 1 },
+  sceneHidden: { display: "none" },
   tabIcon: { fontSize: 20 },
 });

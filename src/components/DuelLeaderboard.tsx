@@ -47,23 +47,28 @@ export default function DuelLeaderboard() {
             key={entry.player_id}
             style={[
               styles.row,
-              { borderColor: colors.border, backgroundColor: isMe ? "#eef2ff" : colors.surface },
+              { borderColor: isMe ? colors.accent : colors.border, backgroundColor: isMe ? colors.accentSoft : colors.surface },
             ]}
           >
             <Text style={styles.rank}>{MEDALS[idx] || idx + 1}</Text>
             {entry.avatar_url ? (
               <Image source={{ uri: entry.avatar_url }} style={styles.avatar} />
             ) : (
-              <View style={[styles.avatar, styles.avatarFallback]}>
-                <Text style={styles.avatarFallbackText}>{entry.display_name?.substring(0, 2).toUpperCase() || "??"}</Text>
+              <View style={[styles.avatar, styles.avatarFallback, { backgroundColor: colors.surfaceSunken }]}>
+                <Text style={[styles.avatarFallbackText, { color: colors.textMuted }]}>
+                  {entry.display_name?.substring(0, 2).toUpperCase() || "??"}
+                </Text>
               </View>
             )}
-            <Text style={[styles.name, { color: isMe ? "#4338ca" : colors.text }]} numberOfLines={1}>
+            <Text style={[styles.name, { color: isMe ? colors.accent : colors.text }]} numberOfLines={1}>
               {entry.display_name || t("unknown", { defaultValue: "Unknown" })}
               {isMe ? ` (${t("you", { defaultValue: "You" })})` : ""}
             </Text>
-            <Text style={styles.wins}>
-              {entry.wins} <Text style={styles.winsLabel}>{t("wins", { defaultValue: "wins" })}</Text>
+            <Text style={[styles.wins, { color: colors.accent }]}>
+              {entry.wins}{" "}
+              <Text style={[styles.winsLabel, { color: colors.textMuted }]}>
+                {t("wins", { defaultValue: "wins" })}
+              </Text>
             </Text>
           </View>
         );
@@ -77,9 +82,9 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: 10, padding: 10, borderWidth: 1, borderRadius: 10 },
   rank: { width: 24, textAlign: "center", fontWeight: "700" },
   avatar: { width: 32, height: 32, borderRadius: 16 },
-  avatarFallback: { backgroundColor: "#e2e8f0", alignItems: "center", justifyContent: "center" },
-  avatarFallbackText: { fontSize: 10, fontWeight: "700", color: "#64748b" },
+  avatarFallback: { alignItems: "center", justifyContent: "center" },
+  avatarFallbackText: { fontSize: 10, fontWeight: "700" },
   name: { flex: 1, fontWeight: "700" },
-  wins: { fontWeight: "800", color: "#4f46e5", fontFamily: "monospace" },
-  winsLabel: { fontWeight: "400", fontSize: 11, color: "#94a3b8" },
+  wins: { fontWeight: "800", fontFamily: "monospace" },
+  winsLabel: { fontWeight: "400", fontSize: 11 },
 });

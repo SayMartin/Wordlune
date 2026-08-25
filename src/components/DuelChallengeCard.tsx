@@ -50,8 +50,10 @@ export default function DuelChallengeCard({ match, onJoin, loading }: Props) {
           {new Date(match.created_at).toLocaleTimeString()}
         </Text>
       </View>
-      <View style={styles.joinBadge}>
-        <Text style={styles.joinText}>{t("join", { defaultValue: "Join" })}</Text>
+      <View style={[styles.joinBadge, { backgroundColor: colors.successSoft, borderColor: colors.success }]}>
+        <Text style={[styles.joinText, { color: colors.success }]}>
+          {t("join", { defaultValue: "Join" })}
+        </Text>
       </View>
     </Pressable>
   );
@@ -70,6 +72,6 @@ const styles = StyleSheet.create({
   info: { gap: 2, flex: 1 },
   nameRow: { flexDirection: "row", alignItems: "center", gap: 6 },
   name: { fontWeight: "700" },
-  joinBadge: { backgroundColor: "#dcfce7", borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
-  joinText: { color: "#15803d", fontWeight: "700", fontSize: 12 },
+  joinBadge: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
+  joinText: { fontWeight: "700", fontSize: 12 },
 });

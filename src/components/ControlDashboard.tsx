@@ -166,8 +166,8 @@ export default function ControlDashboard({
                 styles.mainButton,
                 styles.noWebOutline,
                 disabled
-                  ? [{ backgroundColor: colors.surface, borderColor: colors.border }, styles.disabledState]
-                  : styles.activeButton,
+                  ? [{ backgroundColor: colors.surfaceHover, borderColor: colors.border }, styles.disabledState]
+                  : { backgroundColor: colors.accent, borderColor: colors.accentHover },
               ]}
               ref={mainButtonRef}
               onPress={handleMainAction}
@@ -176,9 +176,11 @@ export default function ControlDashboard({
               focusable={false}
             >
               {poolLoading ? (
-                <ActivityIndicator color={disabled ? colors.text : "#ffffff"} />
+                <ActivityIndicator color={disabled ? colors.text : colors.onAccent} />
               ) : (
-                <Text style={[styles.mainButtonIcon, { color: disabled ? colors.text : "#ffffff" }]}>{mainIcon}</Text>
+                <Text style={[styles.mainButtonIcon, { color: disabled ? colors.text : colors.onAccent }]}>
+                  {mainIcon}
+                </Text>
               )}
             </Pressable>
           )}
@@ -190,7 +192,7 @@ export default function ControlDashboard({
                 styles.noWebOutline,
                 status === "idle" || disabled
                   ? [{ borderColor: colors.border }, styles.disabledState]
-                  : { borderColor: "#4f46e5" },
+                  : { borderColor: colors.accent },
               ]}
               ref={resetButtonRef}
               onPress={() => {
@@ -202,7 +204,12 @@ export default function ControlDashboard({
               accessibilityLabel={t("reset", { defaultValue: "Reset" })}
               focusable={false}
             >
-              <Text style={[styles.resetButtonIcon, { color: status === "idle" || disabled ? colors.textMuted : "#4f46e5" }]}>
+              <Text
+                style={[
+                  styles.resetButtonIcon,
+                  { color: status === "idle" || disabled ? colors.textMuted : colors.accent },
+                ]}
+              >
                 ↻
               </Text>
             </Pressable>
@@ -211,9 +218,7 @@ export default function ControlDashboard({
           <Text
             style={[
               styles.timer,
-              suddenDeathRemaining !== null
-                ? styles.suddenDeathTimer
-                : { color: "#4f46e5" },
+              { color: suddenDeathRemaining !== null ? colors.danger : colors.accent },
             ]}
           >
             {suddenDeathRemaining !== null ? formatTime(suddenDeathRemaining) : formatTime(displayElapsed)}
@@ -223,18 +228,27 @@ export default function ControlDashboard({
         <View style={styles.cluster}>
           {children}
           {onExit && (
-            <Pressable style={styles.exitButton} onPress={onExit}>
-              <Text style={styles.exitButtonText}>{t("quit_game", { defaultValue: "Quit" })}</Text>
+            <Pressable
+              style={[styles.exitButton, { backgroundColor: colors.warningSoft, borderColor: colors.warning }]}
+              onPress={onExit}
+            >
+              <Text style={[styles.exitButtonText, { color: colors.warning }]}>
+                {t("quit_game", { defaultValue: "Quit" })}
+              </Text>
             </Pressable>
           )}
         </View>
       </View>
 
       {!hasSelection && (
-        <Text style={styles.hint}>{t("select_subcategories_to_enable", { defaultValue: "Select subcategories to enable game" })}</Text>
+        <Text style={[styles.hint, { color: colors.warning }]}>
+          {t("select_subcategories_to_enable", { defaultValue: "Select subcategories to enable game" })}
+        </Text>
       )}
       {hasSelection && noWordsFound && (
-        <Text style={styles.hint}>{t("no_words_for_filter", { defaultValue: "No words match the current letter range — widen it to start" })}</Text>
+        <Text style={[styles.hint, { color: colors.warning }]}>
+          {t("no_words_for_filter", { defaultValue: "No words match the current letter range — widen it to start" })}
+        </Text>
       )}
     </View>
   );
@@ -261,7 +275,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  activeButton: { backgroundColor: "#4f46e5", borderColor: "#c7d2fe" },
   mainButtonIcon: { fontSize: 18 },
   resetButton: {
     width: 44,
@@ -277,13 +290,12 @@ const styles = StyleSheet.create({
   // control should invent its own disabled look.
   disabledState: { opacity: 0.4 },
   timer: { fontWeight: "700", fontSize: 20, fontVariant: ["tabular-nums"] },
-  suddenDeathTimer: { color: "#dc2626", fontSize: 20 },
-  hint: { textAlign: "center", color: "#ef4444", fontWeight: "600", fontSize: 13 },
+  hint: { textAlign: "center", fontWeight: "600", fontSize: 13 },
   exitButton: {
-    backgroundColor: "#fed7aa",
-    borderRadius: 8,
+    borderWidth: 1,
+    borderRadius: 999,
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
   },
-  exitButtonText: { color: "#c2410c", fontWeight: "700" },
+  exitButtonText: { fontWeight: "700" },
 });

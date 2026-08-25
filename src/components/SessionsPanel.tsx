@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -7,6 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
 import type { AppParamList } from "../navigation/types";
 import ConfirmationOverlay from "./ConfirmationOverlay";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 
@@ -57,8 +59,8 @@ export default function SessionsPanel() {
 
   return (
     <>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#6366f1" }]}>
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>
           {t("sessions_title", { defaultValue: "Sessions" })}
         </Text>
         <Text style={[styles.body, { color: colors.textMuted }]}>
@@ -68,22 +70,16 @@ export default function SessionsPanel() {
           })}
         </Text>
 
-        {error && <Text style={styles.error}>{error}</Text>}
+        {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
 
-        <Pressable
-          style={[styles.button, { borderColor: colors.border }, working && styles.disabled]}
+        <Button
+          variant="ghost"
+          fullWidth
+          loading={working}
+          label={t("sign_out_everywhere", { defaultValue: "Sign out everywhere" })}
           onPress={() => setShowConfirm(true)}
-          disabled={working}
-        >
-          {working ? (
-            <ActivityIndicator color={colors.text} />
-          ) : (
-            <Text style={[styles.buttonText, { color: colors.text }]}>
-              {t("sign_out_everywhere", { defaultValue: "Sign out everywhere" })}
-            </Text>
-          )}
-        </Pressable>
-      </View>
+        />
+      </Card>
 
       {showConfirm && (
         <ConfirmationOverlay
@@ -107,11 +103,8 @@ export default function SessionsPanel() {
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 10 },
+  card: { padding: 18, gap: 10 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 2 },
   body: { fontSize: 13, lineHeight: 19 },
-  button: { borderWidth: 1, padding: 12, borderRadius: 8, alignItems: "center" },
-  buttonText: { fontWeight: "700" },
-  disabled: { opacity: 0.6 },
-  error: { color: "#dc2626", fontSize: 13 },
+  error: { fontSize: 13 },
 });

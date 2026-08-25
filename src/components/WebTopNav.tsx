@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 import { useTranslation } from "react-i18next";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useTheme } from "../theme/ThemeProvider";
+import { glassProps } from "../theme/webTheme";
 import { useAuth } from "../context/AuthContext";
 import { updatePlayerSettings } from "../supabase/players-repository";
 import { flagFor, nextLanguage } from "../utils/languageCycle";
@@ -67,7 +69,24 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
     : { label: t("login", { defaultValue: "Log In" }), onPress: () => nav.navigate("Login") };
 
   return (
-    <View style={[styles.bar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+    <View {...glassProps} style={[styles.bar, { backgroundColor: colors.surface }]}>
+      {/* The rule under the bar fades out towards both edges instead of
+          stopping dead at them — same treatment as the header on
+          appfinningar.se, drawn here because RN borders can't be gradients. */}
+      <View style={styles.hairline}>
+        <Svg width="100%" height="1" viewBox="0 0 100 1" preserveAspectRatio="none">
+          <Defs>
+            <LinearGradient id="wlNavRule" x1="0" y1="0" x2="1" y2="0">
+              <Stop offset="0" stopColor={colors.border} stopOpacity="0" />
+              <Stop offset="0.18" stopColor={colors.border} stopOpacity="1" />
+              <Stop offset="0.82" stopColor={colors.border} stopOpacity="1" />
+              <Stop offset="1" stopColor={colors.border} stopOpacity="0" />
+            </LinearGradient>
+          </Defs>
+          <Rect x="0" y="0" width="100" height="1" fill="url(#wlNavRule)" />
+        </Svg>
+      </View>
+
       <View style={styles.inner}>
         <View style={styles.side}>
           <Pressable style={styles.brand} onPress={() => goToTab("Home")}>
@@ -85,22 +104,25 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
 
         {!isMobile && (
           <View style={styles.centerLinks}>
-            {links.map((link, i) => (
-              <React.Fragment key={link.name}>
-                {i > 0 && <Text style={{ color: colors.textMuted }}>|</Text>}
-                <Pressable onPress={() => goToTab(link.name)}>
-                  <Text
-                    style={[
-                      styles.navLink,
-                      { color: colors.accent },
-                      link.isActive && styles.navLinkActive,
-                    ]}
-                  >
-                    {link.isGated ? "🔒 " : ""}
-                    {link.label}
-                  </Text>
-                </Pressable>
-              </React.Fragment>
+            {links.map((link) => (
+              <Pressable
+                key={link.name}
+                onPress={() => goToTab(link.name)}
+                style={[
+                  styles.navItem,
+                  { borderBottomColor: link.isActive ? colors.accent : "transparent" },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.navLink,
+                    { color: link.isActive ? colors.text : colors.textMuted },
+                  ]}
+                >
+                  {link.isGated ? "🔒 " : ""}
+                  {link.label}
+                </Text>
+              </Pressable>
             ))}
           </View>
         )}
@@ -115,16 +137,19 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
 
           {!isMobile && (
             <Pressable
-              style={[styles.authButton, { borderColor: colors.border }]}
+              style={[
+                styles.authButton,
+                { borderColor: colors.border, backgroundColor: colors.surfaceHover },
+              ]}
               onPress={authAction.onPress}
             >
-              <Text style={[styles.authButtonText, { color: colors.accent }]}>{authAction.label}</Text>
+              <Text style={[styles.authButtonText, { color: colors.text }]}>{authAction.label}</Text>
             </Pressable>
           )}
 
           {isMobile && (
             <Pressable
-              style={[styles.menuButton, { borderColor: colors.border }]}
+              style={[styles.menuButton, { borderColor: colors.border, backgroundColor: colors.surfaceHover }]}
               onPress={() => setMenuOpen((v) => !v)}
               accessibilityLabel="Toggle navigation"
             >
@@ -137,7 +162,7 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
       {isMobile && menuOpen && (
         <>
           <Pressable style={styles.menuBackdrop} onPress={() => setMenuOpen(false)} />
-          <View style={[styles.dropdown, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={[styles.dropdown, { backgroundColor: colors.surfaceSolid, borderColor: colors.border }]}>
             {links.map((link) => (
               <Pressable key={link.name} style={styles.dropdownItem} onPress={() => goToTab(link.name)}>
                 <Text style={[styles.dropdownText, { color: link.isActive ? colors.accent : colors.text }]}>
@@ -165,7 +190,8 @@ export default function WebTopNav({ state, descriptors, navigation }: BottomTabB
 }
 
 const styles = StyleSheet.create({
-  bar: { borderBottomWidth: 1, position: "relative", zIndex: 10 },
+  bar: { position: "relative", zIndex: 10 },
+  hairline: { pointerEvents: "none", position: "absolute", left: 0, right: 0, bottom: 0, height: 1 },
   inner: {
     width: "100%",
     maxWidth: MAX_WIDTH,
@@ -182,14 +208,14 @@ const styles = StyleSheet.create({
   brand: { flexDirection: "row", alignItems: "center", gap: 8 },
   brandText: { fontSize: 18, fontWeight: "800" },
   flag: { fontSize: 20 },
-  centerLinks: { flexDirection: "row", alignItems: "center", gap: 10 },
-  navLink: { fontSize: 13, fontWeight: "600" },
-  navLinkActive: { fontWeight: "800", textDecorationLine: "underline" },
+  centerLinks: { flexDirection: "row", alignItems: "center", gap: 22 },
+  navItem: { borderBottomWidth: 1, paddingBottom: 3 },
+  navLink: { fontSize: 14, fontWeight: "600" },
   greetingRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   greeting: { fontWeight: "600", fontSize: 13, maxWidth: 140 },
-  authButton: { borderWidth: 1, borderRadius: 6, paddingVertical: 6, paddingHorizontal: 10 },
-  authButtonText: { fontWeight: "700", fontSize: 13 },
-  menuButton: { borderWidth: 1, borderRadius: 6, width: 36, height: 36, alignItems: "center", justifyContent: "center" },
+  authButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 14 },
+  authButtonText: { fontWeight: "600", fontSize: 13 },
+  menuButton: { borderWidth: 1, borderRadius: 999, width: 36, height: 36, alignItems: "center", justifyContent: "center" },
   menuBackdrop: {
     position: "fixed" as any,
     top: 0,

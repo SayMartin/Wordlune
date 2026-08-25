@@ -6,10 +6,11 @@
 
 import "./src/i18n/i18n";
 import React, { useEffect } from "react";
-import { Platform, StatusBar } from "react-native";
+import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer, type LinkingOptions } from "@react-navigation/native";
 import { ThemeProvider, useTheme } from "./src/theme/ThemeProvider";
+import AppBackground from "./src/theme/AppBackground";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { LoadingProvider } from "./src/context/LoadingContext";
 import RootNavigator, { type RootStackParamList } from "./src/navigation/RootNavigator";
@@ -20,6 +21,8 @@ import RootNavigator, { type RootStackParamList } from "./src/navigation/RootNav
 // password-reset and email-confirmation redirects in AuthContext able to land in the app.
 //
 // The "*" -> NotFound mapping is web-only — see the comment on it below.
+const isWeb = Platform.OS === "web";
+
 const linking: LinkingOptions<RootStackParamList> = {
   // The custom scheme matches the intent-filter in AndroidManifest.xml and the
   // redirect URLs AuthContext builds for password reset / email confirmation.
@@ -82,8 +85,15 @@ function AppContent() {
         dark: theme === "dark",
         colors: {
           primary: colors.accent,
-          background: colors.background,
-          card: colors.surface,
+          // Transparent, not colors.background: the gradient is painted once
+          // behind the whole app (AppBackground on native, <body> on web), and
+          // React Navigation would otherwise cover it with an opaque scene
+          // container on every screen. Every navigator here also passes a
+          // transparent contentStyle/sceneStyle for the same reason.
+          background: "transparent",
+          // Headers and the native tab bar have content scrolling underneath
+          // them, so they need the opaque surface rather than the glass one.
+          card: colors.surfaceSolid,
           text: colors.text,
           border: colors.border,
           notification: colors.accent,
@@ -102,13 +112,36 @@ function AppContent() {
   );
 }
 
+// The gradient sits in a plain View behind the navigator rather than inside it,
+// so it survives every screen transition instead of being torn down and redrawn
+// with each one.
+//
+// The base fill is native-only, and deliberately so: on web the gradient is
+// painted onto <body> (webTheme.ts), and any opaque colour here would cover it
+// along with the grain that sits behind #root. On native there is no document
+// to paint, so this View is the bottom of the stack and needs a colour of its
+// own for the moment before AppBackground's SVG has drawn.
+function AppShell() {
+  const { colors } = useTheme();
+  return (
+    <View style={[styles.root, !isWeb && { backgroundColor: colors.backgroundDeep }]}>
+      <AppBackground />
+      <AppContent />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+});
+
 function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
         <LoadingProvider>
           <AuthProvider>
-            <AppContent />
+            <AppShell />
           </AuthProvider>
         </LoadingProvider>
       </ThemeProvider>

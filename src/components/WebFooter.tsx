@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   // width and only breaks on a very narrow viewport, where stacking reads far
   // better than the text overflowing.
   footer: {
+    marginTop: 32,
     paddingVertical: 24,
     borderTopWidth: 1,
     flexDirection: "row",
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     rowGap: 8,
   },
   text: { fontSize: 13 },
-  link: { fontWeight: "700", textDecorationLine: "underline" },
+  link: { fontWeight: "600", textDecorationLine: "underline" },
   // Underlined but not bold: the copyright line reads as one quiet sentence,
   // unlike the Privacy/Delete pair below it, which are deliberate call-outs.
   siteLink: { fontSize: 13, textDecorationLine: "underline" },

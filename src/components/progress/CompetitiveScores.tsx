@@ -9,6 +9,7 @@ import {
 } from "../../supabase/players-repository";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../theme/ThemeProvider";
+import Card from "../ui/Card";
 import Toggle from "../Toggle";
 import ConfirmationOverlay from "../ConfirmationOverlay";
 import OverlayMessage from "../OverlayMessage";
@@ -78,7 +79,7 @@ export default function CompetitiveScores() {
   }
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <Card style={styles.card}>
       {message && (
         <OverlayMessage message={message.text} type={message.type} onClose={() => setMessage(null)} duration={3000} />
       )}
@@ -111,7 +112,7 @@ export default function CompetitiveScores() {
       )}
 
       <View style={[styles.header, { borderColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: "#d97706" }]}>
+        <Text style={[styles.headerTitle, { color: colors.warning }]}>
           🏆 {t("competitive_scores", { defaultValue: "Competitive History" })}
         </Text>
         <Text style={{ color: colors.textMuted, fontSize: 12 }}>
@@ -136,19 +137,19 @@ export default function CompetitiveScores() {
                 {((score.total_duration || 0) % 60).toString().padStart(2, "0")}
               </Text>
             </View>
-            <Text style={[styles.score, { color: "#d97706" }]}>{score.total_score}</Text>
+            <Text style={[styles.score, { color: colors.warning }]}>{score.total_score}</Text>
             <Pressable onPress={() => setScoreToDelete(score.id)} style={styles.deleteButton}>
               <Text>🗑️</Text>
             </Pressable>
           </View>
         ))
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, overflow: "hidden" },
+  card: { overflow: "hidden" },
   header: { padding: 14, borderBottomWidth: 1 },
   headerTitle: { fontSize: 16, fontWeight: "700", marginBottom: 2 },
   row: { flexDirection: "row", alignItems: "center", padding: 12, borderBottomWidth: 1, gap: 10 },

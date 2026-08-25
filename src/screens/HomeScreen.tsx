@@ -1,11 +1,14 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import PageScrollView from "../components/PageScrollView";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import { PageTitle, SectionHeading } from "../components/ui/Heading";
 import type { AppParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
@@ -17,22 +20,36 @@ const FEATURES = [
   { emoji: "🌍", titleKey: "multilingual", titleFallback: "Global & Local", descKey: "multilingual_desc", descFallback: "Play in English, Swedish, or French. Improve your vocabulary in multiple languages while having fun." },
 ] as const;
 
+// The width below which the feature grid collapses to one column. Same figure
+// as appfinningar.se's `.card-grid` minimum track (19rem plus the gap), just
+// resolved here instead of by `auto-fit`, which RN's layout engine has no
+// equivalent for.
+const TWO_COLUMN_MIN_WIDTH = 660;
+
 export default function HomeScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { isAuthenticated } = useAuth();
   const navigation = useNavigation<Nav>();
+  const { width } = useWindowDimensions();
+  const twoColumns = width >= TWO_COLUMN_MIN_WIDTH;
 
   return (
-    <PageScrollView
-      style={{ backgroundColor: colors.background }}
-      contentContainerStyle={styles.container}
-    >
-      <View style={styles.hero}>
-        <Text style={styles.heroTitle}>
-          {t("welcome_title", { defaultValue: "Master the Art of Words" })}
-        </Text>
-        <Text style={styles.heroSubtitle}>
+    <PageScrollView contentContainerStyle={styles.container}>
+      {/* The hero used to be a solid indigo block, which fought the page it sat
+          on. It's the same glass surface as everything else now — the gradient
+          behind the app is doing the colour work. */}
+      <Card style={styles.hero}>
+        <View style={[styles.badge, { borderColor: colors.borderHover, backgroundColor: colors.accentSoft }]}>
+          <View style={[styles.badgeDot, { backgroundColor: colors.accent }]} />
+          <Text style={[styles.badgeText, { color: colors.accent }]}>
+            {t("free_to_play", { defaultValue: "Free to play" })}
+          </Text>
+        </View>
+
+        <PageTitle>{t("welcome_title", { defaultValue: "Master the Art of Words" })}</PageTitle>
+
+        <Text style={[styles.heroSubtitle, { color: colors.textMuted }]}>
           {t("welcome_subtitle", {
             defaultValue:
               "Embark on a linguistic journey where every guess brings you closer to mastery. Challenge yourself, compete with friends, and expand your vocabulary today.",
@@ -40,45 +57,33 @@ export default function HomeScreen() {
         </Text>
 
         <View style={styles.heroActions}>
-          <Pressable
-            style={[styles.button, styles.primaryButton]}
+          <Button
+            label={`${t("play_now", { defaultValue: "Start Playing" })} →`}
             onPress={() => navigation.navigate("Game", undefined)}
-          >
-            <Text style={styles.primaryButtonText}>
-              {t("play_now", { defaultValue: "Start Playing" })} →
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={[styles.button, styles.duelButton]}
+          />
+          <Button
+            variant="ghost"
+            icon="⚔️"
+            label={t("duel_mode", { defaultValue: "Challenge to a Duel (PvP)" })}
             onPress={() => navigation.navigate("Game", { mode: "duel" })}
-          >
-            <Text style={styles.duelButtonText}>
-              {t("duel_mode", { defaultValue: "Challenge to a Duel (PvP)" })}
-            </Text>
-          </Pressable>
-
+          />
           {!isAuthenticated && (
-            <Pressable
-              style={[styles.button, styles.outlineButton]}
+            <Button
+              variant="ghost"
+              label={t("signup", { defaultValue: "Sign Up" })}
               onPress={() => navigation.navigate("Signup")}
-            >
-              <Text style={styles.outlineButtonText}>
-                {t("signup", { defaultValue: "Sign Up" })}
-              </Text>
-            </Pressable>
+            />
           )}
         </View>
-      </View>
+      </Card>
+
+      <SectionHeading>{t("home_modes_heading", { defaultValue: "Ways to play" })}</SectionHeading>
 
       <View style={styles.features}>
         {FEATURES.map((feature) => (
-          <View
+          <Card
             key={feature.titleKey}
-            style={[
-              styles.featureCard,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-            ]}
+            style={[styles.featureCard, twoColumns && styles.featureCardHalf]}
           >
             <Text style={styles.featureEmoji}>{feature.emoji}</Text>
             <Text style={[styles.featureTitle, { color: colors.text }]}>
@@ -87,7 +92,7 @@ export default function HomeScreen() {
             <Text style={[styles.featureDesc, { color: colors.textMuted }]}>
               {t(feature.descKey, { defaultValue: feature.descFallback })}
             </Text>
-          </View>
+          </Card>
         ))}
       </View>
     </PageScrollView>
@@ -95,51 +100,34 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, gap: 24 },
-  hero: {
-    borderRadius: 24,
-    padding: 24,
-    backgroundColor: "#4338ca",
-    gap: 16,
-  },
-  heroTitle: {
-    fontSize: 28,
-    fontWeight: "900",
-    color: "#ffffff",
-    textAlign: "center",
-  },
-  heroSubtitle: {
-    fontSize: 15,
-    color: "#e0e7ff",
-    textAlign: "center",
-    lineHeight: 22,
-  },
-  heroActions: { gap: 12 },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 999,
-    alignItems: "center",
-  },
-  primaryButton: { backgroundColor: "#e5e7eb" },
-  primaryButtonText: { color: "#4338ca", fontWeight: "700", fontSize: 15 },
-  duelButton: { backgroundColor: "#ea580c" },
-  duelButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 15 },
-  outlineButton: {
-    borderWidth: 1.5,
-    borderColor: "rgba(255,255,255,0.4)",
-    backgroundColor: "rgba(255,255,255,0.1)",
-  },
-  outlineButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 15 },
-  features: { gap: 16 },
-  featureCard: {
-    borderWidth: 1,
-    borderRadius: 16,
-    padding: 20,
+  container: { padding: 16, gap: 8, paddingBottom: 40 },
+  hero: { padding: 28, gap: 18, alignItems: "center" },
+  badge: {
+    flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingVertical: 5,
+    paddingHorizontal: 14,
   },
+  badgeDot: { width: 7, height: 7, borderRadius: 4 },
+  badgeText: { fontSize: 13, fontWeight: "500" },
+  heroSubtitle: {
+    fontSize: 15,
+    textAlign: "center",
+    lineHeight: 23,
+    // The measure stays readable on a wide desktop window — the yardstick is
+    // the text, not the viewport.
+    maxWidth: 520,
+  },
+  heroActions: { gap: 12, alignSelf: "stretch", alignItems: "center", marginTop: 4 },
+  features: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
+  featureCard: { flexGrow: 1, flexBasis: "100%", padding: 22, alignItems: "center", gap: 10 },
+  // flexBasis just under half leaves room for the 16px gap without needing a
+  // percentage that resolves differently across the two layout engines.
+  featureCardHalf: { flexBasis: "45%" },
   featureEmoji: { fontSize: 32 },
   featureTitle: { fontSize: 17, fontWeight: "700", textAlign: "center" },
-  featureDesc: { fontSize: 14, textAlign: "center", lineHeight: 20 },
+  featureDesc: { fontSize: 14, textAlign: "center", lineHeight: 21 },
 });

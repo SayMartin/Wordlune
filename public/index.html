@@ -27,8 +27,10 @@
     <meta name="description" content="Guess the hidden word in English, Swedish or French. Play practice rounds, compete for a place on the leaderboard, or duel a friend in real time. Free to play, no ads." />
 
     <!-- Boot theme is always dark (ThemeProvider ignores the persisted value on
-         start), so the browser chrome should match rather than flash light. -->
-    <meta name="theme-color" content="#0f172a" />
+         start), so the browser chrome should match rather than flash light.
+         This is the boot value only: webTheme.ts rewrites it on every theme
+         change, so it must stay in step with palettes.ts's dark background. -->
+    <meta name="theme-color" content="#0d1533" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Wordlune" />
@@ -63,6 +65,18 @@
         display: flex;
         height: 100%;
         flex: 1;
+      }
+    </style>
+
+    <!-- First-paint background only. webTheme.ts replaces this with the full
+         gradient (and the grain) as soon as the bundle runs, but that is one
+         network round trip away — without a colour here the browser paints its
+         default white in the meantime, which on a dark-by-default app reads as
+         a flash. Keep in step with palettes.ts's dark backgroundDeep. -->
+    <style id="wordlune-boot">
+      html,
+      body {
+        background-color: #070c1c;
       }
     </style>
   </head>

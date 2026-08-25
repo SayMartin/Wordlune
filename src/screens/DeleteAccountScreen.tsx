@@ -6,6 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../theme/ThemeProvider";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
 import type { AppParamList } from "../navigation/types";
 import DeleteAccountPanel from "../components/DeleteAccountPanel";
 import { SUPPORT_EMAIL } from "../constants/privacy";
@@ -48,7 +50,7 @@ export default function DeleteAccountScreen() {
   ];
 
   return (
-    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView contentContainerStyle={styles.container}>
       <View>
         <Text style={[styles.pageTitle, { color: colors.text }]}>
           {t("delete_account", { defaultValue: "Delete Account" })}
@@ -61,8 +63,8 @@ export default function DeleteAccountScreen() {
         </Text>
       </View>
 
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#6366f1" }]}>
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>
           {t("delete_account_what_title", { defaultValue: "What gets deleted" })}
         </Text>
         {deletedItems.map((item, i) => (
@@ -84,13 +86,13 @@ export default function DeleteAccountScreen() {
               "Deleted data may persist briefly in encrypted database backups before those expire on their normal schedule.",
           })}
         </Text>
-      </View>
+      </Card>
 
       {signedIn ? (
         <DeleteAccountPanel />
       ) : (
-        <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Text style={[styles.cardTitle, { color: "#6366f1" }]}>
+        <Card style={styles.card}>
+          <Text style={[styles.cardTitle, { color: colors.accent }]}>
             {t("delete_account_how_title", { defaultValue: "How to delete it" })}
           </Text>
           <Text style={[styles.body, { color: colors.textMuted }]}>
@@ -99,14 +101,12 @@ export default function DeleteAccountScreen() {
                 "Sign in and come back to this page, or use Settings → Danger Zone in the app. Deleting takes effect immediately.",
             })}
           </Text>
-          <Pressable
-            style={[styles.primaryButton, { backgroundColor: colors.accent }]}
+          <Button
+            fullWidth
+            style={styles.primaryButton}
+            label={t("delete_account_login_cta", { defaultValue: "Log in to delete your account" })}
             onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.primaryButtonText}>
-              {t("delete_account_login_cta", { defaultValue: "Log in to delete your account" })}
-            </Text>
-          </Pressable>
+          />
 
           <Text style={[styles.body, styles.emailFallback, { color: colors.textMuted }]}>
             {t("delete_account_email_fallback", {
@@ -125,7 +125,7 @@ export default function DeleteAccountScreen() {
           >
             {SUPPORT_EMAIL}
           </Text>
-        </View>
+        </Card>
       )}
 
       <Pressable onPress={() => navigation.navigate("PrivacyPolicy")}>
@@ -141,13 +141,12 @@ const styles = StyleSheet.create({
   container: { padding: 16, gap: 20 },
   pageTitle: { fontSize: 26, fontWeight: "800", marginBottom: 8 },
   intro: { fontSize: 16, lineHeight: 22 },
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 8 },
+  card: { padding: 18, gap: 8 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 4 },
   body: { fontSize: 14, lineHeight: 20 },
   bulletItem: { fontSize: 14, lineHeight: 20 },
   note: { fontSize: 13, lineHeight: 19, marginTop: 8, fontStyle: "italic" },
-  primaryButton: { padding: 12, borderRadius: 8, alignItems: "center", marginTop: 8 },
-  primaryButtonText: { color: "#fff", fontWeight: "700" },
+  primaryButton: { marginTop: 8 },
   emailFallback: { marginTop: 12 },
   link: { fontWeight: "700", textDecorationLine: "underline" },
   centered: { textAlign: "center" },

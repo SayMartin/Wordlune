@@ -55,7 +55,14 @@ export default function RootNavigator() {
   const { t } = useTranslation();
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        // The gradient is painted once behind the whole app (App.tsx); an
+        // opaque scene background here would cover it on every screen.
+        contentStyle: { backgroundColor: "transparent" },
+      }}
+    >
       <Stack.Screen name="Main" component={MainTabs} />
       <Stack.Screen
         name="Signup"

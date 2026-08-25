@@ -10,7 +10,7 @@ export default function SettingsScreen() {
   const { colors } = useTheme();
 
   return (
-    <PageScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <PageScrollView contentContainerStyle={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>{t("settings", { defaultValue: "Settings" })}</Text>
       <Settings />
     </PageScrollView>

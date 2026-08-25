@@ -1,9 +1,11 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import Toggle from "./Toggle";
 import OptionButton from "./OptionButton";
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 
 interface Props {
   currentLanguage: string;
@@ -37,8 +39,8 @@ export default function ProfileSettingsSection({
 
   return (
     <>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#6366f1" }]}>{t("language", { defaultValue: "Language" })}</Text>
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>{t("language", { defaultValue: "Language" })}</Text>
         <View style={styles.row}>
           <OptionButton active={currentLanguage === "en"} onPress={() => onLanguageChange("en")}>
             English
@@ -50,10 +52,10 @@ export default function ProfileSettingsSection({
             Français
           </OptionButton>
         </View>
-      </View>
+      </Card>
 
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#6366f1" }]}>{t("theme", { defaultValue: "Theme" })}</Text>
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>{t("theme", { defaultValue: "Theme" })}</Text>
         <View style={styles.row}>
           <OptionButton active={theme === "light"} onPress={() => onThemeChange("light")}>
             🌞 {t("light", { defaultValue: "Light" })}
@@ -62,12 +64,12 @@ export default function ProfileSettingsSection({
             🌙 {t("dark", { defaultValue: "Dark" })}
           </OptionButton>
         </View>
-      </View>
+      </Card>
 
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardTitle, { color: "#6366f1" }]}>{t("accessibility", { defaultValue: "Accessibility" })}</Text>
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>{t("accessibility", { defaultValue: "Accessibility" })}</Text>
         <Toggle checked={reduceMotion} onChange={onReduceMotionChange} label={t("reduce_motion", { defaultValue: "Reduce Motion" })} />
-      </View>
+      </Card>
 
       <View style={styles.footer}>
         {authState !== "registered" && (
@@ -77,26 +79,25 @@ export default function ProfileSettingsSection({
         )}
 
         <View style={styles.buttonRow}>
-          <Pressable
-            style={[styles.saveButton, (loading || !canSave) && styles.disabled]}
-            onPress={onSave}
+          <Button
+            size="sm"
             disabled={loading || !canSave}
-          >
-            <Text style={styles.saveButtonText}>
-              {loading
+            label={
+              loading
                 ? t("saving", { defaultValue: "Saving..." })
                 : canSave
                   ? t("save_settings", { defaultValue: "Save Settings" })
-                  : t("settings_saved", { defaultValue: "Settings Saved!" })}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.cancelButton, (loading || !canSave) && styles.disabled]}
-            onPress={onCancel}
+                  : t("settings_saved", { defaultValue: "Settings Saved!" })
+            }
+            onPress={onSave}
+          />
+          <Button
+            size="sm"
+            variant="ghost"
             disabled={loading || !canSave}
-          >
-            <Text style={styles.cancelButtonText}>{t("cancel", { defaultValue: "Cancel" })}</Text>
-          </Pressable>
+            label={t("cancel", { defaultValue: "Cancel" })}
+            onPress={onCancel}
+          />
         </View>
       </View>
     </>
@@ -104,15 +105,10 @@ export default function ProfileSettingsSection({
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 4 },
+  card: { padding: 18, gap: 4 },
   cardTitle: { fontSize: 18, fontWeight: "800", marginBottom: 8 },
-  row: { flexDirection: "row", gap: 8 },
+  row: { flexDirection: "row", gap: 8, flexWrap: "wrap" },
   footer: { gap: 14 },
   note: { fontSize: 15, fontStyle: "italic" },
   buttonRow: { flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" },
-  saveButton: { backgroundColor: "#2563eb", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
-  disabled: { opacity: 0.5 },
-  saveButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 13 },
-  cancelButton: { backgroundColor: "#6b7280", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
-  cancelButtonText: { color: "#ffffff", fontWeight: "700", fontSize: 13 },
 });

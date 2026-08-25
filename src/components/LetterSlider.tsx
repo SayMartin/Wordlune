@@ -102,6 +102,15 @@ export default function LetterSlider({
         )}
       </View>
 
+      {/* The hint text is a third item on this row, not a row of its own, so on
+          a wide viewport it sits immediately right of the switch that turns it
+          on. Its flexBasis is what decides when it stops doing that: a wrapping
+          row starts a new line whenever an item's basis doesn't fit in what's
+          left, so on a phone the two switches keep line one and the hint drops
+          underneath — where it then grows to the full width and wraps its own
+          text. No breakpoint, because the deciding factor is how long the
+          category names happen to be in the current language, which a fixed
+          width can't know. */}
       <View style={styles.toggles}>
         {onOverrideChange && (
           <Toggle
@@ -118,13 +127,15 @@ export default function LetterSlider({
             label={hintLabel ? `💡 ${hintLabel}` : undefined}
           />
         )}
-      </View>
 
-      {hintChecked && !!hintNames?.length && (
-        <Text style={[styles.hint, { color: "#f59e0b" }]}>
-          💡 {t("hint_categories", { defaultValue: "Hint" })}: {hintNames.join(", ")}
-        </Text>
-      )}
+        {hintChecked && !!hintNames?.length && (
+          // No 💡 of its own: the switch it now sits beside already carries one,
+          // and two bulbs on the same line read as a mistake.
+          <Text style={[styles.hint, { color: colors.warning }]}>
+            {t("hint_categories", { defaultValue: "Hint" })}: {hintNames.join(", ")}
+          </Text>
+        )}
+      </View>
     </View>
   );
 }
@@ -145,6 +156,29 @@ const styles = StyleSheet.create({
   // Shared disabled recipe across the app: uniform opacity fade, no per-button
   // custom disabled color.
   disabledState: { opacity: 0.4 },
-  toggles: { flexDirection: "row", gap: 20, marginTop: 4 },
-  hint: { fontSize: 13, fontWeight: "700", marginTop: 2 },
+  toggles: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    columnGap: 20,
+    rowGap: 8,
+    marginTop: 4,
+  },
+  // flexBasis is the wrap threshold, not a width: with less than this left on
+  // the current line the hint moves to its own line, where flexGrow lets it
+  // take the full width back — which is also what makes textAlign do anything,
+  // since it centres the text inside the item's box rather than the row's.
+  //
+  // lineHeight is set explicitly because the default for 13px leaves a couple
+  // of pixels of slack under the descenders, which reads as extra padding when
+  // this is the last thing in the card.
+  hint: {
+    fontSize: 13,
+    fontWeight: "700",
+    lineHeight: 17,
+    textAlign: "center",
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 200,
+  },
 });
