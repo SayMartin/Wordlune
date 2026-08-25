@@ -4,7 +4,6 @@ import {
   listWordsByIds,
   listWordIdsForSubcategories,
   listFiveLetterWords,
-  listHydrocarbonFiveLetterWords,
 } from "../supabase/words-repository";
 
 // Helper to pick a random word
@@ -59,7 +58,12 @@ export default function useWordPool({
       try {
         // --- DUEL MODE ---
         if (gameModeProp === "duel") {
-          const words = await listHydrocarbonFiveLetterWords(lang);
+          // Every five-letter word in this language, not just the category the
+          // secret came from. The pool doubles as the list of accepted guesses
+          // (useGame's submitGuess), so scoping it to one category would reject
+          // almost every sensible opening word — while the secret itself is
+          // still chosen elsewhere, in DuelLobby.
+          const words = await listFiveLetterWords(lang);
           if (mounted) {
             setCandidatePool(words);
 

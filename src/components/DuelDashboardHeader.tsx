@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import DuelIcon from "./DuelIcon";
 import Card from "./ui/Card";
-import { getExtensionsForWord, getAllHydrocarbonSubcategories } from "../supabase/words-repository";
+import { getExtensionsForWord } from "../supabase/words-repository";
 import { flagFor } from "../utils/languageCycle";
 
 interface Props {
@@ -19,11 +19,6 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [wordSubcats, setWordSubcats] = useState<{ id: string; name: string }[]>([]);
-  const [allHydroList, setAllHydroList] = useState<{ id: string; name_en: string; name_sv: string; name_fr: string }[]>([]);
-
-  useEffect(() => {
-    getAllHydrocarbonSubcategories().then(setAllHydroList);
-  }, []);
 
   useEffect(() => {
     const lookupLang = language?.split("-")[0] || "en";
@@ -69,34 +64,30 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
         )}
       </View>
 
-      {allHydroList.length > 0 && (
+      {/* The secret's own subcategories, the same hint the practice screen shows
+          (LetterSlider's hintNames).
+
+          This used to render a fixed row of every Hydrocarbons subcategory and
+          highlight the ones the secret belonged to — a decoy-and-reveal design
+          that only worked while every duel secret came from that one category.
+          Now that the secret is drawn from the whole dictionary, those chips
+          would simply never light up for a country or a car brand, so the hint
+          shows what the word actually is filed under instead. */}
+      {isHintEnabled && wordSubcats.length > 0 && (
         <View style={[styles.chipRow, { borderColor: colors.border }]}>
-          {allHydroList.map((sub) => {
-            const isActive = isHintEnabled && wordSubcats.some((ws) => ws.id === sub.id);
-            const langCode = language?.split("-")[0];
-            const displayName = langCode === "sv" ? sub.name_sv : langCode === "fr" ? sub.name_fr : sub.name_en;
-            return (
-              <View
-                key={sub.id}
-                style={[
-                  styles.chip,
-                  isActive
-                    ? { backgroundColor: colors.warningSoft, borderColor: colors.warning }
-                    : { backgroundColor: colors.surfaceSunken, borderColor: colors.border },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.chipText,
-                    { color: isActive ? colors.warning : colors.textMuted },
-                    isActive && styles.chipTextActive,
-                  ]}
-                >
-                  {displayName || sub.name_en}
-                </Text>
-              </View>
-            );
-          })}
+          {wordSubcats.map((sub) => (
+            <View
+              key={sub.id}
+              style={[
+                styles.chip,
+                { backgroundColor: colors.warningSoft, borderColor: colors.warning },
+              ]}
+            >
+              <Text style={[styles.chipText, styles.chipTextActive, { color: colors.warning }]}>
+                {sub.name}
+              </Text>
+            </View>
+          ))}
         </View>
       )}
     </Card>

@@ -5,7 +5,7 @@ import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
 import { Match, LobbyMatch, createMatch, listWaitingMatches, joinMatch, abandonMatch } from "../supabase/matches-repository";
 import { supabase } from "../supabaseClient";
-import { getFiveLetterHydrocarbon } from "../supabase/words-repository";
+import { getRandomFiveLetterWord } from "../supabase/words-repository";
 import Toggle from "./Toggle";
 import OptionButton from "./OptionButton";
 import Card from "./ui/Card";
@@ -70,9 +70,9 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
     setLoading(true);
     setErrorMsg(null);
     try {
-      const secret = await getFiveLetterHydrocarbon(duelLang);
+      const secret = await getRandomFiveLetterWord(duelLang);
       if (!secret) {
-        setErrorMsg(t("no_secret_found", { defaultValue: "Could not find a valid 5-letter hydrocarbon word." }));
+        setErrorMsg(t("no_secret_found", { defaultValue: "Could not find a valid 5-letter word." }));
         setLoading(false);
         return;
       }

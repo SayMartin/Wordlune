@@ -248,7 +248,7 @@
   "no_games_played": "Inga spel spelade än. Gå och öva!",
   "no_hint": "Ingen ledtråd",
   "no_scores_yet": "Inga poäng än. Bli den första!",
-  "no_secret_found": "Kunde inte hitta ett giltigt 5-bokstävers kolväteord.",
+  "no_secret_found": "Kunde inte hitta ett giltigt ord på 5 bokstäver.",
   "no_words_for_filter": "Inga ord matchar det valda bokstavsintervallet — utöka det för att starta",
   "not_found_message": "Sidan du letar efter finns inte.",
   "not_found_title": "Hittades inte",

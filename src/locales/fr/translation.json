@@ -248,7 +248,7 @@
   "no_games_played": "Aucune partie jouée pour le moment. Allez vous entraîner !",
   "no_hint": "Aucun indice",
   "no_scores_yet": "Aucun score pour le moment. Soyez le premier !",
-  "no_secret_found": "Impossible de trouver un mot secret valide de 5 lettres.",
+  "no_secret_found": "Impossible de trouver un mot valide de 5 lettres.",
   "no_words_for_filter": "Aucun mot ne correspond à la plage de lettres actuelle — élargissez-la pour commencer",
   "not_found_message": "La page que vous recherchez n'existe pas.",
   "not_found_title": "Page introuvable",

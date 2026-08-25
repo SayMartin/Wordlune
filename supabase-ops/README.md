@@ -56,6 +56,68 @@ union all select 'fr', word_fr from words
 Run from this directory (`supabase-ops/`) so the `migrations/...` relative paths inside them resolve correctly:
 
 - **`generate_challenge.mjs`** — generates a daily/competitive challenge. Reads Supabase credentials from a local `.env` file (`SUPABASE_URL`/`VITE_SUPABASE_URL`, service role key) in this directory, or from the environment.
+### The "hydrocarbons" word set
+
+`migrations/seeds/hydrocarbons/` is an organic-chemistry pun, not a chemistry
+category: the subcategories are Animals, Body, Fruits, Groceries, Kitchen,
+Plants and Vegetables. It matters more than the other categories
+because **Duel mode draws its entire word pool from it** (five-letter words
+only, via `listHydrocarbonFiveLetterWords`), and because the candidate pool
+doubles as the list of accepted guesses — `useGame.ts` rejects any guess that
+isn't in the pool, so a thin category doesn't just mean fewer answers, it means
+obvious words get refused mid-game.
+
+Expanded 2026-08-25 from 179 rows to 357 (five-letter: 142 en / 120 sv / 94 fr,
+36 of them five letters in all three languages — which is the ceiling on what
+`generate_challenge.mjs` can pick from, since it requires all three). Body and
+Kitchen are new subcategories from that pass; the five existing ones were
+roughly doubled. The same pass corrected five `word_fr` values in
+`vegetables.csv` that had been copied straight from `word_en` where French
+actually differs (TOMATE, CITROUILLE, OIGNON, RACINES, GRAINES) — the other 27
+identical en/fr pairs in the set are genuinely the same word and were left
+alone.
+
+Two subcategories were retired at the same time
+(`20260825_remove_bicycle_brands_and_at_sea.sql`): **Bicycle Brands** and **At
+sea**, both under Vehicles, both brand-name lists. Proper nouns make poor word
+game content — nobody can reason their way to "Sunseeker", and the words are
+identical in all three languages, so the category hint tells a player nothing.
+Car Brands and Motorcycle Brands were kept, so the Vehicles category still
+exists.
+
+That migration deletes the subcategories and their join rows but **keeps the
+`words` rows**, which is not the obvious design and was arrived at by rehearsing
+the first draft against a local `supabase start` stack. Deleting the words would
+have broken eight competitive_challenges from January that address them by id
+through a UUID[] with no foreign key behind it, and would have removed BULLS,
+FERRY, REGAL and SURLY — ordinary English words that merely happen to also be
+brands — from the accepted-guess list. Keeping them costs nothing: the
+subcategory is gone from the picker, the old challenges still resolve, the words
+stay guessable, and since `answer_eligible_words` requires at least one eligible
+subcategory, a word with none can never be drawn as a secret either.
+
+`20260825_answer_eligible_subcategories.sql` adds `subcategories.is_answer_eligible`
+and the `answer_eligible_words` view. It exists because Duel's secret is now
+drawn from the whole dictionary rather than one category, which is what lets
+guess validation be switched on at all — but also means a proper-noun list could
+supply the word to guess. "Cities in Sweden" and "Villages on Öland" are flagged
+ineligible: unguessable to anyone not local, and identical across all three
+languages, so the language played in tells you nothing. Their words remain valid
+guesses and remain playable in practice mode. Set the flag rather than deleting
+rows when a category is fine to type but unfair to have to solve.
+
+When adding words, run the check at the foot of `20260825_fix_french_dieresis.sql`
+rather than the older one — the character sets there are the ones the *on-screen*
+keyboards actually offer, which is stricter than `GameScreen.tsx`'s
+`LETTER_PATTERNS` and is what a player is really limited to.
+
+- **`migration_state.sql`** — read-only. Answers "what is actually applied?" by
+  measuring the data rather than trusting the prose in this file, which has been
+  wrong about it three times running. There is no migration-tracking table, so
+  this is the closest thing; it is also correct after a restore from backup,
+  which a tracking table would not necessarily be. Paste it into the Supabase
+  SQL editor.
+
 - **`upload_seeds_to_staging.js`** — reads CSVs from `migrations/seeds/hydrocarbons`, clears and repopulates the `staging_import_rows` table. Needs `SUPABASE_URL` (or `VITE_SUPABASE_URL`) and `SUPABASE_SERVICE_KEY`/`SUPABASE_SERVICE_ROLE_KEY` env vars — the service role key, not the anon key, since it bypasses RLS. Unlike `generate_challenge.mjs`, this script does **not** load `.env` itself (no dotenv, no manual parser) — it only reads `process.env`, so a `.env` file sitting in the folder is silently ignored unless you explicitly load it. Run it with Node's built-in env-file flag (Node ≥ 20.6):
   ```sh
   cd supabase-ops

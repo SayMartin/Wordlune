@@ -40,43 +40,6 @@ export async function listFiveLetterWords(lang = "en"): Promise<string[]> {
   }
 }
 
-export async function listHydrocarbonFiveLetterWords(
-  lang = "en",
-): Promise<string[]> {
-  try {
-    // 1. Find subcategory id for "%hydrocarbons%"
-    const { data: subData, error: subError } = await supabase
-      .from("subcategories")
-      .select("id")
-      .ilike("name_en", "%hydrocarbons%")
-      .limit(1);
-
-    if (subError) throw subError;
-    if (!subData || subData.length === 0) return [];
-
-    const subId = subData[0].id;
-
-    // 2. Get word IDs
-    const wordIds = await listWordIdsForSubcategories([subId]);
-    if (wordIds.length === 0) return [];
-
-    // 3. Get words (filtered by 5 letters)
-    // We reuse listWordsByIds but filtering logic is client side or we can improve listWordsByIds
-    // Actually listWordsByIds returns strings.
-    // Fetch all words for the category and filter for length 5
-    const allWords = await listWordsByIds(wordIds, lang, 10000); // High limit to get all
-
-    // 4. Filter 5 letters
-    const fiveLetter = allWords.filter((w) => w && w.length === 5);
-
-    // Dedupe
-    return Array.from(new Set(fiveLetter.map((w) => w.toUpperCase())));
-  } catch (err) {
-    console.error("listHydrocarbonFiveLetterWords error", err);
-    return [];
-  }
-}
-
 function safeToUpper(s: any) {
   if (!s) return "";
   return String(s).toUpperCase();
@@ -345,61 +308,65 @@ export async function listWordsSubcategories(subcatIds: string[]) {
   }
 }
 
+const CACHE_ANSWERS_5: Record<string, string[]> = {};
+
 /**
- * Specifically for Duel Mode:
- * Finds the "Hydrocarbons" subcategory, fetches all linked words,
- * filters for 5-letter words in the given language, and returns one at random.
+ * A random five-letter word to be guessed, in the given language.
+ *
+ * Reads `answer_eligible_words`, not `words`: proper-noun lists like "Villages
+ * on Öland" are excluded from being the answer while remaining perfectly valid
+ * *guesses* (listFiveLetterWords, which the duel pool uses, still includes
+ * them) and remaining playable in practice mode, where the player chooses the
+ * category deliberately. The rule lives in Postgres — see
+ * 20260825_answer_eligible_subcategories.sql — so the client can't drift from
+ * it, the same reasoning the leaderboard views follow.
+ *
+ * Duel used to draw its secret from the Hydrocarbons category alone. Drawing
+ * from the whole dictionary gives duels the variety the practice screen has
+ * and, more importantly, lets guess validation be on without rejecting most of
+ * the language.
  */
-export async function getFiveLetterHydrocarbon(
+export async function getRandomFiveLetterWord(
   lang: string = "en",
 ): Promise<string | null> {
-  try {
-    // 1. Find the CATEGORY "Hydrocarbons" (it is a main category, not subcategory)
-    const { data: cats, error: catError } = await supabase
-      .from("categories")
-      .select("id")
-      .ilike("name_en", "%hydrocarbons%")
-      .limit(1);
-
-    if (catError || !cats || cats.length === 0) {
-      console.warn("Category 'Hydrocarbons' not found.");
-      return null;
-    }
-    const catId = cats[0].id;
-
-    // 2. Find all subcategories for this category
-    const { data: subcats, error: subError } = await supabase
-      .from("subcategories")
-      .select("id")
-      .eq("category_id", catId);
-
-    if (subError || !subcats || subcats.length === 0) {
-      console.warn("No subcategories found for Hydrocarbons.");
-      return null;
-    }
-
-    // 3. Get all word IDs for these subcategories
-    const subcatIds = subcats.map((s: any) => s.id);
-    const wordIds = await listWordIdsForSubcategories(subcatIds);
-    if (wordIds.length === 0) return null;
-
-    // 4. Fetch the actual words (in the requested language)
-    // We filter by length=5
-    const words = await listWordsByIds(wordIds, lang, 5000);
-
-    // 5. Filter for exactly 5 letters
-    const candidates = words.filter((w) => w && w.length === 5);
-
-    if (candidates.length === 0) return null;
-
-    // 6. Pick random
-    const idx = Math.floor(Math.random() * candidates.length);
-    return candidates[idx];
-  } catch (err) {
-    console.error("getFiveLetterHydrocarbon error", err);
-    return null;
-  }
+  const words = await listAnswerEligibleFiveLetterWords(lang);
+  if (words.length === 0) return null;
+  return words[Math.floor(Math.random() * words.length)];
 }
+
+async function listAnswerEligibleFiveLetterWords(lang: string): Promise<string[]> {
+  if (CACHE_ANSWERS_5[lang]) return CACHE_ANSWERS_5[lang];
+
+  const col = wordColumn(lang);
+  const { data, error } = await supabase
+    .from("answer_eligible_words")
+    .select(col)
+    .ilike(col, "_____")
+    .limit(DEFAULT_LIMIT);
+
+  if (error) {
+    // Deliberately no fallback to listFiveLetterWords. There was one while
+    // 20260825_answer_eligible_subcategories.sql was still unapplied, to cover
+    // a client newer than the database it talks to; the migration was applied
+    // to production on 2026-08-25 (verified against the data, not against a
+    // migration log — there isn't one), so that window is closed.
+    //
+    // Falling back now would silently reinstate exactly what the view exists to
+    // prevent: an unwinnable duel on a Swedish village name, reported by nobody
+    // because it looks like bad luck rather than a bug. An empty pool surfaces
+    // as a visible failure instead, which is the outcome worth having.
+    console.error("answer_eligible_words unavailable", error);
+    return [];
+  }
+
+  const words = Array.from(
+    new Set((data ?? []).map((w: any) => safeToUpper(w[col])).filter(Boolean)),
+  ) as string[];
+
+  CACHE_ANSWERS_5[lang] = words;
+  return words;
+}
+
 
 export interface WordWithCategories {
   word: string;
@@ -498,31 +465,3 @@ async function fetchSubcatsForWordId(
 // words_categories: word_id, category_id
 // words_subcategories: Word_id, subcategory_id
 
-export async function getAllHydrocarbonSubcategories(): Promise<
-  { id: string; name_en: string; name_sv: string; name_fr: string }[]
-> {
-  try {
-    const { data: cats, error: catError } = await supabase
-      .from("categories")
-      .select("id")
-      .ilike("name_en", "%hydrocarbons%")
-      .limit(1);
-
-    if (catError || !cats || cats.length === 0) return [];
-
-    const { data, error } = await supabase
-      .from("subcategories")
-      .select("id, name_en, name_sv, name_fr")
-      .eq("category_id", cats[0].id)
-      .order("name_en");
-
-    if (error) {
-      console.error("Error fetching hydrocarbon subcategories:", error);
-      return [];
-    }
-    return data || [];
-  } catch (err) {
-    console.error("getAllHydrocarbonSubcategories exception:", err);
-    return [];
-  }
-}

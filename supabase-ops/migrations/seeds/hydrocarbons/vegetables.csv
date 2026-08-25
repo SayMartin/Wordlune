@@ -1,20 +1,20 @@
 word_native,word_en,word_sv,word_fr,category_name_native,category_name_en,category_name_sv,category_name_fr,subcategory_name_native,subcategory_name_en,subcategory_name_sv,subcategory_name_fr,difficulty,source,created_by,is_active
 cucumber,CUCUMBER,GURKA,CONCOMBRE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
-tomato,TOMATO,TOMAT,TOMATO,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+tomato,TOMATO,TOMAT,TOMATE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 carrot,CARROT,MOROT,CAROTTE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 beans,BEANS,BÖNOR,HARICOTS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 beets,BEETS,BETOR,BETTERAVES,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 mushroom,MUSHROOM,SVAMP,CHAMPIGNON,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
-pumpkin,PUMPKIN,PUMPA,PUMPKIN,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+pumpkin,PUMPKIN,PUMPA,CITROUILLE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 leek,LEEK,PURJO,POIREAU,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 chili,CHILI,CHILI,PIMENT,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 peas,PEAS,ÄRTOR,POIS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
-onion,ONION,LÖK,ONION,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
-maize,MAIZE,MAJS,MAÏS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+onion,ONION,LÖK,OIGNON,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+maize,MAIZE,MAJS,MAIS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 chard,CHARD,MANGOLD,BLETTE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 leeks,LEEKS,PURJOLÖK,POIREAUX,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
-roots,ROOTS,RÖTTER,ROOTS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
-seeds,SEEDS,FRÖN,SEEDS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+roots,ROOTS,RÖTTER,RACINES,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+seeds,SEEDS,FRÖN,GRAINES,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 herbs,HERBS,ÖRTER,HERBES,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 cress,CRESS,KRASSE,CRESSON,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 olive,OLIVE,OLIV,OLIVE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
@@ -25,3 +25,19 @@ radish,RADISH,RÄDISA,RADIS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,ve
 cilantro,CILANTRO,KORIANDER,CORIANDRE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 artichoke,ARTICHOKE,ARTISJOKK,ARTICHAUT,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
 zucchini,ZUCCHINI,ZUCCHINI,COURGETTE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+potato,POTATO,POTATIS,POMME DE TERRE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+turnip,TURNIP,ROVA,NAVET,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+parsnip,PARSNIP,PALSTERNACKA,PANAIS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+celery,CELERY,SELLERI,CÉLERI,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+lettuce,LETTUCE,HUVUDSALLAD,LAITUE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+salad,SALAD,SALLAD,SALADE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+broccoli,BROCCOLI,BROCCOLI,BROCOLI,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+cauliflower,CAULIFLOWER,BLOMKÅL,CHOU-FLEUR,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+paprika,PAPRIKA,PAPRIKA,POIVRON,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+eggplant,EGGPLANT,AUBERGINE,AUBERGINE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+fennel,FENNEL,FÄNKÅL,FENOUIL,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+asparagus,ASPARAGUS,SPARRIS,ASPERGE,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+kale,KALE,GRÖNKÅL,CHOU FRISÉ,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+sprout,SPROUT,GRODD,GERME,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+bean,BEAN,BÖNA,HARICOT,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
+pea,PEA,ÄRTA,POIS,hydrocarbons,Hydrocarbons,Kolväten,Hydrocarbures,vegetables,Vegetables,Grönsaker,Légumes,1,seed,,true
