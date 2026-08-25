@@ -145,20 +145,29 @@ Three settings in `config.toml` are deliberately not the CLI defaults, and matte
 
 ### The baseline
 
-The 49 files in `migrations/` were applied by hand through the SQL editor, and (see [Naming convention](#naming-convention)) their dates are invented, so sorting them is *not* run order. Renaming them into CLI-style 14-digit timestamps would encode that fiction as fact.
+The 49 files in `migrations/` were applied by hand through the SQL editor, and (see [Naming convention](#naming-convention)) their dates are invented, so sorting them is *not* run order. Replaying them would not reproduce production.
 
-So don't. Generate a single baseline from what prod actually looks like now, and leave `migrations/` as the historical record:
+So don't. `scripts/refresh-dev-baseline.sh` generates a single baseline from what production actually looks like now, plus a seed of word content, and leaves `migrations/` as the historical record:
 
 ```sh
-supabase db dump --db-url "<prod-session-pooler-url>" --schema public,auth \
-  -f supabase/migrations/$(date -u +%Y%m%d%H%M%S)_baseline.sql
-
-# word content, so the local app is playable
-pg_dump "<prod-session-pooler-url>" --data-only \
-  -t words -t categories -t subcategories -t words_subcategories \
-  > supabase/seed.sql
+export PROD_DB_URL='postgresql://postgres.<ref>:<pw>@<pooler-host>:5432/postgres'
+./supabase-ops/scripts/refresh-dev-baseline.sh
+supabase db reset
 ```
 
-`supabase db reset` runs the baseline then `seed.sql` automatically. From here, write new migrations with `supabase migration new <name>`, test them with `db reset`, and only then apply to prod.
+Session pooler on 5432, same as `backup.sh`. Run it again whenever production's schema changes; it replaces the previous baseline rather than adding to it, since two baselines would both run on `db reset` and the second would fail on existing objects.
+
+`seed.sql` is committed, so it covers **word content only** — `words`, `categories`, `subcategories`, the two join tables and `competitive_challenges`. The script refuses to leave a seed containing `player_profiles`, `game_scores`, `challenge_*` or `duel_matches`; now that the database holds production data, that check is the difference between a seed file and a personal-data leak in a public repo.
+
+### Four things that make this harder than it looks
+
+Each of these was hit and fixed on 2026-08-25; the script handles all four, but they explain why it is not simply `pg_dump | psql`.
+
+- **Dump `public` only, never `public,auth`.** The opposite of `backup.sh`, which must include `auth` or it restores a database nobody can log into. Here `supabase start` creates `auth` itself and GoTrue owns it, so replaying a dumped copy dies with `permission denied for schema auth` — the migration runs as `postgres`, which has no rights in a schema owned by `supabase_auth_admin`.
+- **Strip `\restrict` / `\unrestrict`.** pg_dump 17.11+ wraps its output in those psql guards. `supabase db reset` feeds the file straight to the server rather than through psql, where a backslash command is not SQL: `syntax error at or near "\"`.
+- **Repoint `search_path` from `''` to `'public'`.** pg_dump sets it empty because it qualifies everything it writes — but the INSERTs fire triggers, and `subcategories_normalize_trigger()` calls `normalize_text()` unqualified. With an empty search_path that resolves to nothing: `function normalize_text(text) does not exist`.
+- **Do not recreate the `on_auth_user_created` trigger.** It is tempting, since a `public`-only dump cannot carry a trigger that lives on `auth.users`, and `20260124_create_player_profiles.sql` does create one. But adding it back breaks guest sign-in outright: `handle_new_user()` sets `display_name` from `raw_user_meta_data->>'full_name'`, which is NULL for an anonymous user, and `display_name` is NOT NULL — every anonymous sign-in then fails with a 500, `Database error creating anonymous user`. Production has 52 guest accounts, so the trigger demonstrably is not firing there; profiles are created client-side by `ensurePlayerProfile()` in `AuthContext.tsx`. Leaving it out is what makes dev match production.
+
+Point the app at the local stack with a `.env.local` holding the URL and publishable key that `supabase start` prints (gitignored; they are the CLI's fixed local keys, identical on every machine).
 
 **Limitation worth knowing:** `pg_cron` and `pg_net` are not in the local stack, so the scheduled cleanup jobs (`cleanup_anonymous_users`, the inactivity warnings) cannot be exercised end to end. Their SQL function bodies can be called by hand; the scheduling itself is only verifiable in prod.
