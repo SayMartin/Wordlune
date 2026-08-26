@@ -62,7 +62,6 @@ export default function GameScreen() {
   const [maxLetters, setMaxLetters] = useState(DEFAULT_MAX_LETTERS);
   const [minLetters, setMinLetters] = useState(0);
   const [overrideFive, setOverrideFive] = useState(false);
-  const [isPracticeHintEnabled, setIsPracticeHintEnabled] = useState(false);
   const [practiceHintSubcategories, setPracticeHintSubcategories] = useState<{ id: string; name: string }[]>([]);
   const [localPoolCount, setLocalPoolCount] = useState<number | null>(null);
 
@@ -295,8 +294,16 @@ export default function GameScreen() {
     setShowResultOverlay(status === "won" || status === "lost");
   }, [status]);
 
+  // The secret's own subcategories. Fetched unconditionally — the hint is
+  // always on now, in practice as in competitive as in duel. Without it the
+  // answer is one of a couple of hundred unrelated words and the round is
+  // guesswork rather than general knowledge; see createMatch() for the numbers.
+  //
+  // Competitive included, which it was not before: the challenge menu used to
+  // be where you learned the categories, which is the wrong place — see
+  // ChallengeSelector.
   useEffect(() => {
-    if (gameMode !== "practice" || !isPracticeHintEnabled || !secret) {
+    if (gameMode === "duel" || !secret) {
       setPracticeHintSubcategories([]);
       return;
     }
@@ -308,7 +315,16 @@ export default function GameScreen() {
     return () => {
       cancelled = true;
     };
-  }, [gameMode, isPracticeHintEnabled, secret, i18n.language]);
+  }, [gameMode, secret, i18n.language]);
+
+  // THE HINT IS ONLY SHOWN WHILE THE ROUND IS RUNNING, and that is a rule about
+  // the clock rather than about tidiness. Time is part of the score now
+  // (src/utils/scoring.ts), so a hint visible at `idle` would hand the player
+  // free thinking time before pressing Play — study the category, plan an
+  // opening word, then start a timer that has already been beaten. `paused` is
+  // excluded for the same reason.
+  const showHint = status === "playing";
+  const visibleHintSubcategories = showHint ? practiceHintSubcategories : [];
 
   const isRowFull = status === "playing" && currentGuess.length === (secret?.length || effectiveMax);
 
@@ -515,9 +531,7 @@ export default function GameScreen() {
               onCountChange={handleCountChange}
               disabled={status === "playing" || status === "paused"}
               headerContent={<GameModeToggle mode={gameMode} onChange={handleModeChange} disabled={status === "playing" || status === "paused"} />}
-              highlightedSubcategoryIds={
-                isPracticeHintEnabled ? practiceHintSubcategories.map((s) => s.id) : undefined
-              }
+              highlightedSubcategoryIds={visibleHintSubcategories.map((s) => s.id)}
             />
 
             <LetterSlider
@@ -537,11 +551,7 @@ export default function GameScreen() {
               overrideChecked={overrideFive}
               onOverrideChange={setOverrideFive}
               overrideLabel={t("force_five", { defaultValue: "Always 5" })}
-              showHintToggle
-              hintChecked={isPracticeHintEnabled}
-              onHintChange={setIsPracticeHintEnabled}
-              hintLabel={t("enable_hints", { defaultValue: "Enable Hints" })}
-              hintNames={isPracticeHintEnabled ? practiceHintSubcategories.map((s) => s.name) : []}
+              hintNames={visibleHintSubcategories.map((s) => s.name)}
             />
           </Card>
         ) : (
@@ -569,6 +579,18 @@ export default function GameScreen() {
             <Text style={[styles.challengeBannerTitle, { color: colors.text }]}>
               🎯 {t("word_n_of_m", { n: challengeSession.attempt.progress_index + 1, m: challengeSession.words.length, defaultValue: `Word ${challengeSession.attempt.progress_index + 1} of ${challengeSession.words.length}` })}
             </Text>
+
+            {/* The per-word hint, and the only place competitive shows one.
+                It appears when the round starts and never before: the challenge
+                menu deliberately no longer names the categories, so this is
+                where you learn what the word is about — after the clock is
+                running, not while you plan against it. */}
+            {visibleHintSubcategories.length > 0 && (
+              <Text style={[styles.challengeHint, { color: colors.warning }]}>
+                💡 {t("hint_categories", { defaultValue: "Hint" })}:{" "}
+                {visibleHintSubcategories.map((s) => s.name).join(", ")}
+              </Text>
+            )}
             {status === "playing" && (
               <Text style={[styles.challengeLink, { color: colors.accent }]} onPress={() => setCompetitiveConfirm({
                 title: t("confirm_skip_title", { defaultValue: "Skip Word?" }),
@@ -628,7 +650,7 @@ export default function GameScreen() {
               }
               onDuelForfeit={handleDuelForfeit}
               language={gameMode === "duel" ? activeMatch?.language : undefined}
-              isHintEnabled={gameMode === "duel" ? activeMatch?.is_hint_enabled : isPracticeHintEnabled}
+              isHintEnabled={showHint && (gameMode !== "duel" || !!activeMatch?.is_hint_enabled)}
               hideRestart={gameMode === "duel" || gameMode === "competitive"}
               startLabel={gameMode === "competitive" ? t("start_challenge", { defaultValue: "Start Challenge" }) : undefined}
               suddenDeathEndTime={gameMode === "duel" ? suddenDeathEndTime : undefined}
@@ -808,6 +830,7 @@ const styles = StyleSheet.create({
   duelBoards: { flexDirection: "row", justifyContent: "space-around", gap: 12 },
   challengeBanner: { padding: 14, gap: 6, alignItems: "center" },
   challengeBannerTitle: { fontWeight: "700", fontSize: 14, textAlign: "center" },
+  challengeHint: { fontSize: 12, fontWeight: "700", textAlign: "center" },
   challengeLink: { fontSize: 12, fontWeight: "600" },
   saveRow: { alignItems: "center", marginTop: 4 },
   saveButton: {

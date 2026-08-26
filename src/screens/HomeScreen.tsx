@@ -14,10 +14,10 @@ import type { AppParamList } from "../navigation/types";
 type Nav = NativeStackNavigationProp<AppParamList>;
 
 const FEATURES = [
-  { emoji: "☕", titleKey: "practice_mode", titleFallback: "Relax & Practice", descKey: "practice_desc", descFallback: "Hone your skills at your own pace. No timers, no pressure—just you and the words." },
-  { emoji: "🏆", titleKey: "competitive_mode", titleFallback: "Climb the Ranks", descKey: "competitive_desc", descFallback: "Ready for the big leagues? Compete in ranked challenges and secure your spot on the leaderboard." },
-  { emoji: "⚔️", titleKey: "duel_lobby_title", titleFallback: "Duel Mode", descKey: "duel_description", descFallback: "Face off against another player in real-time. Be the first to solve the word!" },
-  { emoji: "🌍", titleKey: "multilingual", titleFallback: "Global & Local", descKey: "multilingual_desc", descFallback: "Play in English, Swedish, or French. Improve your vocabulary in multiple languages while having fun." },
+  { emoji: "☕", titleKey: "practice_mode", titleFallback: "Relax & Practice", descKey: "practice_desc", descFallback: "Choose the subjects you want — animals, geography, food — and play at your own pace. Nothing is ranked and nothing is published." },
+  { emoji: "🏆", titleKey: "competitive_mode", titleFallback: "Climb the Ranks", descKey: "competitive_desc", descFallback: "Five words a week, drawn from a theme you don't see until you start. Knowing the subject counts, and so does not dawdling." },
+  { emoji: "⚔️", titleKey: "duel_lobby_title", titleFallback: "Duel Mode", descKey: "duel_description", descFallback: "Race another player to the same hidden word in real time. You both get the same category — after that it is whoever gets there first." },
+  { emoji: "🌍", titleKey: "multilingual", titleFallback: "Global & Local", descKey: "multilingual_desc", descFallback: "Play in English, Swedish or French. The same subjects in every language, so what you know travels with you." },
 ] as const;
 
 // The width below which the feature grid collapses to one column. Same figure
@@ -47,12 +47,12 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        <PageTitle>{t("welcome_title", { defaultValue: "Master the Art of Words" })}</PageTitle>
+        <PageTitle>{t("welcome_title", { defaultValue: "Guess the Word. Know the Subject." })}</PageTitle>
 
         <Text style={[styles.heroSubtitle, { color: colors.textMuted }]}>
           {t("welcome_subtitle", {
             defaultValue:
-              "Embark on a linguistic journey where every guess brings you closer to mastery. Challenge yourself, compete with friends, and expand your vocabulary today.",
+              "Every round is drawn from a category — animals, capital cities, groceries, countries. The letters narrow the field; what you know closes it. Three languages, alone or against someone.",
           })}
         </Text>
 

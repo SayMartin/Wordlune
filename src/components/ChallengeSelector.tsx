@@ -6,7 +6,6 @@ import Card from "./ui/Card";
 import { useAuth } from "../context/AuthContext";
 import {
   getChallengeMenu,
-  challengeCategoryNames,
   ChallengeMetadata,
   ChallengeAttempt,
   getMyChallengeAttempts,
@@ -39,7 +38,7 @@ function daysRemaining(endDate: string | null): number | null {
 }
 
 export default function ChallengeSelector({ onSelect, onCancel }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const { profile } = useAuth();
   const [challenges, setChallenges] = useState<ChallengeMetadata[]>([]);
@@ -131,7 +130,6 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
               const attempt = attempts[c.id];
               const isDone = attempt && (attempt.status === "completed" || attempt.status === "forfeited");
               const isForfeit = attempt?.status === "forfeited";
-              const categories = challengeCategoryNames(c, i18n.language);
               const daysLeft = daysRemaining(c.end_date);
 
               return (
@@ -163,11 +161,13 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
                       </View>
                     )}
                   </View>
-                  {categories.length > 0 && (
-                    <Text style={[styles.description, { color: colors.textMuted }]} numberOfLines={2}>
-                      {categories.join(" · ")}
-                    </Text>
-                  )}
+                  {/* The categories used to be listed here. They are not any
+                      more, deliberately: knowing the theme before you start
+                      lets you prepare against a clock that counts towards the
+                      leaderboard — read up on African capitals, then press
+                      Play. The hint now appears per word once the round is
+                      running (GameScreen's challenge banner), which gives the
+                      same help without the head start. */}
                   <View style={styles.footerRow}>
                     <Text
                       style={{

@@ -151,6 +151,15 @@ select 'leaderboard ranks first run only (20260827)',
   ) d
 
 union all
+-- A challenge name is visible before the round starts, and starting begins a
+-- clock that counts. Any theme left in a name is a head start.
+select 'neutral challenge names (20260829)',
+       case when count(*) = 0 then 'APPLIED' else 'NOT APPLIED' end,
+       count(*) || ' challenge name(s) still advertising their theme'
+  from public.competitive_challenges
+ where name like '%— week of %'
+
+union all
 select 'duel timeouts (20260828_duel_timeouts)',
        case when count(*) = 4 then 'APPLIED' else 'NOT APPLIED' end,
        'columns + 3 functions: ' || count(*) || ' of 4'

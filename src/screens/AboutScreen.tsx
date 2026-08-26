@@ -29,7 +29,7 @@ export default function AboutScreen() {
           {t("about_description", {
             app: APP_NAME,
             defaultValue:
-              "{{app}} is a word game for anyone who likes playing with words. Guess the hidden word, explore new categories, and have fun in three languages.",
+              "{{app}} is a guessing game about what you know. Every hidden word belongs to a category, and you are told which one — the letters do the rest of the work only if the subject is somewhere in your head. Play in English, Swedish or French. Free, and no ads.",
           })}
         </Text>
       </View>
@@ -45,13 +45,13 @@ export default function AboutScreen() {
           </Text>
           <Text style={[styles.modeDesc, { color: colors.textMuted }]}>
             {t("practice_desc", {
-              defaultValue: "Play at your own pace with customizable rules, tailored to your learning needs.",
+              defaultValue: "Choose the subjects you want — animals, geography, food — and play at your own pace. Nothing is ranked and nothing is published.",
             })}
           </Text>
           <BulletList
             color={colors.textMuted}
             items={[
-              t("practice_feat_1", { defaultValue: "Choose specific categories (e.g., Animals, Geography)" }),
+              t("practice_feat_1", { defaultValue: "Pick the subjects you want to be tested on" }),
               t("practice_feat_2", { defaultValue: "Adjust word length (2-12 letters)" }),
               t("practice_feat_3", { defaultValue: "Scores are saved to your personal history (requires login)" }),
             ]}
@@ -63,12 +63,12 @@ export default function AboutScreen() {
             🏆 {t("competitive_mode", { defaultValue: "Competitive Mode" })}
           </Text>
           <Text style={[styles.modeDesc, { color: colors.textMuted }]}>
-            {t("competitive_desc", { defaultValue: "Compete against others in daily challenges curated by the team." })}
+            {t("competitive_desc", { defaultValue: "Five words a week, drawn from a theme you don't see until you start. Knowing the subject counts, and so does not dawdling." })}
           </Text>
           <BulletList
             color={colors.textMuted}
             items={[
-              t("comp_feat_1", { defaultValue: "Pre-selected words and categories" }),
+              t("comp_feat_1", { defaultValue: "A new set of five words every week, theme revealed as you play" }),
               t("comp_feat_2", { defaultValue: "Time and guess-count based scoring" }),
               t("comp_feat_3", { defaultValue: "Global leaderboards (Registered players only)" }),
             ]}
@@ -81,7 +81,7 @@ export default function AboutScreen() {
           </Text>
           <Text style={[styles.modeDesc, { color: colors.textMuted }]}>
             {t("duel_description", {
-              defaultValue: "Face off against another player in real-time. Be the first to solve the word!",
+              defaultValue: "Race another player to the same hidden word in real time. You both get the same category — after that it is whoever gets there first.",
             })}
           </Text>
           <BulletList

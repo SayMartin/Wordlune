@@ -18,10 +18,6 @@ interface Props {
   overrideLabel?: string;
   checkboxDisabled?: boolean;
   count?: number | null;
-  showHintToggle?: boolean;
-  hintChecked?: boolean;
-  onHintChange?: (checked: boolean) => void;
-  hintLabel?: string;
   // Subcategory names the current secret belongs to — shown as a compact
   // line under the toggles instead of requiring CategorySelector to be
   // expanded (there's no room for that there).
@@ -66,10 +62,6 @@ export default function LetterSlider({
   overrideLabel,
   checkboxDisabled = false,
   count,
-  showHintToggle,
-  hintChecked,
-  onHintChange,
-  hintLabel,
   hintNames,
 }: Props) {
   const { t } = useTranslation();
@@ -102,15 +94,14 @@ export default function LetterSlider({
         )}
       </View>
 
-      {/* The hint text is a third item on this row, not a row of its own, so on
-          a wide viewport it sits immediately right of the switch that turns it
-          on. Its flexBasis is what decides when it stops doing that: a wrapping
-          row starts a new line whenever an item's basis doesn't fit in what's
-          left, so on a phone the two switches keep line one and the hint drops
-          underneath — where it then grows to the full width and wraps its own
-          text. No breakpoint, because the deciding factor is how long the
-          category names happen to be in the current language, which a fixed
-          width can't know. */}
+      {/* The hint text shares this row with the "Always 5" switch rather than
+          taking a row of its own. Its flexBasis is what decides when it stops
+          doing that: a wrapping row starts a new line whenever an item's basis
+          doesn't fit in what's left, so on a phone the switch keeps line one
+          and the hint drops underneath — where it then grows to the full width
+          and wraps its own text. No breakpoint, because the deciding factor is
+          how long the category names happen to be in the current language,
+          which a fixed width can't know. */}
       <View style={styles.toggles}>
         {onOverrideChange && (
           <Toggle
@@ -120,19 +111,14 @@ export default function LetterSlider({
             label={overrideLabel ? `🔒 ${overrideLabel}` : undefined}
           />
         )}
-        {showHintToggle && onHintChange && (
-          <Toggle
-            checked={!!hintChecked}
-            onChange={onHintChange}
-            label={hintLabel ? `💡 ${hintLabel}` : undefined}
-          />
-        )}
-
-        {hintChecked && !!hintNames?.length && (
-          // No 💡 of its own: the switch it now sits beside already carries one,
-          // and two bulbs on the same line read as a mistake.
+        {!!hintNames?.length && (
+          // The 💡 is back on the text itself now that the switch that used to
+          // carry one is gone. The hint is always on: without it the answer is
+          // one of a couple of hundred unrelated words and the round is
+          // guesswork rather than general knowledge. See createMatch() for the
+          // same reasoning on the duel side.
           <Text style={[styles.hint, { color: colors.warning }]}>
-            {t("hint_categories", { defaultValue: "Hint" })}: {hintNames.join(", ")}
+            💡 {t("hint_categories", { defaultValue: "Hint" })}: {hintNames.join(", ")}
           </Text>
         )}
       </View>

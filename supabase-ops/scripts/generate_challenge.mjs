@@ -62,6 +62,15 @@ const WEEKS = 26;
  */
 const FIVE_EVERY_N_WEEKS = 3;
 
+/**
+ * Challenge names, kept free of any hint about their content.
+ *
+ * Must stay in step with 20260829_neutral_challenge_names.sql, which renames
+ * the batch already in the database to exactly these forms.
+ */
+const WEEKLY_NAME = "Weekly Challenge";
+const FIVE_NAME = "5x5 Challenge";
+
 /** Words per challenge. */
 const WORDS_PER_CHALLENGE = 5;
 
@@ -488,7 +497,12 @@ async function main() {
     const words = take(shuffledByTheme.get(plan.key), WORDS_PER_CHALLENGE);
 
     rows.push({
-      name: `${plan.label} — week of ${isoDate(start)}`,
+      // Deliberately NOT the theme label. The name is the one thing a player
+      // sees before starting, and a clock that counts towards the leaderboard
+      // starts when they do — "Africa — week of ..." is an invitation to read
+      // up on African capitals first. The theme still decides the words and
+      // still reaches the player, as a per-word hint once the round is running.
+      name: `${WEEKLY_NAME} — ${isoDate(start)}`,
       description: null, // resolved by challenge_menu_stats at read time
       difficulty: plan.difficulty,
       subcategory_ids: plan.subcategoryIds,
@@ -511,7 +525,9 @@ async function main() {
         ),
       ];
       rows.push({
-        name: `5x5 — week of ${isoDate(start)}`,
+        // "5x5" is a rule, not content — it says every word is five letters,
+        // which the badge already shows and which gives nothing away.
+        name: `${FIVE_NAME} — ${isoDate(start)}`,
         description: null,
         difficulty: fivePlan.difficulty,
         subcategory_ids: fiveSubcatIds,

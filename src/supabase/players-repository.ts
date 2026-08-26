@@ -483,21 +483,17 @@ export interface ChallengeMetadata {
   // `description` column held a snapshot of these taken when the challenge was
   // generated, in English and Swedish only — which is how retired categories
   // kept advertising themselves and why French players read English names.
+  //
+  // Nothing displays them right now: showing a challenge's categories before it
+  // starts lets a player prepare against a clock that counts (see
+  // ChallengeSelector), so the hint moved to per-word, mid-round. They are kept
+  // because they are the honest source if categories are ever shown *after*
+  // completion, where revealing them costs nothing.
   subcategory_names_en: string[];
   subcategory_names_sv: string[];
   subcategory_names_fr: string[];
 }
 
-/** Pick the caller's language out of the view's three name arrays. */
-export function challengeCategoryNames(
-  challenge: ChallengeMetadata,
-  lang: string,
-): string[] {
-  const code = (lang || "en").split("-")[0];
-  if (code === "sv") return challenge.subcategory_names_sv ?? [];
-  if (code === "fr") return challenge.subcategory_names_fr ?? [];
-  return challenge.subcategory_names_en ?? [];
-}
 
 export interface ChallengeAttempt {
   id: string;
