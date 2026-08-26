@@ -1,6 +1,6 @@
 {
   "about": "À propos",
-  "about_description": "{{app}} est un jeu de devinettes sur ce que vous savez. Chaque mot caché appartient à une catégorie, et on vous dit laquelle — les lettres ne font le reste du travail que si le sujet vous dit quelque chose. Jouez en anglais, en suédois ou en français. Gratuit et sans publicité.",
+  "about_description": "{{app}} est un jeu qui s'inspire à la fois de Wordle et du Trivial Pursuit. Devinez le mot caché. Chaque mot appartient à une catégorie, et on vous dit laquelle. Jouez en suédois, en anglais ou en français. Jouez seul ou défiez d'autres joueurs.",
   "accessibility": "Accessibilité",
   "account": "Compte",
   "account_types_title": "Compte & Accès",
@@ -366,7 +366,6 @@
   "public_count": "Nombre de parties publiques",
   "publish": "Publier",
   "publish_score": "Publier le score ?",
-  "quit_duel_lobby": "Quitter le mode",
   "quit_game": "Quitter",
   "randomize": "Aléatoire",
   "randomize_avatar": "Aléatoire",
@@ -539,5 +538,8 @@
   "duel_clock_match": "Match",
   "duel_clock_you": "Vous",
   "duel_clock_opponent": "Adv.",
-  "duel_abandoned_msg": "Aucun des deux joueurs n'a proposé de mot, le duel est annulé. Il ne compte pour personne."
+  "duel_abandoned_msg": "Aucun des deux joueurs n'a proposé de mot, le duel est annulé. Il ne compte pour personne.",
+  "invite_listed_for": "Visible encore",
+  "invite_expired_title": "Plus dans la liste",
+  "invite_expired_msg": "Personne de nouveau ne peut trouver ce défi. Annulez et créez-en un autre — ou patientez un instant, au cas où quelqu'un l'aurait déjà ouvert."
 }

@@ -94,14 +94,12 @@ export default function LetterSlider({
         )}
       </View>
 
-      {/* The hint text shares this row with the "Always 5" switch rather than
-          taking a row of its own. Its flexBasis is what decides when it stops
-          doing that: a wrapping row starts a new line whenever an item's basis
-          doesn't fit in what's left, so on a phone the switch keeps line one
-          and the hint drops underneath — where it then grows to the full width
-          and wraps its own text. No breakpoint, because the deciding factor is
-          how long the category names happen to be in the current language,
-          which a fixed width can't know. */}
+      {/* The hint text shares this row with the "Always 5" switch at every
+          width, down to a 375px iPhone SE. That is what flexBasis: 0 buys: an
+          item whose basis is zero always fits on the line it is on, so the row
+          can never decide to wrap it onto its own. When the text is longer than
+          the space left beside the switch it wraps inside its own box instead,
+          growing the row taller rather than moving. */}
       <View style={styles.toggles}>
         {onOverrideChange && (
           <Toggle
@@ -150,10 +148,13 @@ const styles = StyleSheet.create({
     rowGap: 8,
     marginTop: 4,
   },
-  // flexBasis is the wrap threshold, not a width: with less than this left on
-  // the current line the hint moves to its own line, where flexGrow lets it
-  // take the full width back — which is also what makes textAlign do anything,
-  // since it centres the text inside the item's box rather than the row's.
+  // flexBasis: 0 keeps the hint on the switch's row at any width (see the
+  // comment at the call site); flexGrow then hands it whatever is left of the
+  // line, which is also what makes textAlign do anything, since it centres the
+  // text inside the item's box rather than the row's. minWidth is spelled out
+  // because a flex item's automatic minimum size is its content — without it a
+  // long category name would push the row wider than the card instead of
+  // wrapping inside it.
   //
   // lineHeight is set explicitly because the default for 13px leaves a couple
   // of pixels of slack under the descenders, which reads as extra padding when
@@ -165,6 +166,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flexGrow: 1,
     flexShrink: 1,
-    flexBasis: 200,
+    flexBasis: 0,
+    minWidth: 0,
   },
 });

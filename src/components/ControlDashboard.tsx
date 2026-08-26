@@ -3,6 +3,7 @@ import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import DuelDashboardHeader from "./DuelDashboardHeader";
+import DuelClocks, { DuelClockState } from "./DuelClocks";
 
 interface Props {
   gameMode?: "practice" | "competitive" | "duel";
@@ -19,12 +20,7 @@ interface Props {
   hideRestart?: boolean;
   // Duel-only
   duelOpponentName?: string;
-  duelClocks?: {
-    silenceSecondsLeft: number;
-    mySecondsLeft: number;
-    opponentSecondsLeft: number;
-    inactivityDormant: boolean;
-  };
+  duelClocks?: DuelClockState;
   onDuelForfeit?: () => void;
   elapsedTime?: number; // externally controlled (synced duel timer)
   language?: string;
@@ -158,11 +154,10 @@ export default function ControlDashboard({
       {isDuel && duelOpponentName && (
         <DuelDashboardHeader
           duelOpponentName={duelOpponentName}
-          onDuelForfeit={onDuelForfeit}
+          onExit={onExit}
           language={language}
           secret={secret}
           isHintEnabled={isHintEnabled}
-          clocks={duelClocks}
         />
       )}
 
@@ -223,27 +218,43 @@ export default function ControlDashboard({
             </Pressable>
           )}
 
-          <Text
-            style={[
-              styles.timer,
-              { color: suddenDeathRemaining !== null ? colors.danger : colors.accent },
-            ]}
-          >
-            {suddenDeathRemaining !== null ? formatTime(suddenDeathRemaining) : formatTime(displayElapsed)}
-          </Text>
+          {/* Sudden death outranks everything: it is a single hard deadline
+              that decides the match, so it takes the whole slot rather than
+              competing with three clocks that can no longer be the thing that
+              ends it. Otherwise a duel shows its clocks here and every other
+              mode shows elapsed time — counting up in a duel measures nothing
+              the match is decided on. */}
+          {suddenDeathRemaining !== null ? (
+            <Text style={[styles.timer, { color: colors.danger }]}>{formatTime(suddenDeathRemaining)}</Text>
+          ) : isDuel && duelClocks ? (
+            <DuelClocks clocks={duelClocks} />
+          ) : (
+            <Text style={[styles.timer, { color: colors.accent }]}>{formatTime(displayElapsed)}</Text>
+          )}
         </View>
 
         <View style={styles.cluster}>
           {children}
-          {onExit && (
+          {isDuel && duelOpponentName && onDuelForfeit ? (
             <Pressable
-              style={[styles.exitButton, { backgroundColor: colors.warningSoft, borderColor: colors.warning }]}
-              onPress={onExit}
+              style={[styles.forfeitButton, { backgroundColor: colors.dangerSoft, borderColor: colors.danger }]}
+              onPress={onDuelForfeit}
             >
-              <Text style={[styles.exitButtonText, { color: colors.warning }]}>
-                {t("quit_game", { defaultValue: "Quit" })}
+              <Text style={[styles.forfeitText, { color: colors.danger }]}>
+                🏳️ {t("surrender", { defaultValue: "Surrender" })}
               </Text>
             </Pressable>
+          ) : (
+            onExit && (
+              <Pressable
+                style={[styles.exitButton, { backgroundColor: colors.warningSoft, borderColor: colors.warning }]}
+                onPress={onExit}
+              >
+                <Text style={[styles.exitButtonText, { color: colors.warning }]}>
+                  {t("quit_game", { defaultValue: "Quit" })}
+                </Text>
+              </Pressable>
+            )
           )}
         </View>
       </View>
@@ -267,11 +278,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    flexWrap: "wrap",
+    rowGap: 10,
     borderWidth: 1,
     borderRadius: 12,
     padding: 12,
   },
-  cluster: { flexDirection: "row", alignItems: "center", gap: 10 },
+  cluster: { flexDirection: "row", alignItems: "center", flexShrink: 1, gap: 10 },
   // Browser default focus outlines follow whichever button was last clicked,
   // not app state — suppressed so the border below is the only ring shown.
   noWebOutline: Platform.OS === "web" ? { outlineWidth: 0 } : {},
@@ -306,4 +319,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   exitButtonText: { fontWeight: "700" },
+  forfeitButton: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+  },
+  forfeitText: { fontWeight: "700", fontSize: 15 },
 });

@@ -107,6 +107,43 @@ export default function GameModeToggle({ mode, onChange, disabled = false }: Pro
   );
 }
 
+/**
+ * The inset every card hosting this toggle must use.
+ *
+ * The toggle sits in the top-right corner of whichever card happens to be first
+ * in the game column — the filter card in practice, the duel arena, the
+ * challenge menu. Those are different cards, so the only thing keeping the
+ * buttons from shifting as you switch modes is that all of them start their
+ * content at the same offset. That used to be three hand-matched numbers (14/10
+ * here, 18 in the lobby, 16 in the challenge menu) and the toggle jumped 15px
+ * up and 4-8px sideways on every mode change.
+ *
+ * Bottom padding is deliberately not part of it: it sits below everything and
+ * can differ per card without moving anything.
+ */
+export const MODE_BAR_INSET = { paddingTop: 14, paddingLeft: 14, paddingRight: 14 } as const;
+
+/**
+ * The row a host card puts at its very top: whatever titles it has on the left,
+ * the toggle on the right. zIndex matches the toggle's own so the hover tooltip,
+ * which drops below the buttons, paints over the rows that follow it inside the
+ * same card (see the stacking-context note above).
+ */
+export const modeBarStyles = StyleSheet.create({
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    rowGap: 8,
+    columnGap: 10,
+    // Cards that centre their content (the duel lobby's waiting card) would
+    // otherwise shrink this row to its contents and pull the toggle inward.
+    alignSelf: "stretch",
+    zIndex: 20,
+  },
+});
+
 // Fixed height (matching CategorySelector's expandButton) instead of
 // padding-derived height — emoji glyphs have inconsistent line-box metrics
 // across browsers/fonts, so padding math alone doesn't reliably line the two

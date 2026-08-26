@@ -16,7 +16,7 @@ import BoardGrid from "../components/BoardGrid";
 import Keyboard from "../components/Keyboard";
 import LetterSlider from "../components/LetterSlider";
 import CategorySelector from "../components/CategorySelector";
-import GameModeToggle from "../components/GameModeToggle";
+import GameModeToggle, { MODE_BAR_INSET } from "../components/GameModeToggle";
 import ControlDashboard from "../components/ControlDashboard";
 import PracticeResultOverlay from "../components/PracticeResultOverlay";
 import CompetitiveResultOverlay from "../components/CompetitiveResultOverlay";
@@ -524,7 +524,17 @@ export default function GameScreen() {
   return (
     <View style={styles.screen}>
       <PageScrollView contentContainerStyle={styles.container}>
-        {showPoolSelectors ? (
+        {/* The mode toggle is not a row of its own any more: it is handed to
+            whichever card is first in the column and rendered in its top-right
+            corner. Every one of those cards insets its content by
+            MODE_BAR_INSET, so the buttons stay put as you switch modes instead
+            of jumping between the filter card's padding and a bare row's.
+
+            It is deliberately absent once a duel match or a challenge round is
+            running: those screens have their own deliberate exits (Surrender,
+            Quit, Give Up Challenge), and switching mode mid-match would leave
+            the match behind rather than end it. */}
+        {showPoolSelectors && (
           <Card style={styles.filterCard}>
             <CategorySelector
               onChange={handleSelectionChange}
@@ -554,24 +564,20 @@ export default function GameScreen() {
               hintNames={visibleHintSubcategories.map((s) => s.name)}
             />
           </Card>
-        ) : (
-          // Duel/competitive have no filter card to sit in, so the toggle is
-          // rendered on its own — but it must land in the same spot it occupies
-          // in practice mode (top right of the content column). Without the row
-          // wrapper it inherits the container's `alignItems: "stretch"` and
-          // drifts to the left edge; the horizontal padding matches
-          // filterCard's, so its right edge lines up across all three modes.
-          <View style={styles.modeToggleRow}>
-            <GameModeToggle mode={gameMode} onChange={handleModeChange} />
-          </View>
         )}
 
         {gameMode === "duel" && !activeMatch && (
-          <DuelLobby onMatchStart={setActiveMatch} onExit={() => handleModeChange("practice")} />
+          <DuelLobby
+            onMatchStart={setActiveMatch}
+            modeToggle={<GameModeToggle mode={gameMode} onChange={handleModeChange} />}
+          />
         )}
 
         {gameMode === "competitive" && showChallengeSelector && (
-          <ChallengeSelector onSelect={handleChallengeSelect} onCancel={() => handleModeChange("practice")} />
+          <ChallengeSelector
+            onSelect={handleChallengeSelect}
+            modeToggle={<GameModeToggle mode={gameMode} onChange={handleModeChange} />}
+          />
         )}
 
         {gameMode === "competitive" && challengeSession && !showChallengeSelector && (
@@ -820,12 +826,7 @@ const styles = StyleSheet.create({
   // Less padding at the bottom than the top: the last row here is often the
   // hint line, which is short and centred, and the symmetric 14 left it
   // looking marooned above the card's edge.
-  filterCard: { paddingTop: 14, paddingBottom: 10, paddingHorizontal: 10, gap: 14 },
-  // zIndex mirrors CategorySelector's headerRow: GameModeToggle's hover tooltip
-  // drops below the buttons and has to paint over the lobby/selector card that
-  // follows it in the same column. See GameModeToggle.tsx on why this must be
-  // repeated on every ancestor rather than set once on the tooltip.
-  modeToggleRow: { flexDirection: "row", justifyContent: "flex-end", paddingHorizontal: 10, zIndex: 20 },
+  filterCard: { ...MODE_BAR_INSET, paddingBottom: 10, gap: 14 },
   banner: { padding: 10, borderRadius: 8, borderWidth: 1 },
   duelBoards: { flexDirection: "row", justifyContent: "space-around", gap: 12 },
   challengeBanner: { padding: 14, gap: 6, alignItems: "center" },

@@ -12,10 +12,16 @@ import {
   restartChallengeAttempt,
 } from "../supabase/players-repository";
 import ConfirmationOverlay from "./ConfirmationOverlay";
+import { MODE_BAR_INSET, modeBarStyles } from "./GameModeToggle";
 
 interface Props {
   onSelect: (challengeId: string, isFiveChars?: boolean) => void;
-  onCancel: () => void;
+  /**
+   * The game-mode toggle, rendered top-right. It replaces the "Cancel" link
+   * that used to sit there: cancelling only ever meant going back to practice,
+   * which is what the toggle's ☕ does from the same corner.
+   */
+  modeToggle?: React.ReactNode;
 }
 
 // Palette keys rather than literals, resolved against the active theme at
@@ -37,7 +43,7 @@ function daysRemaining(endDate: string | null): number | null {
   return Math.max(0, Math.ceil(ms / 86_400_000));
 }
 
-export default function ChallengeSelector({ onSelect, onCancel }: Props) {
+export default function ChallengeSelector({ onSelect, modeToggle }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { profile } = useAuth();
@@ -105,18 +111,30 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
     onSelect(c.id, c.is_five_chars);
   };
 
+  const header = (
+    <View style={[modeBarStyles.headerRow, styles.header, { borderColor: colors.border }]}>
+      <Text style={[styles.headerTitle, { color: colors.warning }]}>{t("select_challenge", { defaultValue: "Select a Challenge" })}</Text>
+      {modeToggle}
+    </View>
+  );
+
+  // Loading keeps the card and the header: the toggle lives in that corner in
+  // every mode, and blinking it out of existence for the length of a fetch is
+  // the same jump this arrangement exists to remove.
   if (loading) {
-    return <Text style={{ color: colors.textMuted, textAlign: "center", padding: 16 }}>{t("loading_challenges", { defaultValue: "Loading challenges..." })}</Text>;
+    return (
+      <Card style={styles.card}>
+        {header}
+        <Text style={{ color: colors.textMuted, textAlign: "center", padding: 16 }}>
+          {t("loading_challenges", { defaultValue: "Loading challenges..." })}
+        </Text>
+      </Card>
+    );
   }
 
   return (
     <Card style={styles.card}>
-      <View style={[styles.header, { borderColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: colors.warning }]}>{t("select_challenge", { defaultValue: "Select a Challenge" })}</Text>
-        <Pressable onPress={onCancel}>
-          <Text style={{ color: colors.textMuted, fontSize: 13 }}>{t("cancel", { defaultValue: "Cancel" })}</Text>
-        </Pressable>
-      </View>
+      {header}
 
       {challenges.length === 0 ? (
         <View style={{ padding: 20, alignItems: "center" }}>
@@ -226,8 +244,9 @@ export default function ChallengeSelector({ onSelect, onCancel }: Props) {
 }
 
 const styles = StyleSheet.create({
-  card: { padding: 16, gap: 12 },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, paddingBottom: 10 },
+  card: { ...MODE_BAR_INSET, paddingBottom: 16, gap: 12 },
+  // Layout comes from modeBarStyles.headerRow; this only adds the rule under it.
+  header: { borderBottomWidth: 1, paddingBottom: 10 },
   headerTitle: { fontSize: 16, fontWeight: "800" },
   challengeCard: { borderWidth: 1, borderRadius: 10, padding: 12, gap: 4, position: "relative" },
   // Was `opacity: 0.7` back when a finished challenge was permanently locked.

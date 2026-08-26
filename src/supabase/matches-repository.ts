@@ -172,6 +172,17 @@ export async function claimVictory(
   if (error) console.error("Error checking victory:", error);
 }
 
+/**
+ * How long an open invitation is advertised in the lobby, in seconds.
+ *
+ * Mirrors the `duel_lobby` view's own filter. Past this the row still exists
+ * and `join_duel_match()` still accepts it for a further ten minutes — slack
+ * for a player whose list was fetched a moment before it lapsed — but nobody
+ * new can find it, so from the creator's side this is when the invitation
+ * stops working.
+ */
+export const DUEL_INVITE_LISTED_SECONDS = 5 * 60;
+
 /** Kept in step with resolve_duel()'s defaults in 20260828_duel_timeouts.sql. */
 export const DUEL_INACTIVITY_SECONDS = 120;
 export const DUEL_SILENCE_SECONDS = 480;

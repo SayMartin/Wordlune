@@ -1,6 +1,6 @@
 {
   "about": "About",
-  "about_description": "{{app}} is a guessing game about what you know. Every hidden word belongs to a category, and you are told which one — the letters do the rest of the work only if the subject is somewhere in your head. Play in English, Swedish or French. Free, and no ads.",
+  "about_description": "{{app}} is a game with influences from both Wordle and Trivial Pursuit. Guess the hidden word. Every word belongs to a category, and you are told which one. Play in Swedish, English or French. Play on your own or challenge others.",
   "accessibility": "Accessibility",
   "account": "Account",
   "account_types_title": "Account & Access",
@@ -366,7 +366,6 @@
   "public_count": "Public Games Count",
   "publish": "Publish",
   "publish_score": "Publish Score?",
-  "quit_duel_lobby": "Quit Mode",
   "quit_game": "Quit",
   "randomize": "Randomize",
   "randomize_avatar": "Randomize",
@@ -539,5 +538,8 @@
   "duel_clock_match": "Match",
   "duel_clock_you": "You",
   "duel_clock_opponent": "Opp",
-  "duel_abandoned_msg": "Neither player made a guess, so the duel was called off. It counts for neither of you."
+  "duel_abandoned_msg": "Neither player made a guess, so the duel was called off. It counts for neither of you.",
+  "invite_listed_for": "Listed for",
+  "invite_expired_title": "No longer listed",
+  "invite_expired_msg": "Nobody new can find this challenge now. Cancel and create a new one — or wait a moment longer, in case someone already had it open."
 }

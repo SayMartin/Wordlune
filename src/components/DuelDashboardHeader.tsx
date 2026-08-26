@@ -9,21 +9,13 @@ import { flagFor } from "../utils/languageCycle";
 
 interface Props {
   duelOpponentName: string;
-  onDuelForfeit?: () => void;
+  onExit?: () => void;
   language?: string;
   secret?: string;
   isHintEnabled?: boolean;
-  clocks?: {
-    silenceSecondsLeft: number;
-    mySecondsLeft: number;
-    opponentSecondsLeft: number;
-    inactivityDormant: boolean;
-  };
 }
 
-const mmss = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
-
-export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, language, secret, isHintEnabled, clocks }: Props) {
+export default function DuelDashboardHeader({ duelOpponentName, onExit, language, secret, isHintEnabled }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [wordSubcats, setWordSubcats] = useState<{ id: string; name: string }[]>([]);
@@ -60,48 +52,17 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
           </View>
         </View>
 
-        {/* All three clocks, always. Any of them can end the duel, so hiding one
-            until it matters means being surprised by it. Left to right they run
-            from the least to the most urgent: the whole match, then each
-            player's own inactivity limit.
-
-            The two player clocks grey out together when both players are idle
-            past the limit — neither can fire then, because the forfeit rule only
-            works against a player whose opponent is still going, and the match
-            clock is what settles it. Showing them live at 0:00 while nothing
-            happened would read as a broken timer. */}
-        {clocks && (
-          <View style={styles.clockRow}>
-            <ClockPill
-              icon="⏳"
-              label={t("duel_clock_match", { defaultValue: "Match" })}
-              seconds={clocks.silenceSecondsLeft}
-              total={480}
-            />
-            <ClockPill
-              icon="🙋"
-              label={t("duel_clock_you", { defaultValue: "You" })}
-              seconds={clocks.mySecondsLeft}
-              total={120}
-              dimmed={clocks.inactivityDormant}
-            />
-            <ClockPill
-              icon="👤"
-              label={t("duel_clock_opponent", { defaultValue: "Opp" })}
-              seconds={clocks.opponentSecondsLeft}
-              total={120}
-              dimmed={clocks.inactivityDormant}
-            />
-          </View>
-        )}
-
-        {onDuelForfeit && (
+        {/* Leaving the duel screen lives up here, next to who you are playing;
+            surrendering the match lives on the control bar with the clocks that
+            can end it. The two used to sit the other way round, which put the
+            softer of the two exits in the busier spot. */}
+        {onExit && (
           <Pressable
-            style={[styles.forfeitButton, { borderColor: colors.danger, backgroundColor: colors.dangerSoft }]}
-            onPress={onDuelForfeit}
+            style={[styles.exitButton, { backgroundColor: colors.warningSoft, borderColor: colors.warning }]}
+            onPress={onExit}
           >
-            <Text style={[styles.forfeitText, { color: colors.danger }]}>
-              🏳️ {t("surrender", { defaultValue: "Surrender" })}
+            <Text style={[styles.exitButtonText, { color: colors.warning }]}>
+              {t("quit_game", { defaultValue: "Quit" })}
             </Text>
           </Pressable>
         )}
@@ -137,67 +98,16 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
   );
 }
 
-/**
- * Urgency is proportional, not absolute: a quarter of the clock left is the
- * warning point and a tenth is the alarm, so the 8-minute match timer and the
- * 2-minute player timers escalate at the same *relative* moment instead of the
- * match clock sitting green until it suddenly isn't.
- */
-function ClockPill({
-  icon,
-  label,
-  seconds,
-  total,
-  dimmed = false,
-}: {
-  icon: string;
-  label: string;
-  seconds: number;
-  total: number;
-  dimmed?: boolean;
-}) {
-  const { colors } = useTheme();
-  const fraction = total > 0 ? seconds / total : 1;
-  const tone = dimmed
-    ? { color: colors.textMuted, borderColor: colors.border }
-    : fraction <= 0.1
-      ? { color: colors.danger, borderColor: colors.danger }
-      : fraction <= 0.25
-        ? { color: colors.warning, borderColor: colors.warning }
-        : { color: colors.textMuted, borderColor: colors.border };
-
-  return (
-    <View style={[styles.clockPill, { borderColor: tone.borderColor }, dimmed && styles.clockDimmed]}>
-      <Text style={[styles.clockLabel, { color: tone.color }]} numberOfLines={1}>
-        {icon} {label}
-      </Text>
-      <Text style={[styles.clockValue, { color: tone.color }]}>{mmss(seconds)}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: { padding: 14, gap: 10 },
-  topRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
+  topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
   identity: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
   vsLabel: { fontSize: 10, fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.6 },
   opponentName: { fontSize: 16, fontWeight: "800" },
   statusCol: { alignItems: "center", gap: 4, marginLeft: 8 },
   langBadge: { fontSize: 10, fontWeight: "700", borderWidth: 1, borderRadius: 4, paddingHorizontal: 4, paddingVertical: 1 },
-  clockRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginRight: 8 },
-  clockPill: {
-    alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 6,
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    minWidth: 54,
-  },
-  clockDimmed: { opacity: 0.45 },
-  clockLabel: { fontSize: 9, fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.4 },
-  clockValue: { fontSize: 13, fontWeight: "800", fontFamily: "monospace" },
-  forfeitButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
-  forfeitText: { fontWeight: "700", fontSize: 11 },
+  exitButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 14 },
+  exitButtonText: { fontWeight: "700" },
   chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, borderTopWidth: 1, paddingTop: 8 },
   chip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 4 },
   chipText: { fontSize: 10 },

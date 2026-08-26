@@ -1,6 +1,6 @@
 {
   "about": "Om",
-  "about_description": "{{app}} är ett gissningsspel om det du kan. Varje dolt ord hör till en kategori, och du får veta vilken — bokstäverna gör resten av jobbet bara om ämnet finns någonstans i huvudet. Spela på engelska, svenska eller franska. Gratis, och utan reklam.",
+  "about_description": "{{app}} är ett spel med influenser från både Wordle och Trivial Pursuit. Gissa det dolda ordet. Varje ord hör till en kategori, och du får veta vilken. Spela på svenska, engelska eller franska. Spela själv eller utmana andra.",
   "accessibility": "Tillgänglighet",
   "account": "Konto",
   "account_types_title": "Konto & Åtkomst",
@@ -366,7 +366,6 @@
   "public_count": "Antal offentliga spel",
   "publish": "Publicera",
   "publish_score": "Publicera poäng?",
-  "quit_duel_lobby": "Avsluta läge",
   "quit_game": "Avsluta",
   "randomize": "Slumpa",
   "randomize_avatar": "Slumpa",
@@ -539,5 +538,8 @@
   "duel_clock_match": "Match",
   "duel_clock_you": "Du",
   "duel_clock_opponent": "Motst.",
-  "duel_abandoned_msg": "Ingen av er gissade, så duellen avbröts. Den räknas inte för någon av er."
+  "duel_abandoned_msg": "Ingen av er gissade, så duellen avbröts. Den räknas inte för någon av er.",
+  "invite_listed_for": "Syns i",
+  "invite_expired_title": "Syns inte längre",
+  "invite_expired_msg": "Ingen ny kan hitta den här utmaningen nu. Avbryt och skapa en ny — eller vänta en stund till, ifall någon redan hade den uppe."
 }

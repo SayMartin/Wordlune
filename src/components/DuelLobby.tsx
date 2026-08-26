@@ -3,7 +3,15 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
-import { Match, LobbyMatch, createMatch, listWaitingMatches, joinMatch, abandonMatch } from "../supabase/matches-repository";
+import {
+  Match,
+  LobbyMatch,
+  createMatch,
+  listWaitingMatches,
+  joinMatch,
+  abandonMatch,
+  DUEL_INVITE_LISTED_SECONDS,
+} from "../supabase/matches-repository";
 import { supabase } from "../supabaseClient";
 import { getRandomFiveLetterWord } from "../supabase/words-repository";
 import OptionButton from "./OptionButton";
@@ -12,13 +20,20 @@ import Button from "./ui/Button";
 import DuelIcon from "./DuelIcon";
 import DuelLeaderboard from "./DuelLeaderboard";
 import DuelChallengeCard from "./DuelChallengeCard";
+import { MODE_BAR_INSET, modeBarStyles } from "./GameModeToggle";
 
 interface Props {
   onMatchStart: (match: Match) => void;
-  onExit?: () => void;
+  /**
+   * The game-mode toggle, rendered top-right of whichever card this shows.
+   * It replaces the "Quit mode" button that used to sit there: that button only
+   * ever switched back to practice, which is precisely what the toggle's ☕ does
+   * from the same corner.
+   */
+  modeToggle?: React.ReactNode;
 }
 
-export default function DuelLobby({ onMatchStart, onExit }: Props) {
+export default function DuelLobby({ onMatchStart, modeToggle }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { session } = useAuth();
@@ -26,6 +41,12 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
   const [loading, setLoading] = useState(false);
   const [waitingMatches, setWaitingMatches] = useState<LobbyMatch[]>([]);
   const [myMatchId, setMyMatchId] = useState<string | null>(null);
+  // When my own invitation was posted, and a per-second tick to count from it.
+  // The creator used to sit on an indefinite "Waiting for opponent..." spinner
+  // with no way to tell that the invitation had stopped being listed five
+  // minutes ago and nobody could still find it.
+  const [myMatchPostedAt, setMyMatchPostedAt] = useState<number | null>(null);
+  const [inviteTick, setInviteTick] = useState(() => Date.now());
   const [duelLang, setDuelLang] = useState<"en" | "sv" | "fr">("en");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [view, setView] = useState<"lobby" | "leaderboard">("lobby");
@@ -64,6 +85,19 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
     };
   }, [myMatchId, onMatchStart]);
 
+  // Ticks only while an invitation of mine is outstanding.
+  useEffect(() => {
+    if (!myMatchId || myMatchPostedAt === null) return;
+    const interval = setInterval(() => setInviteTick(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [myMatchId, myMatchPostedAt]);
+
+  const inviteSecondsLeft =
+    myMatchPostedAt === null
+      ? null
+      : Math.max(0, DUEL_INVITE_LISTED_SECONDS - Math.floor((inviteTick - myMatchPostedAt) / 1000));
+  const inviteLapsed = inviteSecondsLeft === 0;
+
   const handleCreateMatch = async () => {
     setLoading(true);
     setErrorMsg(null);
@@ -77,6 +111,10 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
       const newMatch = await createMatch(secret, duelLang);
       if (newMatch) {
         setMyMatchId(newMatch.id);
+        // The server's own timestamp, not Date.now(): the lobby view filters on
+        // created_at, so a clock skewed against the database would count down to
+        // the wrong moment.
+        setMyMatchPostedAt(new Date(newMatch.created_at).getTime());
       } else {
         setErrorMsg(t("match_creation_failed", { defaultValue: "Failed to create match." }));
       }
@@ -111,6 +149,7 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
     setLoading(true);
     try {
       await abandonMatch(myMatchId);
+      setMyMatchPostedAt(null);
       setWaitingMatches((prev) => prev.filter((m) => m.id !== myMatchId));
       setMyMatchId(null);
     } catch (err) {
@@ -123,6 +162,10 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
   if (!session) {
     return (
       <Card style={styles.centerCard}>
+        <View style={modeBarStyles.headerRow}>
+          <View />
+          {modeToggle}
+        </View>
         <Text style={[styles.title, { color: colors.text }]}>{t("duel_mode", { defaultValue: "Duel Mode" })}</Text>
         <Text style={{ color: colors.textMuted, textAlign: "center" }}>
           {t("visitor_duel_warning", { defaultValue: "Please sign in to play Duel mode." })}
@@ -134,14 +177,53 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
   if (myMatchId) {
     return (
       <Card style={styles.centerCard}>
+        <View style={modeBarStyles.headerRow}>
+          <View />
+          {modeToggle}
+        </View>
         <View style={styles.waitingHeader}>
           <DuelIcon size={32} />
           <Text style={[styles.title, { color: colors.text }]}>{t("waiting_for_opponent", { defaultValue: "Waiting for opponent..." })}</Text>
         </View>
-        <ActivityIndicator size="large" color={colors.accent} />
-        <Text style={{ color: colors.textMuted, textAlign: "center" }}>
-          {t("waiting_for_player_accept", { defaultValue: "Your challenge is live. Waiting for someone to accept." })}
-        </Text>
+        {/* The spinner stops once the invitation stops being listed. Leaving it
+            turning would keep promising activity that can no longer happen. */}
+        {!inviteLapsed && <ActivityIndicator size="large" color={colors.accent} />}
+
+        {inviteLapsed ? (
+          <>
+            <Text style={[styles.inviteExpired, { color: colors.warning }]}>
+              ⌛ {t("invite_expired_title", { defaultValue: "No longer listed" })}
+            </Text>
+            {/* Not "expired": the row lives on and join_duel_match() still
+                accepts it for another ten minutes, so someone whose lobby list
+                was fetched just before the cutoff can still walk in. It is only
+                unfindable, which is a different and more honest claim. */}
+            <Text style={{ color: colors.textMuted, textAlign: "center" }}>
+              {t("invite_expired_msg", {
+                defaultValue:
+                  "Nobody new can find this challenge now. Cancel and create a new one — or wait a moment longer, in case someone already had it open.",
+              })}
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text style={{ color: colors.textMuted, textAlign: "center" }}>
+              {t("waiting_for_player_accept", { defaultValue: "Your challenge is live. Waiting for someone to accept." })}
+            </Text>
+            {inviteSecondsLeft !== null && (
+              <Text
+                style={[
+                  styles.inviteClock,
+                  { color: inviteSecondsLeft <= 60 ? colors.warning : colors.textMuted },
+                ]}
+              >
+                {t("invite_listed_for", { defaultValue: "Listed for" })}{" "}
+                {Math.floor(inviteSecondsLeft / 60)}:
+                {(inviteSecondsLeft % 60).toString().padStart(2, "0")}
+              </Text>
+            )}
+          </>
+        )}
         {errorMsg && <Text style={[styles.error, { color: colors.danger }]}>{errorMsg}</Text>}
         <Button
           variant="ghost"
@@ -159,21 +241,12 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
 
   return (
     <Card style={styles.card}>
-      <View style={styles.headerRow}>
+      <View style={modeBarStyles.headerRow}>
         <View style={styles.headerTitleRow}>
           <DuelIcon size={32} />
           <Text style={[styles.title, { color: colors.text }]}>{t("duel_arena", { defaultValue: "Duel Arena" })}</Text>
         </View>
-        {onExit && (
-          <Pressable
-            style={[styles.exitButton, { borderColor: colors.warning, backgroundColor: colors.warningSoft }]}
-            onPress={onExit}
-          >
-            <Text style={[styles.exitButtonText, { color: colors.warning }]}>
-              {t("quit_duel_lobby", { defaultValue: "Quit" })}
-            </Text>
-          </Pressable>
-        )}
+        {modeToggle}
       </View>
 
       <View style={[styles.tabBar, { borderColor: colors.border }]}>
@@ -243,15 +316,14 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
 }
 
 const styles = StyleSheet.create({
-  centerCard: { padding: 24, alignItems: "center", gap: 12 },
+  inviteClock: { fontSize: 15, fontWeight: "800", fontFamily: "monospace" },
+  inviteExpired: { fontSize: 15, fontWeight: "800" },
+  centerCard: { ...MODE_BAR_INSET, paddingBottom: 24, alignItems: "center", gap: 12 },
   title: { fontSize: 18, fontWeight: "800" },
   waitingHeader: { flexDirection: "row", alignItems: "center", gap: 8 },
   error: { fontSize: 13, textAlign: "center", fontWeight: "600" },
-  card: { padding: 18, gap: 12 },
-  headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  card: { ...MODE_BAR_INSET, paddingBottom: 18, gap: 12 },
   headerTitleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  exitButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
-  exitButtonText: { fontWeight: "700", fontSize: 12 },
   tabBar: { flexDirection: "row", borderBottomWidth: 1 },
   tabButton: { flex: 1, alignItems: "center", paddingVertical: 10 },
   optionRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10, padding: 12, borderWidth: 1, borderRadius: 10, marginBottom: 10 },

@@ -9,6 +9,7 @@ import {
   listWordsSubcategories,
 } from "../supabase/words-repository";
 import Toggle from "./Toggle";
+import { modeBarStyles } from "./GameModeToggle";
 
 type Category = { id: string; name: string; slug?: string };
 type Subcategory = { id: string; name: string; category_id: string };
@@ -149,7 +150,7 @@ export default function CategorySelector({
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerRow}>
+      <View style={modeBarStyles.headerRow}>
         <Pressable
           style={[styles.expandButton, { borderColor: colors.border }, disabled && styles.disabledState]}
           onPress={() => !disabled && setCollapsed((c) => !c)}
@@ -231,15 +232,11 @@ const styles = StyleSheet.create({
   // react-native-web emits every View with `position: relative; z-index: 0`,
   // which makes each one its own stacking context, so a descendant's z-index
   // can never lift it past an ancestor's sibling. See GameModeToggle.tsx.
+  //
+  // The header row itself is `modeBarStyles.headerRow` (GameModeToggle.tsx),
+  // shared with every other card that hosts the mode toggle so the buttons land
+  // in the same place whichever card is showing.
   container: { gap: 8, zIndex: 20 },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    rowGap: 8,
-    zIndex: 20,
-  },
   expandButton: {
     height: 40,
     justifyContent: "center",
