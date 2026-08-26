@@ -44,7 +44,7 @@ export default function PrivacyPolicyScreen() {
       name: t("privacy_policy_data_profile", { defaultValue: "Profile" }),
       body: t("privacy_policy_data_profile_body", {
         defaultValue:
-          "Your display name, avatar, level, and whether you have chosen to make your profile visible on leaderboards.",
+          "Your display name, avatar, and whether you have chosen to make your profile visible on leaderboards.",
       }),
       basis: t("privacy_policy_data_profile_basis", {
         defaultValue:

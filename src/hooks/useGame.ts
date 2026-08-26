@@ -106,15 +106,28 @@ function pickFromList(list: string[], seed?: string) {
 // `resetGame` below — they are meant to rebuild state when the language changes.
 // Drop the parameter and those dep arrays lose `lang`, which silently stops a
 // language switch from resetting the round.
+/**
+ * Stand-ins held by `secret` before a real word arrives: `START` while the word
+ * pool is still being fetched, `LOADING` while a duel waits for its match to
+ * supply one. Neither is a word in any language, so anything that looks a secret
+ * up — the category hint, above all — must skip them rather than query for a
+ * word that cannot exist. `isPlaceholderSecret` is what those call sites ask.
+ */
+export const PLACEHOLDER_SECRETS = ["START", "LOADING"];
+
+export function isPlaceholderSecret(secret?: string | null): boolean {
+  return !secret || PLACEHOLDER_SECRETS.includes(secret.trim().toUpperCase());
+}
+
 function makeNew(
   _lang = "en",
   seed?: string,
   explicitSecret?: string,
   isCompetitive?: boolean,
 ): PersistedState {
-  // If no explicit secret and no seed, we might default to "START" or random logic.
-  // But for Duel Mode, explicitSecret is mandatory.
-  const secret = explicitSecret ?? (seed ? "START" : "START");
+  // No explicit secret means the pool hasn't answered yet — the placeholder
+  // holds the slot until it does. (Duel mode never gets here without one.)
+  const secret = explicitSecret ?? PLACEHOLDER_SECRETS[0];
 
   return {
     secret,

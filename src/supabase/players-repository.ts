@@ -156,25 +156,49 @@ export async function ensurePlayerProfile(
   const existing = await getPlayerProfile(userId, 0);
   if (existing) return existing;
 
-  const displayName = opts?.displayName || (await suggestUniqueDisplayName("Guest"));
-  const avatarUrl =
-    opts?.avatarUrl ||
-    localAvatarUrl(displayName);
+  const baseName = opts?.displayName || "Guest";
+  let displayName = opts?.displayName || (await suggestUniqueDisplayName("Guest"));
 
-  const { data, error } = await supabase
-    .from("player_profiles")
-    .upsert(
-      { id: userId, display_name: displayName, avatar_url: avatarUrl },
-      { onConflict: "id" },
-    )
-    .select()
-    .single();
+  // A name that was free when we asked for it can be taken by the time we
+  // write it — by the trigger creating another guest, or by a second client
+  // that asked at the same moment. `onConflict: "id"` does not cover that: the
+  // unique index that trips is on display_name, on somebody else's row.
+  //
+  // Giving up there left the session permanently profile-less, which is the
+  // exact state this function exists to prevent. So a collision is retried
+  // rather than reported: first by re-reading, since the most likely writer is
+  // this user's own trigger insert finally landing, and only then by asking for
+  // a new name. The loop is bounded because a name generator that keeps handing
+  // back taken names is a bug to surface, not to spin on.
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const avatarUrl = opts?.avatarUrl || localAvatarUrl(displayName);
 
-  if (error) {
-    console.error("Error creating fallback player profile:", error);
-    return null;
+    const { data, error } = await supabase
+      .from("player_profiles")
+      .upsert(
+        { id: userId, display_name: displayName, avatar_url: avatarUrl },
+        { onConflict: "id" },
+      )
+      .select()
+      .single();
+
+    if (!error) return data;
+
+    if (error.code !== "23505") {
+      console.error("Error creating fallback player profile:", error);
+      return null;
+    }
+
+    const raced = await getPlayerProfile(userId, 0);
+    if (raced) return raced;
+
+    displayName = await suggestUniqueDisplayName(baseName);
   }
-  return data;
+
+  console.error(
+    `Error creating fallback player profile: display name still taken after 4 attempts (base "${baseName}")`,
+  );
+  return null;
 }
 
 /**

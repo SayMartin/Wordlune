@@ -6,7 +6,7 @@
  * The policy screen renders this same value as its "last updated" date, so the
  * two can never drift apart.
  */
-export const PRIVACY_POLICY_VERSION = "2026-08-20";
+export const PRIVACY_POLICY_VERSION = "2026-08-26";
 
 /**
  * Built by concatenation rather than a literal string, so the address doesn't

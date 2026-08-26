@@ -6,6 +6,7 @@ import DuelIcon from "./DuelIcon";
 import Card from "./ui/Card";
 import { getExtensionsForWord } from "../supabase/words-repository";
 import { flagFor } from "../utils/languageCycle";
+import { isPlaceholderSecret } from "../hooks/useGame";
 
 interface Props {
   duelOpponentName: string;
@@ -22,7 +23,9 @@ export default function DuelDashboardHeader({ duelOpponentName, onExit, language
 
   useEffect(() => {
     const lookupLang = language?.split("-")[0] || "en";
-    if (secret) {
+    // A duel holds the LOADING placeholder until the match supplies its word;
+    // that is not a word to look a hint up for.
+    if (secret && !isPlaceholderSecret(secret)) {
       getExtensionsForWord(secret.trim(), lookupLang).then((data) => {
         setWordSubcats(data?.subcategories || []);
       });

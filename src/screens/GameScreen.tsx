@@ -6,7 +6,7 @@ import { useNavigation, useRoute, type RouteProp } from "@react-navigation/nativ
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
 import { useAuth } from "../context/AuthContext";
-import useGame from "../hooks/useGame";
+import useGame, { isPlaceholderSecret } from "../hooks/useGame";
 import useDuelMode from "../hooks/useDuelMode";
 import useChallengeMode from "../hooks/useChallengeMode";
 import { saveGameScore } from "../supabase/players-repository";
@@ -303,7 +303,10 @@ export default function GameScreen() {
   // be where you learned the categories, which is the wrong place — see
   // ChallengeSelector.
   useEffect(() => {
-    if (gameMode === "duel" || !secret) {
+    // isPlaceholderSecret covers the stand-in `secret` carries until the word
+    // pool answers — looking that up warns about a word that is not in the
+    // dictionary and never will be.
+    if (gameMode === "duel" || isPlaceholderSecret(secret)) {
       setPracticeHintSubcategories([]);
       return;
     }

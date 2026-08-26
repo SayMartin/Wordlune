@@ -289,10 +289,6 @@ export default function Settings() {
           </Text>
         </View>
         <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
-          <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("level", { defaultValue: "Level" })}</Text>
-          <Text style={[styles.statValue, { color: colors.text }]}>{profile.metadata?.level || 1}</Text>
-        </View>
-        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
           <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("joined", { defaultValue: "Joined" })}</Text>
           <Text style={[styles.statValue, { color: colors.text }]}>{profile.created_at ? new Date(profile.created_at).toLocaleDateString() : "-"}</Text>
         </View>
