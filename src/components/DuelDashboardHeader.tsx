@@ -13,9 +13,17 @@ interface Props {
   language?: string;
   secret?: string;
   isHintEnabled?: boolean;
+  clocks?: {
+    silenceSecondsLeft: number;
+    mySecondsLeft: number;
+    opponentSecondsLeft: number;
+    inactivityDormant: boolean;
+  };
 }
 
-export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, language, secret, isHintEnabled }: Props) {
+const mmss = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
+
+export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, language, secret, isHintEnabled, clocks }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [wordSubcats, setWordSubcats] = useState<{ id: string; name: string }[]>([]);
@@ -51,6 +59,41 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
             <Text style={{ opacity: isHintEnabled ? 1 : 0.25, fontSize: 16 }}>💡</Text>
           </View>
         </View>
+
+        {/* All three clocks, always. Any of them can end the duel, so hiding one
+            until it matters means being surprised by it. Left to right they run
+            from the least to the most urgent: the whole match, then each
+            player's own inactivity limit.
+
+            The two player clocks grey out together when both players are idle
+            past the limit — neither can fire then, because the forfeit rule only
+            works against a player whose opponent is still going, and the match
+            clock is what settles it. Showing them live at 0:00 while nothing
+            happened would read as a broken timer. */}
+        {clocks && (
+          <View style={styles.clockRow}>
+            <ClockPill
+              icon="⏳"
+              label={t("duel_clock_match", { defaultValue: "Match" })}
+              seconds={clocks.silenceSecondsLeft}
+              total={480}
+            />
+            <ClockPill
+              icon="🙋"
+              label={t("duel_clock_you", { defaultValue: "You" })}
+              seconds={clocks.mySecondsLeft}
+              total={120}
+              dimmed={clocks.inactivityDormant}
+            />
+            <ClockPill
+              icon="👤"
+              label={t("duel_clock_opponent", { defaultValue: "Opp" })}
+              seconds={clocks.opponentSecondsLeft}
+              total={120}
+              dimmed={clocks.inactivityDormant}
+            />
+          </View>
+        )}
 
         {onDuelForfeit && (
           <Pressable
@@ -94,6 +137,45 @@ export default function DuelDashboardHeader({ duelOpponentName, onDuelForfeit, l
   );
 }
 
+/**
+ * Urgency is proportional, not absolute: a quarter of the clock left is the
+ * warning point and a tenth is the alarm, so the 8-minute match timer and the
+ * 2-minute player timers escalate at the same *relative* moment instead of the
+ * match clock sitting green until it suddenly isn't.
+ */
+function ClockPill({
+  icon,
+  label,
+  seconds,
+  total,
+  dimmed = false,
+}: {
+  icon: string;
+  label: string;
+  seconds: number;
+  total: number;
+  dimmed?: boolean;
+}) {
+  const { colors } = useTheme();
+  const fraction = total > 0 ? seconds / total : 1;
+  const tone = dimmed
+    ? { color: colors.textMuted, borderColor: colors.border }
+    : fraction <= 0.1
+      ? { color: colors.danger, borderColor: colors.danger }
+      : fraction <= 0.25
+        ? { color: colors.warning, borderColor: colors.warning }
+        : { color: colors.textMuted, borderColor: colors.border };
+
+  return (
+    <View style={[styles.clockPill, { borderColor: tone.borderColor }, dimmed && styles.clockDimmed]}>
+      <Text style={[styles.clockLabel, { color: tone.color }]} numberOfLines={1}>
+        {icon} {label}
+      </Text>
+      <Text style={[styles.clockValue, { color: tone.color }]}>{mmss(seconds)}</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: { padding: 14, gap: 10 },
   topRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
@@ -102,6 +184,18 @@ const styles = StyleSheet.create({
   opponentName: { fontSize: 16, fontWeight: "800" },
   statusCol: { alignItems: "center", gap: 4, marginLeft: 8 },
   langBadge: { fontSize: 10, fontWeight: "700", borderWidth: 1, borderRadius: 4, paddingHorizontal: 4, paddingVertical: 1 },
+  clockRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginRight: 8 },
+  clockPill: {
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    minWidth: 54,
+  },
+  clockDimmed: { opacity: 0.45 },
+  clockLabel: { fontSize: 9, fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.4 },
+  clockValue: { fontSize: 13, fontWeight: "800", fontFamily: "monospace" },
   forfeitButton: { borderWidth: 1, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },
   forfeitText: { fontWeight: "700", fontSize: 11 },
   chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, borderTopWidth: 1, paddingTop: 8 },

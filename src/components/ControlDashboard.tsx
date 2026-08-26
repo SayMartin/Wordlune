@@ -19,6 +19,12 @@ interface Props {
   hideRestart?: boolean;
   // Duel-only
   duelOpponentName?: string;
+  duelClocks?: {
+    silenceSecondsLeft: number;
+    mySecondsLeft: number;
+    opponentSecondsLeft: number;
+    inactivityDormant: boolean;
+  };
   onDuelForfeit?: () => void;
   elapsedTime?: number; // externally controlled (synced duel timer)
   language?: string;
@@ -48,6 +54,7 @@ export default function ControlDashboard({
   onExit,
   hideRestart = false,
   duelOpponentName,
+  duelClocks,
   onDuelForfeit,
   elapsedTime,
   language,
@@ -155,6 +162,7 @@ export default function ControlDashboard({
           language={language}
           secret={secret}
           isHintEnabled={isHintEnabled}
+          clocks={duelClocks}
         />
       )}
 

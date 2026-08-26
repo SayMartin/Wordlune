@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
+import { useBoardTileSize } from "./BoardGrid";
 
 type LetterStatus = "absent" | "present" | "correct";
 
@@ -25,6 +26,18 @@ const STATUS_COLORS: Record<LetterStatus, string> = {
   correct: "#6aaa64",
 };
 
+/**
+ * How big the opponent's board is relative to your own.
+ *
+ * Clearly secondary — it carries no letters, only colours, and yours is the one
+ * you type into — but big enough to read across the screen. It was pinned at
+ * 22px, which meant that the more room the viewport had the further the two
+ * boards drifted apart: yours grew to 38px on a desktop while this stayed put.
+ * Deriving it keeps the relationship constant at every size.
+ */
+const OPPONENT_SCALE = 0.7;
+const MIN_TILE = 18;
+
 export default function OpponentBoard({
   evaluations,
   currentInputLength,
@@ -39,6 +52,10 @@ export default function OpponentBoard({
   const displayName = playerName || t("opponent", { defaultValue: "Opponent" });
   const rows = Array.from({ length: rowCount }, (_, i) => i);
 
+  const ownTileSize = useBoardTileSize(wordLength, rowCount);
+  const tileSize = Math.max(MIN_TILE, Math.round(ownTileSize * OPPONENT_SCALE));
+  const gap = tileSize >= 24 ? 4 : 3;
+
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
@@ -49,14 +66,14 @@ export default function OpponentBoard({
           {score} {t("points_short", { defaultValue: "pts" })}
         </Text>
       </View>
-      <View style={{ gap: 4 }}>
+      <View style={{ gap }}>
         {rows.map((rowIndex) => {
           const isCompletedRow = rowIndex < evaluations.length;
           const isActiveRow = rowIndex === activeRowIndex;
           const rowData = isCompletedRow && evaluations[rowIndex] ? evaluations[rowIndex] : [];
 
           return (
-            <View key={rowIndex} style={styles.row}>
+            <View key={rowIndex} style={[styles.row, { gap }]}>
               {Array.from({ length: wordLength }, (_, colIndex) => {
                 let bg = colors.surface;
                 let borderColor = colors.border;
@@ -72,7 +89,12 @@ export default function OpponentBoard({
                   borderColor = colors.textMuted;
                 }
 
-                return <View key={colIndex} style={[styles.tile, { backgroundColor: bg, borderColor }]} />;
+                return (
+                  <View
+                    key={colIndex}
+                    style={[styles.tile, { width: tileSize, height: tileSize, backgroundColor: bg, borderColor }]}
+                  />
+                );
               })}
             </View>
           );
@@ -85,7 +107,8 @@ export default function OpponentBoard({
 const styles = StyleSheet.create({
   container: { alignItems: "center", gap: 6 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", width: "100%", paddingHorizontal: 4 },
-  label: { fontSize: 11, fontWeight: "700", maxWidth: 100 },
-  row: { flexDirection: "row", gap: 4 },
-  tile: { width: 22, height: 22, borderRadius: 3, borderWidth: 2 },
+  label: { fontSize: 12, fontWeight: "700", maxWidth: 140 },
+  row: { flexDirection: "row" },
+  // width/height come from the derived tile size at render time.
+  tile: { borderRadius: 3, borderWidth: 2 },
 });

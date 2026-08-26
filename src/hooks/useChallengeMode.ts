@@ -9,10 +9,10 @@ import {
   getMyChallengeAttempt,
   ChallengeAttempt,
 } from "../supabase/players-repository";
+import { computeWordScore } from "../utils/scoring";
 
 interface ChallengeSession {
   id: string;
-  description?: any;
   attempt: ChallengeAttempt;
   words: string[];
 }
@@ -57,9 +57,12 @@ export default function useChallengeMode({
   const [loadingMessage, setLoadingMessage] = useState("");
   const [showForfeitResult, setShowForfeitResult] = useState(false);
 
+  // `description` used to be threaded through here from the challenge menu and
+  // stored on the session, where nothing ever read it. It was the frozen
+  // category-name snapshot; challenge_menu_stats resolves names at read time
+  // now, so the whole parameter is gone rather than left dangling.
   const handleChallengeSelect = async (
     challengeId: string,
-    description?: any,
     isFiveChars?: boolean,
   ) => {
     if (!profile?.id) return;
@@ -98,7 +101,6 @@ export default function useChallengeMode({
 
       setChallengeSession({
         id: challengeId,
-        description,
         attempt,
         words,
       });
@@ -142,8 +144,16 @@ export default function useChallengeMode({
       const endTimeVal = endTime || Date.now();
       const duration = Math.max(0, Math.floor((endTimeVal - startTime) / 1000));
 
-      // Standard scoring: Max 100, -10 per extra guess
-      const scoreVal = won ? Math.max(10, 100 - (guesses.length - 1) * 10) : 0;
+      // Same formula as practice — see src/utils/scoring.ts. The word length
+      // comes from the challenge's own word list rather than from the board,
+      // since the secret is per-language and the time allowance scales with it.
+      const currentWord = words[attempt.progress_index] || "";
+      const scoreVal = computeWordScore({
+        won,
+        guesses: guesses.length,
+        durationSeconds: duration,
+        wordLength: currentWord.trim().length || 5,
+      }).total;
 
       // No saveGameScore() here, deliberately: this path only ever runs in
       // competitive mode, and the web app skips saving intermediate words there

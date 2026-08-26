@@ -7,6 +7,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../theme/ThemeProvider";
 import Card from "../components/ui/Card";
 import { PageTitle } from "../components/ui/Heading";
+import { ScoringRules } from "../components/ScoreBreakdown";
 import type { AppParamList } from "../navigation/types";
 import { SUPPORT_EMAIL } from "../constants/privacy";
 import { APP_NAME } from "../constants/app";
@@ -92,6 +93,19 @@ export default function AboutScreen() {
             ]}
           />
         </View>
+      </Card>
+
+      {/* Scoring gets its own section rather than a bullet under each mode:
+          the rules are the same for practice and challenge, and a player
+          looking for "how are points worked out" should find one answer, not
+          have to reconcile three. The text is rendered from ScoreBreakdown's
+          ScoringRules, the same component the result overlay and the Progress
+          modal use, so it cannot drift from what the game actually computes. */}
+      <Card style={styles.card}>
+        <Text style={[styles.cardTitle, { color: colors.accent }]}>
+          {t("scoring_rules_title", { defaultValue: "How points are scored" })}
+        </Text>
+        <ScoringRules />
       </Card>
 
       <Card style={[styles.card, styles.accessCard]}>

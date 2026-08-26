@@ -1,13 +1,15 @@
-import React from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../theme/ThemeProvider";
+import { WordScoreMath, ScoringRules } from "./ScoreBreakdown";
+import { ScoreBreakdown, formatDuration } from "../utils/scoring";
 
 interface Props {
   status: "won" | "lost";
   secret: string;
   guessesCount: number;
-  score: number;
+  breakdown: ScoreBreakdown;
   durationSeconds: number;
   onClose: () => void;
   isSaved?: boolean;
@@ -17,7 +19,7 @@ export default function PracticeResultOverlay({
   status,
   secret,
   guessesCount,
-  score,
+  breakdown,
   durationSeconds,
   onClose,
   isSaved,
@@ -25,9 +27,12 @@ export default function PracticeResultOverlay({
   const { t } = useTranslation();
   const { colors, radii } = useTheme();
   const isWon = status === "won";
-  const minutes = Math.floor(durationSeconds / 60);
-  const seconds = durationSeconds % 60;
-  const timeString = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const timeString = formatDuration(durationSeconds);
+  // Collapsed by default: the three stat cells answer "what did I get", and the
+  // arithmetic answers "why", which most players only want once. Expanded
+  // inline rather than in a second Modal — nesting Modals is unreliable on iOS
+  // and this overlay is already the modal the breakdown belongs in.
+  const [showMath, setShowMath] = useState(false);
 
   return (
     <Modal transparent animationType="fade" visible onRequestClose={onClose}>
@@ -64,13 +69,28 @@ export default function PracticeResultOverlay({
             </View>
             <View style={styles.statCell}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("points", { defaultValue: "Points" })}</Text>
-              <Text style={[styles.statValue, { color: colors.warning }]}>{score}</Text>
+              <Text style={[styles.statValue, { color: colors.warning }]}>{breakdown.total}</Text>
             </View>
             <View style={styles.statCell}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t("time", { defaultValue: "Time" })}</Text>
               <Text style={[styles.statValue, { color: colors.text }]}>{timeString}</Text>
             </View>
           </View>
+
+          <Pressable onPress={() => setShowMath((v) => !v)} style={styles.mathToggle}>
+            <Text style={[styles.mathToggleText, { color: colors.accent }]}>
+              {t("score_how_calculated", { defaultValue: "How was this calculated?" })} {showMath ? "▾" : "▸"}
+            </Text>
+          </Pressable>
+
+          {showMath && (
+            <ScrollView style={styles.mathScroll} contentContainerStyle={styles.mathContent}>
+              <WordScoreMath breakdown={breakdown} />
+              <View style={[styles.rulesDivider, { borderTopColor: colors.border }]}>
+                <ScoringRules compact />
+              </View>
+            </ScrollView>
+          )}
 
           {isSaved && (
             <Text style={[styles.saved, { color: colors.success }]}>
@@ -94,7 +114,7 @@ export default function PracticeResultOverlay({
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", padding: 16 },
-  card: { width: "100%", maxWidth: 360, borderWidth: 1, padding: 24, alignItems: "center", gap: 4 },
+  card: { width: "100%", maxWidth: 360, maxHeight: "90%", borderWidth: 1, padding: 24, alignItems: "center", gap: 4 },
   emoji: { fontSize: 44, marginBottom: 4 },
   title: { fontSize: 22, fontWeight: "900" },
   wordLabel: { fontSize: 11, textTransform: "uppercase", marginTop: 8 },
@@ -105,6 +125,11 @@ const styles = StyleSheet.create({
   // a dark one, which is exactly what a stat well wants to do.
   statLabel: { fontSize: 10, textTransform: "uppercase", fontWeight: "700" },
   statValue: { fontSize: 16, fontWeight: "800" },
+  mathToggle: { marginTop: 12 },
+  mathToggleText: { fontSize: 12, fontWeight: "700", textDecorationLine: "underline" },
+  mathScroll: { width: "100%", marginTop: 10 },
+  mathContent: { gap: 12 },
+  rulesDivider: { borderTopWidth: 1, paddingTop: 10 },
   saved: { fontWeight: "600", marginTop: 8 },
   button: { width: "100%", paddingVertical: 12, borderRadius: 999, alignItems: "center", marginTop: 16 },
   buttonText: { fontWeight: "700" },

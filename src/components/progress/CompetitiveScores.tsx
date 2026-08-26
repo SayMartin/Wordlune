@@ -13,6 +13,8 @@ import Card from "../ui/Card";
 import Toggle from "../Toggle";
 import ConfirmationOverlay from "../ConfirmationOverlay";
 import OverlayMessage from "../OverlayMessage";
+import ScoreBreakdownModal, { AggregateScoreMath } from "../ScoreBreakdown";
+import { formatDuration } from "../../utils/scoring";
 
 type ChallengeResultWithJoin = ChallengeResult & { competitive_challenges?: { name: string } | null };
 
@@ -24,6 +26,7 @@ export default function CompetitiveScores() {
   const [loading, setLoading] = useState(true);
   const [scoreToDelete, setScoreToDelete] = useState<string | null>(null);
   const [scoreToPublish, setScoreToPublish] = useState<{ id: string; newVal: boolean } | null>(null);
+  const [scoreToExplain, setScoreToExplain] = useState<ChallengeResultWithJoin | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   useEffect(() => {
@@ -111,15 +114,7 @@ export default function CompetitiveScores() {
         />
       )}
 
-      <View style={[styles.header, { borderColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: colors.warning }]}>
-          🏆 {t("competitive_scores", { defaultValue: "Competitive History" })}
-        </Text>
-        <Text style={{ color: colors.textMuted, fontSize: 12 }}>
-          {t("ranked_games_description", { defaultValue: "Games that count towards the leaderboard." })}
-        </Text>
-      </View>
-
+      {/* Heading lives on ProgressScreen's column — see JustPlayingScores. */}
       {scores.length === 0 ? (
         <Text style={{ color: colors.textMuted, textAlign: "center", padding: 24 }}>
           {t("no_competitive_history", { defaultValue: "No competitive games yet." })}
@@ -128,21 +123,42 @@ export default function CompetitiveScores() {
         scores.map((score) => (
           <View key={score.id} style={[styles.row, { borderColor: colors.border }]}>
             <Toggle checked={!!score.is_public} onChange={(v) => setScoreToPublish({ id: score.id, newVal: v })} />
-            <View style={styles.rowMain}>
+            <Pressable
+              style={styles.rowMain}
+              onPress={() => setScoreToExplain(score)}
+              accessibilityRole="button"
+              accessibilityLabel={t("score_how_calculated", { defaultValue: "How was this calculated?" })}
+            >
               <Text style={[styles.challengeName, { color: colors.text }]}>
                 {score.competitive_challenges?.name || t("challenge", { defaultValue: "Challenge" })}
               </Text>
               <Text style={{ color: colors.textMuted, fontSize: 11 }}>
-                {new Date(score.completed_at).toLocaleDateString()} · {Math.floor((score.total_duration || 0) / 60)}:
-                {((score.total_duration || 0) % 60).toString().padStart(2, "0")}
+                {new Date(score.completed_at).toLocaleDateString()} · {formatDuration(score.total_duration || 0)}
               </Text>
-            </View>
-            <Text style={[styles.score, { color: colors.warning }]}>{score.total_score}</Text>
+            </Pressable>
+            <Pressable onPress={() => setScoreToExplain(score)}>
+              <Text style={[styles.score, { color: colors.warning }]}>{score.total_score}</Text>
+            </Pressable>
             <Pressable onPress={() => setScoreToDelete(score.id)} style={styles.deleteButton}>
               <Text>🗑️</Text>
             </Pressable>
           </View>
         ))
+      )}
+
+      {scoreToExplain && (
+        <ScoreBreakdownModal
+          visible
+          onClose={() => setScoreToExplain(null)}
+          title={t("score_breakdown_title", { defaultValue: "Score breakdown" })}
+          subtitle={scoreToExplain.competitive_challenges?.name || undefined}
+        >
+          <AggregateScoreMath
+            totalScore={scoreToExplain.total_score}
+            totalGuesses={scoreToExplain.total_guesses}
+            totalDuration={scoreToExplain.total_duration}
+          />
+        </ScoreBreakdownModal>
       )}
     </Card>
   );

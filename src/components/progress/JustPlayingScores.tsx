@@ -7,6 +7,8 @@ import { useTheme } from "../../theme/ThemeProvider";
 import Card from "../ui/Card";
 import ConfirmationOverlay from "../ConfirmationOverlay";
 import OverlayMessage from "../OverlayMessage";
+import ScoreBreakdownModal, { WordScoreMath } from "../ScoreBreakdown";
+import { explainStoredScore, formatDuration } from "../../utils/scoring";
 
 export default function JustPlayingScores() {
   const { t } = useTranslation();
@@ -15,7 +17,10 @@ export default function JustPlayingScores() {
   const [scores, setScores] = useState<GameScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [scoreToDelete, setScoreToDelete] = useState<string | null>(null);
+  const [scoreToExplain, setScoreToExplain] = useState<GameScore | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+
+  const explained = scoreToExplain ? explainStoredScore(scoreToExplain) : null;
 
   useEffect(() => {
     if (profile?.id) {
@@ -60,15 +65,9 @@ export default function JustPlayingScores() {
         />
       )}
 
-      <View style={[styles.header, { borderColor: colors.border }]}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
-          ☕ {t("just_playing_scores", { defaultValue: "Practice History" })}
-        </Text>
-        <Text style={{ color: colors.textMuted, fontSize: 12 }}>
-          {t("private_practice_games", { defaultValue: "Your private practice games." })}
-        </Text>
-      </View>
-
+      {/* No card header any more: ProgressScreen puts the "🔒 Your history"
+          heading and the privacy line above every one of these panels, and
+          repeating it inside each card said the same thing twice. */}
       {scores.length === 0 ? (
         <Text style={{ color: colors.textMuted, textAlign: "center", padding: 24 }}>
           {t("no_games_played", { defaultValue: "No games played yet. Go practice!" })}
@@ -76,21 +75,47 @@ export default function JustPlayingScores() {
       ) : (
         scores.map((score) => (
           <View key={score.id} style={[styles.row, { borderColor: colors.border }]}>
-            <View style={styles.rowMain}>
+            {/* The row itself opens the breakdown rather than a separate ⓘ
+                button: the whole row is about this one score, and an extra
+                target would crowd the delete button on a phone. */}
+            <Pressable
+              style={styles.rowMain}
+              onPress={() => setScoreToExplain(score)}
+              accessibilityRole="button"
+              accessibilityLabel={t("score_how_calculated", { defaultValue: "How was this calculated?" })}
+            >
               <Text style={[styles.word, { color: colors.accent }]}>{score.word}</Text>
               <Text style={{ color: colors.textMuted, fontSize: 12 }}>
-                {score.guesses_count} {t("guesses", { defaultValue: "guesses" })} · {score.duration_seconds ?? 0}s
+                {score.guesses_count} {t("guesses", { defaultValue: "guesses" })} ·{" "}
+                {formatDuration(score.duration_seconds ?? 0)}
               </Text>
               <Text style={{ color: colors.textMuted, fontSize: 11 }}>
                 {score.completed_at ? new Date(score.completed_at).toLocaleDateString() : ""}
               </Text>
-            </View>
-            <Text style={[styles.score, { color: colors.text }]}>{score.score}</Text>
+            </Pressable>
+            <Pressable onPress={() => setScoreToExplain(score)}>
+              <Text style={[styles.score, { color: colors.text }]}>{score.score}</Text>
+            </Pressable>
             <Pressable onPress={() => setScoreToDelete(score.id!)} style={styles.deleteButton}>
               <Text>🗑️</Text>
             </Pressable>
           </View>
         ))
+      )}
+
+      {explained && scoreToExplain && (
+        <ScoreBreakdownModal
+          visible
+          onClose={() => setScoreToExplain(null)}
+          title={t("score_breakdown_title", { defaultValue: "Score breakdown" })}
+          subtitle={scoreToExplain.word || undefined}
+        >
+          <WordScoreMath
+            breakdown={explained}
+            storedScore={explained.storedScore}
+            matchesStored={explained.matchesStored}
+          />
+        </ScoreBreakdownModal>
       )}
     </Card>
   );

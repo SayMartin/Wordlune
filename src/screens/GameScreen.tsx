@@ -11,7 +11,7 @@ import useDuelMode from "../hooks/useDuelMode";
 import useChallengeMode from "../hooks/useChallengeMode";
 import { saveGameScore } from "../supabase/players-repository";
 import { getExtensionsForWord } from "../supabase/words-repository";
-import { Match, claimVictory, abandonMatch } from "../supabase/matches-repository";
+import { Match, abandonMatch } from "../supabase/matches-repository";
 import BoardGrid from "../components/BoardGrid";
 import Keyboard from "../components/Keyboard";
 import LetterSlider from "../components/LetterSlider";
@@ -28,6 +28,7 @@ import DuelLobby from "../components/DuelLobby";
 import HostBoard from "../components/HostBoard";
 import OpponentBoard from "../components/OpponentBoard";
 import type { AppParamList } from "../navigation/types";
+import { computeWordScore } from "../utils/scoring";
 
 type Nav = NativeStackNavigationProp<AppParamList>;
 type Mode = "practice" | "competitive" | "duel";
@@ -122,9 +123,12 @@ export default function GameScreen() {
     handleDuelStart,
     handleManualReset: handleDuelReset,
     broadcastSurrender,
+    recordVictory,
     myScore: myDuelScore,
     opponentSurrendered,
     opponentPreStartExit,
+    duelClocks,
+    timeoutResult,
     hasDuelStarted,
     opponentWon,
     opponentLost,
@@ -223,7 +227,7 @@ export default function GameScreen() {
         const myPoints = myDuelScore;
         const oppPoints = oppScore;
         if (myPoints > oppPoints && session?.user?.id) {
-          await claimVictory(activeMatch.id, session.user.id);
+          await recordVictory(activeMatch.id, session.user.id);
         }
         setDuelResult({
           title:
@@ -237,6 +241,37 @@ export default function GameScreen() {
         });
       };
       handleBothLost();
+    }
+
+    // A clock ran out and the server named a winner. The message says which
+    // clock, because "you lost" without a reason reads as a bug when the player
+    // was still sitting there looking at the board.
+    if (timeoutResult && timeoutResult.reason === "abandoned") {
+      // Nobody ever guessed, so there is nothing to have won. Voided rather
+      // than decided — see resolve_duel(). Both players see this, and neither
+      // gets a win or a loss on their record.
+      setDuelResult({
+        title: t("duel_draw_title", { defaultValue: "Draw Declared" }),
+        message: t("duel_abandoned_msg", {
+          defaultValue: "Neither player made a guess, so the duel was called off. It counts for neither of you.",
+        }),
+        onConfirm: backToLobby,
+      });
+    } else if (timeoutResult) {
+      const byInactivity = timeoutResult.reason === "inactivity";
+      setDuelResult({
+        title: timeoutResult.won
+          ? t("duel_victory_title", { defaultValue: "Victory!" })
+          : t("duel_defeat_title", { defaultValue: "Defeat" }),
+        message: byInactivity
+          ? timeoutResult.won
+            ? t("duel_won_inactivity", { defaultValue: "Your opponent stopped playing. You win." })
+            : t("duel_lost_inactivity", { defaultValue: "You ran out of time to guess. Your opponent wins." })
+          : timeoutResult.won
+            ? t("duel_won_timeout", { defaultValue: "Time ran out. You were closest to the word, so you win." })
+            : t("duel_lost_timeout", { defaultValue: "Time ran out. Your opponent was closer to the word." }),
+        onConfirm: backToLobby,
+      });
     }
 
     if (opponentPreStartExit) {
@@ -254,7 +289,7 @@ export default function GameScreen() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opponentSurrendered, opponentWon, opponentLost, opponentPreStartExit, status, activeMatch, gameMode, suddenDeathEndTime, setSuddenDeathEndTime, t]);
+  }, [opponentSurrendered, opponentWon, opponentLost, opponentPreStartExit, timeoutResult, status, activeMatch, gameMode, suddenDeathEndTime, setSuddenDeathEndTime, t]);
 
   useEffect(() => {
     setShowResultOverlay(status === "won" || status === "lost");
@@ -284,6 +319,19 @@ export default function GameScreen() {
 
   const hasSelection = selectedSubcategoryIds === null || (selectedSubcategoryIds && selectedSubcategoryIds.length > 0);
 
+  // One source for the round's elapsed time and its breakdown, so the number
+  // shown in the overlay is arrived at exactly the way the saved one is —
+  // three separate copies of `Math.max(10, 100 - ...)` were what made the score
+  // unexplainable in the first place.
+  const roundDurationSeconds = startTime && endTime ? Math.floor((endTime - startTime) / 1000) : 0;
+  const resultBreakdown = (won: boolean) =>
+    computeWordScore({
+      won,
+      guesses: guesses.length,
+      durationSeconds: roundDurationSeconds,
+      wordLength: secret?.trim().length || effectiveMax,
+    });
+
   const handleSaveScore = useCallback(async () => {
     if (authState === "visitor" || !isAuthenticated || !profile?.id) return;
     if (scoreSavedForSecret === secret) return;
@@ -291,12 +339,17 @@ export default function GameScreen() {
     setSaveError(null);
     try {
       const guessesUsed = guesses.length;
-      const calculatedScore = Math.max(10, 100 - (guessesUsed - 1) * 10);
       const duration = startTime && endTime ? Math.floor((endTime - startTime) / 1000) : 0;
+      const breakdown = computeWordScore({
+        won: true,
+        guesses: guessesUsed,
+        durationSeconds: duration,
+        wordLength: secret?.trim().length || effectiveMax,
+      });
 
       const { data, error } = await saveGameScore({
         player_id: profile.id,
-        score: calculatedScore,
+        score: breakdown.total,
         word: secret,
         max_letters: effectiveMax,
         guesses_count: guessesUsed,
@@ -408,7 +461,7 @@ export default function GameScreen() {
       onConfirm: async () => {
         broadcastSurrender();
         const opponentId = session?.user?.id === activeMatch.player1_id ? activeMatch.player2_id : activeMatch.player1_id;
-        if (opponentId) await claimVictory(activeMatch.id, opponentId);
+        if (opponentId) await recordVictory(activeMatch.id, opponentId);
         backToLobby();
       },
     });
@@ -492,7 +545,15 @@ export default function GameScreen() {
             />
           </Card>
         ) : (
-          <GameModeToggle mode={gameMode} onChange={handleModeChange} />
+          // Duel/competitive have no filter card to sit in, so the toggle is
+          // rendered on its own — but it must land in the same spot it occupies
+          // in practice mode (top right of the content column). Without the row
+          // wrapper it inherits the container's `alignItems: "stretch"` and
+          // drifts to the left edge; the horizontal padding matches
+          // filterCard's, so its right edge lines up across all three modes.
+          <View style={styles.modeToggleRow}>
+            <GameModeToggle mode={gameMode} onChange={handleModeChange} />
+          </View>
         )}
 
         {gameMode === "duel" && !activeMatch && (
@@ -557,6 +618,7 @@ export default function GameScreen() {
                     : () => navigation.navigate("Home")
               }
               elapsedTime={gameMode === "duel" ? duelElapsed : undefined}
+              duelClocks={gameMode === "duel" && activeMatch ? duelClocks : undefined}
               duelOpponentName={
                 gameMode === "duel" && activeMatch
                   ? session?.user?.id === activeMatch.player1_id
@@ -653,8 +715,8 @@ export default function GameScreen() {
           status={status}
           secret={secret}
           guessesCount={guesses.length}
-          score={status === "won" ? Math.max(10, 100 - (guesses.length - 1) * 10) : 0}
-          durationSeconds={startTime && endTime ? Math.floor((endTime - startTime) / 1000) : 0}
+          breakdown={resultBreakdown(status === "won")}
+          durationSeconds={roundDurationSeconds}
           onClose={() => setShowResultOverlay(false)}
           isSaved={scoreSavedForSecret === secret}
         />
@@ -665,8 +727,8 @@ export default function GameScreen() {
           status={status as "won" | "lost"}
           secret={secret}
           guessesCount={guesses.length}
-          score={showForfeitResult ? 0 : status === "won" ? Math.max(10, 100 - (guesses.length - 1) * 10) : 0}
-          durationSeconds={startTime && endTime ? Math.floor((endTime - startTime) / 1000) : 0}
+          breakdown={resultBreakdown(!showForfeitResult && status === "won")}
+          durationSeconds={roundDurationSeconds}
           onNext={
             showForfeitResult
               ? () => {
@@ -737,6 +799,11 @@ const styles = StyleSheet.create({
   // hint line, which is short and centred, and the symmetric 14 left it
   // looking marooned above the card's edge.
   filterCard: { paddingTop: 14, paddingBottom: 10, paddingHorizontal: 10, gap: 14 },
+  // zIndex mirrors CategorySelector's headerRow: GameModeToggle's hover tooltip
+  // drops below the buttons and has to paint over the lobby/selector card that
+  // follows it in the same column. See GameModeToggle.tsx on why this must be
+  // repeated on every ancestor rather than set once on the tooltip.
+  modeToggleRow: { flexDirection: "row", justifyContent: "flex-end", paddingHorizontal: 10, zIndex: 20 },
   banner: { padding: 10, borderRadius: 8, borderWidth: 1 },
   duelBoards: { flexDirection: "row", justifyContent: "space-around", gap: 12 },
   challengeBanner: { padding: 14, gap: 6, alignItems: "center" },

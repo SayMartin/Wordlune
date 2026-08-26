@@ -1,8 +1,16 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase } from "../supabaseClient";
-import { Match, claimVictory } from "../supabase/matches-repository";
+import {
+  Match,
+  claimVictory,
+  recordDuelProgress,
+  resolveDuel,
+  DUEL_INACTIVITY_SECONDS,
+  DUEL_SILENCE_SECONDS,
+} from "../supabase/matches-repository";
 import { useAuth } from "../context/AuthContext";
+import { DUEL_POINTS_CORRECT, DUEL_POINTS_PRESENT } from "../utils/scoring";
 
 interface GameStatePayload {
   row: number;
@@ -53,11 +61,21 @@ export default function useDuelMode({
     // holding the round state ("playing"/"won"/...), which is a different thing
     // entirely from a per-letter evaluation.
     return evaluations.flat().reduce((acc: number, letterStatus: string) => {
-      if (letterStatus === "correct") return acc + 5;
-      if (letterStatus === "present") return acc + 2;
+      if (letterStatus === "correct") return acc + DUEL_POINTS_CORRECT;
+      if (letterStatus === "present") return acc + DUEL_POINTS_PRESENT;
       return acc;
     }, 0);
   }, [evaluations]);
+  // Both scores mirrored into a ref, and every claimVictory routed through
+  // recordVictory below.
+  //
+  // A ref rather than the state directly because two of the three call sites
+  // live inside the realtime channel's subscribe callbacks, which capture their
+  // closure once when the channel is set up — reading myScore/oppScore there
+  // would persist whatever they were at match start, i.e. 0 and 0. The same
+  // trap the elapsed-time ref above already works around.
+  const scoresRef = useRef({ mine: 0, opp: 0 });
+
   const [opponentWon, setOpponentWon] = useState(false);
   const [opponentLost, setOpponentLost] = useState(false);
   const [duelElapsed, setDuelElapsed] = useState(0);
@@ -68,6 +86,45 @@ export default function useDuelMode({
   useEffect(() => {
     duelElapsedRef.current = duelElapsed;
   }, [duelElapsed]);
+
+  useEffect(() => {
+    scoresRef.current = { mine: myScore, opp: oppScore };
+  }, [myScore, oppScore]);
+
+  // The match itself is a prop, and the channel callbacks capture it once too.
+  const matchRef = useRef<Match | null>(activeMatch);
+  useEffect(() => {
+    matchRef.current = activeMatch;
+  }, [activeMatch]);
+
+  /**
+   * Finish the match AND persist both final scores.
+   *
+   * Every claimVictory() call in the duel flow goes through here so no path can
+   * quietly record a winner with no score. duel_matches stores scores per side
+   * (player1_score/player2_score), so the mapping needs to know which side we
+   * are — which only the client does.
+   *
+   * Scores are omitted when the match can't be identified, rather than guessed:
+   * a wrong side is worse than a NULL, since NULL already means "duel from
+   * before scores were persisted" and the UI handles it.
+   */
+  const recordVictory = useCallback(
+    (matchId: string, winnerId: string) => {
+      const match = matchRef.current;
+      const myId = session?.user?.id;
+      if (!match || match.id !== matchId || !myId) {
+        return claimVictory(matchId, winnerId);
+      }
+      const { mine, opp } = scoresRef.current;
+      const iAmPlayer1 = match.player1_id === myId;
+      return claimVictory(matchId, winnerId, {
+        player1_score: iAmPlayer1 ? mine : opp,
+        player2_score: iAmPlayer1 ? opp : mine,
+      });
+    },
+    [session?.user?.id],
+  );
 
   const [matchNames, setMatchNames] = useState<{ p1: string; p2: string }>({
     p1: "",
@@ -86,6 +143,30 @@ export default function useDuelMode({
   const [opponentSurrendered, setOpponentSurrendered] = useState(false);
   const [opponentPreStartExit, setOpponentPreStartExit] = useState(false);
   const duelStartedRef = useRef(false);
+
+  // ---- Timeout clocks --------------------------------------------------
+  //
+  // Two, and they interlock (see 20260828_duel_timeouts.sql):
+  //
+  //   * 2 minutes of one-sided inactivity forfeits the idle player — but only
+  //     while the opponent is still playing. The rule is there to stop one
+  //     player stalling while the other works, not to punish a slow duel.
+  //   * 8 minutes with NEITHER player acting is decided on proximity. This is
+  //     the case the 2-minute rule deliberately leaves alone: with both sides
+  //     idle there is no active opponent to hand the win to.
+  //
+  // The clocks here drive the on-screen countdown and decide *when to ask*. The
+  // verdict itself is always the server's — both clients call resolve_duel(),
+  // which is row-locked and idempotent, so they cannot disagree.
+  const [myLastActivity, setMyLastActivity] = useState(() => Date.now());
+  const [oppLastActivity, setOppLastActivity] = useState(() => Date.now());
+  const [clockTick, setClockTick] = useState(() => Date.now());
+  const [timeoutResult, setTimeoutResult] = useState<{ won: boolean; reason: string } | null>(null);
+  const resolveInFlightRef = useRef(false);
+  // How many guesses we have already counted as activity. Only an ACCEPTED
+  // guess — one that was in the candidate pool and consumed an attempt —
+  // resets a clock; see the reporting effect below.
+  const reportedGuessCountRef = useRef(0);
 
   // 1. Fetch Player Names
   useEffect(() => {
@@ -223,6 +304,10 @@ export default function useDuelMode({
           });
           setOppRow(payload.row + 1);
           setOppScore(payload.score);
+          // The opponent's clock, reset on the same terms as ours: this
+          // broadcast is only sent from the guarded reporting effect below, so
+          // it arrives once per ACCEPTED guess and never for a rejected word.
+          setOppLastActivity(Date.now());
         },
       )
       .on(
@@ -268,7 +353,7 @@ export default function useDuelMode({
           } else if (payload.type === "surrender") {
             gameOverProcessedRef.current = true;
             if (session?.user?.id) {
-              claimVictory(matchId, session.user.id);
+              recordVictory(matchId, session.user.id);
             }
             setOpponentSurrendered(true);
           }
@@ -293,7 +378,7 @@ export default function useDuelMode({
           gameOverProcessedRef.current = true;
 
           if (duelStartedRef.current) {
-            claimVictory(matchId, session.user.id);
+            recordVictory(matchId, session.user.id);
             setOpponentSurrendered(true);
           } else {
             // Pre-start abandonment -> Draw/Cancel
@@ -320,6 +405,9 @@ export default function useDuelMode({
     gameMode,
     activeMatch?.id, // Changed dependency from activeMatch to activeMatch.id
     session?.user?.id,
+    // Same-identity-as-session note as the effect below: this does not cause
+    // the channel to resubscribe more often than it already would.
+    recordVictory,
     // Note: status, pauseGame, etc. are NOT in dependency list to prevent re-subscription on state changes
     // This is intentional. The handlers inside validly form closures, but we don't want to reconnect just because we paused.
     // However, updated handlers are needed for closures.
@@ -336,9 +424,26 @@ export default function useDuelMode({
     if (gameMode !== "duel" || !activeMatch || !channelRef.current) return;
     if (guesses.length === 0) return;
 
+    // ACTIVITY IS AN ACCEPTED GUESS, and this is where that is enforced.
+    //
+    // useGame's submitGuess refuses any word outside the candidate pool without
+    // adding it to `guesses`, so a rejected word must not touch the clocks —
+    // otherwise the way to stall forever is to hammer Enter on gibberish, which
+    // costs no attempt and would keep resetting the countdown.
+    //
+    // Today `evaluations` is reducer state whose reference only changes when a
+    // guess is accepted, so this effect happens to fire at the right moments
+    // already. That is incidental, and a refactor that copied the array on the
+    // way out of useGame would silently make the duel clocks unexpirable — a
+    // failure nobody would notice until a duel refused to end. Counting the
+    // increase explicitly states the rule instead of inheriting it.
+    if (guesses.length <= reportedGuessCountRef.current) return;
+
     const lastRowIndex = guesses.length - 1;
     const lastEvaluation = evaluations[lastRowIndex];
     if (!lastEvaluation) return;
+
+    reportedGuessCountRef.current = guesses.length;
 
     channelRef.current.send({
       type: "broadcast",
@@ -349,6 +454,32 @@ export default function useDuelMode({
         score: myScore,
       },
     });
+
+    setMyLastActivity(Date.now());
+
+    // Also tell the server, which is the only party that can judge a timeout
+    // when one of us has stopped responding. Best-guess greens/yellows are the
+    // tiebreak — the most in any ONE guess, not the running total, because the
+    // score sums every guess and so rewards guessing often over guessing well.
+    const best = evaluations.reduce(
+      (acc: { correct: number; present: number }, row: any[]) => {
+        if (!row) return acc;
+        const correct = row.filter((s) => s === "correct").length;
+        const present = row.filter((s) => s === "present").length;
+        return {
+          correct: Math.max(acc.correct, correct),
+          present: Math.max(acc.present, present),
+        };
+      },
+      { correct: 0, present: 0 },
+    );
+
+    recordDuelProgress(activeMatch.id, {
+      guesses: guesses.length,
+      bestCorrect: best.correct,
+      bestPresent: best.present,
+      score: myScore,
+    });
   }, [gameMode, activeMatch, guesses.length, evaluations, myScore]);
 
   // Claim Victory on Win
@@ -357,7 +488,7 @@ export default function useDuelMode({
 
     if (status === "won") {
       gameOverProcessedRef.current = true;
-      if (session?.user?.id) claimVictory(activeMatch.id, session.user.id);
+      if (session?.user?.id) recordVictory(activeMatch.id, session.user.id);
 
       // Broadcast Victory immediately so opponent knows
       if (channelRef.current) {
@@ -378,7 +509,91 @@ export default function useDuelMode({
         });
       }
     }
-  }, [gameMode, activeMatch, status, session?.user?.id, myScore]);
+    // recordVictory only ever changes when session?.user?.id does, which is
+    // already a dependency — listing it satisfies the rule without widening
+    // when this actually re-runs.
+  }, [gameMode, activeMatch, status, session?.user?.id, myScore, recordVictory]);
+
+  // Reset both clocks when a duel starts (or a new word begins).
+  useEffect(() => {
+    if (gameMode !== "duel") return;
+    const now = Date.now();
+    setMyLastActivity(now);
+    setOppLastActivity(now);
+    setClockTick(now);
+    setTimeoutResult(null);
+    resolveInFlightRef.current = false;
+    reportedGuessCountRef.current = 0;
+  }, [gameMode, activeMatch?.id, secret]);
+
+  // One tick per second while the duel is live, for the countdown display.
+  useEffect(() => {
+    if (gameMode !== "duel" || !activeMatch || status !== "playing") return;
+    const interval = setInterval(() => setClockTick(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [gameMode, activeMatch, status]);
+
+  const myIdleSeconds = Math.floor((clockTick - myLastActivity) / 1000);
+  const oppIdleSeconds = Math.floor((clockTick - oppLastActivity) / 1000);
+  // Time since EITHER of us acted — the 8-minute clock, reset by any guess.
+  const quietSeconds = Math.min(myIdleSeconds, oppIdleSeconds);
+
+  // Both players are past the inactivity limit, so neither can be forfeited for
+  // it — the rule only fires against a player whose opponent is still going.
+  // The 8-minute clock is what decides this one, and the UI dims the two
+  // player timers to say so rather than showing two dead countdowns at 0:00.
+  const bothIdle =
+    myIdleSeconds >= DUEL_INACTIVITY_SECONDS && oppIdleSeconds >= DUEL_INACTIVITY_SECONDS;
+
+  const duelClocks = {
+    /** Seconds until the 8-minute silence clock decides on proximity. */
+    silenceSecondsLeft: Math.max(0, DUEL_SILENCE_SECONDS - quietSeconds),
+    /** Seconds until I forfeit for inactivity. */
+    mySecondsLeft: Math.max(0, DUEL_INACTIVITY_SECONDS - myIdleSeconds),
+    /** Seconds until the opponent forfeits for inactivity. */
+    opponentSecondsLeft: Math.max(0, DUEL_INACTIVITY_SECONDS - oppIdleSeconds),
+    /** True when neither inactivity clock can fire — see bothIdle above. */
+    inactivityDormant: bothIdle,
+  };
+
+  // Ask the server for a verdict once a clock looks spent. It re-checks
+  // everything itself and returns the match untouched if we were early, so a
+  // clock we run slightly fast costs nothing.
+  useEffect(() => {
+    if (gameMode !== "duel" || !activeMatch || status !== "playing") return;
+    if (gameOverProcessedRef.current || resolveInFlightRef.current) return;
+
+    // One-sided inactivity, or total silence. Both-idle is deliberately not a
+    // trigger for the short clock — the server would refuse it anyway, but
+    // asking every second for six minutes would be a pointless round trip.
+    const oneSidedIdle =
+      (myIdleSeconds >= DUEL_INACTIVITY_SECONDS) !== (oppIdleSeconds >= DUEL_INACTIVITY_SECONDS);
+    const expired = quietSeconds >= DUEL_SILENCE_SECONDS || oneSidedIdle;
+    if (!expired) return;
+
+    resolveInFlightRef.current = true;
+    resolveDuel(activeMatch.id).then((match) => {
+      if (!match || match.status !== "finished") {
+        // Not yet, by the server's reckoning. Allow another attempt on the
+        // next tick rather than giving up on the duel entirely.
+        resolveInFlightRef.current = false;
+        return;
+      }
+      gameOverProcessedRef.current = true;
+      setTimeoutResult({
+        won: match.winner_id === session?.user?.id,
+        reason: match.finish_reason || "timeout",
+      });
+    });
+  }, [
+    gameMode,
+    activeMatch,
+    status,
+    quietSeconds,
+    myIdleSeconds,
+    oppIdleSeconds,
+    session?.user?.id,
+  ]);
 
   // Actions
   const broadcastSurrender = () => {
@@ -455,12 +670,18 @@ export default function useDuelMode({
     handleDuelStart,
     handleManualReset,
     broadcastSurrender,
+    // GameScreen finishes matches too (its own win path and the surrender
+    // confirmation). It must go through this rather than claimVictory directly,
+    // or those two paths would be the only ones that record no score.
+    recordVictory,
     gameOverProcessedRef,
     myScore,
     opponentWon,
     opponentLost,
     opponentSurrendered,
     opponentPreStartExit,
+    duelClocks,
+    timeoutResult,
     hasDuelStarted: () => duelStartedRef.current,
   };
 }

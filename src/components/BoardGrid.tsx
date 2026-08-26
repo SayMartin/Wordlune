@@ -31,25 +31,36 @@ function glyphFor(ch: string) {
   return ch;
 }
 
-export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6, word }: Props) {
-  const { colors } = useTheme();
+/**
+ * The tile size your own board uses, given the viewport and the word.
+ *
+ * Exported so the opponent's mirrored board can be sized *from* it rather than
+ * pinned to its own constant: with a fixed 22px it stayed the same size while
+ * your board grew to 38px on a desktop, so the two boards drifted further apart
+ * the more room there was. See OpponentBoard's OPPONENT_SCALE.
+ */
+export function useBoardTileSize(wordLen: number, rows: number) {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
-  const wordLen = (word && word.length) || 5;
   const baseTileSize = wordLen <= 5 ? 26 : wordLen <= 7 ? 26 : wordLen <= 9 ? 22 : wordLen <= 12 ? 18 : 14;
 
   // On web there's usually a bit more room than on a phone, so let the tiles grow slightly
   // beyond the phone-tuned base size above — but stay height-bounded so the board+keyboard+
   // controls above/below it never outgrow the viewport and force a scroll while playing.
-  let tileSize = baseTileSize;
-  if (Platform.OS === "web") {
-    const gap = 4;
-    const availableWidth = Math.min(windowWidth, 896) - 16 /* GameScreen container padding */;
-    const fitWidthTile = Math.floor((availableWidth - gap * (wordLen - 1)) / wordLen);
-    // Rough budget for the board's own height, leaving room for the header/controls/keyboard/footer above and below it.
-    const heightBudget = windowHeight * 0.32;
-    const fitHeightTile = Math.floor(heightBudget / rows) - gap;
-    tileSize = Math.max(baseTileSize, Math.min(fitWidthTile, fitHeightTile, 38));
-  }
+  if (Platform.OS !== "web") return baseTileSize;
+
+  const gap = 4;
+  const availableWidth = Math.min(windowWidth, 896) - 16 /* GameScreen container padding */;
+  const fitWidthTile = Math.floor((availableWidth - gap * (wordLen - 1)) / wordLen);
+  // Rough budget for the board's own height, leaving room for the header/controls/keyboard/footer above and below it.
+  const heightBudget = windowHeight * 0.32;
+  const fitHeightTile = Math.floor(heightBudget / rows) - gap;
+  return Math.max(baseTileSize, Math.min(fitWidthTile, fitHeightTile, 38));
+}
+
+export default function BoardGrid({ guesses, evaluations, currentGuess, rows = 6, word }: Props) {
+  const { colors } = useTheme();
+  const wordLen = (word && word.length) || 5;
+  const tileSize = useBoardTileSize(wordLen, rows);
   const fontSize = tileSize <= 18 ? 11 : tileSize <= 22 ? 13 : tileSize <= 30 ? 15 : Math.round(tileSize * 0.5);
 
   return (

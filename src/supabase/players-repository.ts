@@ -470,11 +470,33 @@ export async function deleteChallengeResult(
 export interface ChallengeMetadata {
   id: string;
   name: string;
-  description?: any; // JSONB can be anything, typically { en: string[], sv: string[] }
   difficulty: string;
   subcategory_ids: string[];
   completions_count: number;
+  /** Now actually populated — challenge_menu_stats omitted this column until 20260826. */
   is_five_chars?: boolean;
+  /** The window the challenge is offered in; the view returns only active rows. */
+  start_date: string;
+  end_date: string | null;
+  word_count: number;
+  // Category names resolved by the view at read time, per language. The old
+  // `description` column held a snapshot of these taken when the challenge was
+  // generated, in English and Swedish only — which is how retired categories
+  // kept advertising themselves and why French players read English names.
+  subcategory_names_en: string[];
+  subcategory_names_sv: string[];
+  subcategory_names_fr: string[];
+}
+
+/** Pick the caller's language out of the view's three name arrays. */
+export function challengeCategoryNames(
+  challenge: ChallengeMetadata,
+  lang: string,
+): string[] {
+  const code = (lang || "en").split("-")[0];
+  if (code === "sv") return challenge.subcategory_names_sv ?? [];
+  if (code === "fr") return challenge.subcategory_names_fr ?? [];
+  return challenge.subcategory_names_en ?? [];
 }
 
 export interface ChallengeAttempt {
@@ -491,16 +513,24 @@ export interface ChallengeAttempt {
 }
 
 /**
- * Fetch list of challenges for the "Select a Challenge" menu.
- * Returns metadata: name, difficulty, completion count.
- * Excludes challenges the player has already attempted (based on backend logic or we can filter in client).
- * For now, this view returns all challenges with global stats.
+ * Challenges for the "Select a Challenge" menu.
+ *
+ * The view does the filtering: it returns only challenges whose start_date has
+ * passed and whose end_date has not, so the menu shows the current week rather
+ * than every challenge ever generated. The schedule is written months ahead
+ * (supabase-ops/scripts/generate_challenge.mjs) and the rows for future weeks
+ * are invisible here and unreadable through PostgREST — they are answer keys
+ * until their window opens.
+ *
+ * Ordered newest window first, then name, so a 5x5 and a themed challenge
+ * sharing a week keep a stable order.
  */
 export async function getChallengeMenu(): Promise<ChallengeMetadata[]> {
   const { data, error } = await supabase
     .from("challenge_menu_stats")
     .select("*")
-    .order("name", { ascending: true }); // or by date
+    .order("start_date", { ascending: false })
+    .order("name", { ascending: true });
 
   if (error) {
     console.error("Error fetching challenge menu:", error);
@@ -528,6 +558,33 @@ export async function getMyChallengeAttempt(
     console.error("Error checking challenge attempt:", error);
   }
   return data || null;
+}
+
+/**
+ * Reopen a finished (completed or forfeited) challenge so it can be played
+ * again, for as long as its week is still running.
+ *
+ * The attempt row is reset rather than duplicated — `challenge_attempts` keeps
+ * its `UNIQUE(player_id, challenge_id)`, so nothing downstream has to learn
+ * about multiple attempts. Previous `challenge_results` rows survive, and only
+ * the earliest one ranks: on a replay the words are already known, so a second
+ * run is worth a guaranteed maximum and would otherwise make the leaderboard a
+ * measure of how often someone replays.
+ *
+ * The server refuses if the challenge's window has closed, so a stale menu
+ * can't reopen last month's challenge.
+ */
+export async function restartChallengeAttempt(
+  challengeId: string,
+): Promise<{ success: boolean; error?: string }> {
+  const { error } = await supabase.rpc("restart_challenge_attempt", {
+    p_challenge_id: challengeId,
+  });
+  if (error) {
+    console.error("Error restarting challenge attempt:", error);
+    return { success: false, error: error.message };
+  }
+  return { success: true };
 }
 
 /**
