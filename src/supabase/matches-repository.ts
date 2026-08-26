@@ -35,10 +35,29 @@ export interface LobbyMatch {
   p1_name?: string;
 }
 
+/**
+ * `isHintEnabled` defaults to true and the lobby no longer offers a choice.
+ *
+ * It was a per-match toggle, off by default, chosen by whoever created the
+ * invitation — so the common duel was the hard one, and the joiner had the
+ * difficulty picked for them. Fairness was never the problem: the flag lives on
+ * the match, so both players got the same conditions and every duel was a fair
+ * contest in itself.
+ *
+ * Playability was. Since 20260825 the secret is drawn from the whole language's
+ * answer-eligible five-letter words — 204 in English, 180 in Swedish, 160 in
+ * French — spanning animals, groceries, countries, car brands and body parts
+ * with nothing to tie them together. The subcategory hint narrows that to
+ * typically 10–36 candidates. Without it there is no anchor at all, and a duel
+ * mostly ends with neither player finding the word.
+ *
+ * The parameter stays so old callers and the column keep working; nothing in
+ * the app passes false any more.
+ */
 export async function createMatch(
   secretWord: string,
   language: string = "en",
-  isHintEnabled: boolean = false,
+  isHintEnabled: boolean = true,
 ): Promise<Match | null> {
   const {
     data: { user },

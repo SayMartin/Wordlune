@@ -44,7 +44,9 @@ export default function DuelChallengeCard({ match, onJoin, loading }: Props) {
         <View style={styles.nameRow}>
           <Text style={[styles.name, { color: colors.text }]}>{getMatchDisplayName(match)}</Text>
           <Text>{flagFor(match.language || "en")}</Text>
-          {match.is_hint_enabled ? <Text>💡</Text> : null}
+          {/* The 💡 badge is gone with the toggle that produced it: every new
+              duel has the hint on, so a badge on every card distinguishes
+              nothing. The language flag stays because that still varies. */}
         </View>
         <Text style={{ color: colors.textMuted, fontSize: 11 }}>
           {new Date(match.created_at).toLocaleTimeString()}

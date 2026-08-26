@@ -6,7 +6,6 @@ import { useAuth } from "../context/AuthContext";
 import { Match, LobbyMatch, createMatch, listWaitingMatches, joinMatch, abandonMatch } from "../supabase/matches-repository";
 import { supabase } from "../supabaseClient";
 import { getRandomFiveLetterWord } from "../supabase/words-repository";
-import Toggle from "./Toggle";
 import OptionButton from "./OptionButton";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
@@ -28,7 +27,6 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
   const [waitingMatches, setWaitingMatches] = useState<LobbyMatch[]>([]);
   const [myMatchId, setMyMatchId] = useState<string | null>(null);
   const [duelLang, setDuelLang] = useState<"en" | "sv" | "fr">("en");
-  const [showHint, setShowHint] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [view, setView] = useState<"lobby" | "leaderboard">("lobby");
 
@@ -76,7 +74,7 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
         setLoading(false);
         return;
       }
-      const newMatch = await createMatch(secret, duelLang, showHint);
+      const newMatch = await createMatch(secret, duelLang);
       if (newMatch) {
         setMyMatchId(newMatch.id);
       } else {
@@ -207,15 +205,12 @@ export default function DuelLobby({ onMatchStart, onExit }: Props) {
             </OptionButton>
           </View>
 
-          <View style={[styles.optionRow, { backgroundColor: colors.surfaceSunken, borderColor: colors.border }]}>
-            <Text style={{ fontSize: 18, opacity: showHint ? 1 : 0.3 }}>💡</Text>
-            <Text style={{ color: colors.textMuted }}>{t("no_hint", { defaultValue: "No hint" })}</Text>
-            <Toggle checked={showHint} onChange={setShowHint} />
-            <Text style={{ color: showHint ? colors.accent : colors.textMuted, fontWeight: showHint ? "700" : "400" }}>
-              {t("show_hint", { defaultValue: "Show hint" })}
-            </Text>
-          </View>
-
+          {/* The hint toggle used to sit here, off by default. Removed: the
+              duel secret comes from the whole language now, so without the
+              category hint there is no anchor at all and the round is mostly
+              unguessable. It was never a fairness problem — the flag is on the
+              match, so both players always shared it — but it did let the
+              creator choose the joiner's difficulty. See createMatch(). */}
           <Button
             fullWidth
             style={styles.createButton}
