@@ -90,7 +90,7 @@ openai_api_key = "env(OPENAI_API_KEY)"
 
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
 # are monitored, and you can view the emails that would have been sent from the web interface.
-[inbucket]
+[local_smtp]
 enabled = true
 # Port to use for the email testing server web interface.
 port = 54324
@@ -101,7 +101,17 @@ port = 54324
 # sender_name = "Admin"
 
 [storage]
-enabled = true
+# Off because nothing in the app uses object storage: avatars are generated
+# locally as SVG (see Avatar.tsx — the whole point of dropping DiceBear was to
+# stop fetching images), the data export writes to the device, and there is no
+# upload anywhere. `supabase.storage` appears nowhere in src/.
+#
+# Leaving it on was not free: storage-api crash-looped on its own migration
+# ledger ("duplicate key value violates unique constraint migrations_name_key"),
+# which is what happens when the container version moves under a volume an older
+# version already migrated. It restarted every minute, forever, for a service no
+# caller had.
+enabled = false
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "50MiB"
 
