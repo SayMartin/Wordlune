@@ -82,3 +82,5 @@ This is a portfolio repository. It is here to be **read**, not cloned and run.
 There are no setup instructions, and that is deliberate. Credentials live outside the repository, the backend is a live database holding real accounts and real scores, and nothing here is intended to make standing up a copy convenient. The code, the migration history and the reasoning in the comments are the artefact.
 
 If you are evaluating this as a work sample, the migration files under `supabase-ops/migrations/` are probably the most revealing thing in the project: each one carries the reasoning, the alternative that was rejected, and the failure it was written in response to.
+
+Source-available, not open source: read it, quote it, judge it — see [LICENSE](LICENSE).

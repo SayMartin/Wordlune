@@ -1,0 +1,30 @@
+# Lint and tests on every branch and pull request.
+#
+# Deliberately separate from deploy.yml: that one is push-to-main only and
+# holds the Supabase build args as secrets, so it must never run for a fork's
+# pull request. This job needs no secrets at all, so it is safe to run for
+# anyone's PR.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # eslint exits 0 on warnings and non-zero on errors; the repo is at zero
+      # errors and the job is here to keep it that way.
+      - run: npm run lint
+
+      - run: npm test -- --ci

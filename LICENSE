@@ -1,0 +1,22 @@
+Copyright (c) 2026 Martin — appfinningar.se
+
+All rights reserved.
+
+This repository is source-available for reading and evaluation. You may view,
+read and quote from the source for the purposes of technical review, study and
+assessing the author's work.
+
+You may not copy, modify, redistribute, publish, sublicense, or use this source
+or any substantial part of it, in original or modified form, to operate a
+service or to build a derived work, without the author's prior written
+permission.
+
+The word lists, category data, seed files and migration content under
+`supabase-ops/` are covered by the same terms.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

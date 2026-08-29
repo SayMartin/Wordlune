@@ -142,18 +142,18 @@ None of these are wired into `package.json` — run them directly from this dire
 
 ## Backups
 
-`scripts/backup.sh` takes a nightly `pg_dump`, encrypts it with `age`, and uploads it to the `wordlune-backups` R2 bucket. It is adapted from cv-forge's `scripts/backup.sh` and keeps that design deliberately, including its **public-key** encryption: the server holds only the age *public* key, so it can create backups but never read them back. The private key belongs in a password manager, not on the server — putting it there gives up the entire property this design exists for.
+`scripts/backup.sh` takes a nightly `pg_dump`, encrypts it with `age`, and uploads it to the project's R2 backup bucket. It is adapted from cv-forge's `scripts/backup.sh` and keeps that design deliberately, including its **public-key** encryption: the server holds only the age *public* key, so it can create backups but never read them back. The private key belongs in a password manager, not on the server — putting it there gives up the entire property this design exists for.
 
 Setup, once, on the server.
 
-Note that smurfserver has **no checkout of this repo** — unlike cv-forge, whose `~/cv-forge` is both a git working copy and the compose directory, `~/wordlune/` holds only `docker-compose.yml` (itself untracked). The server pulls a finished image from GHCR and never needs the source. So the script has to be copied over rather than pulled; the repo is private, so `git clone` on the server would need GitHub credentials for the sake of two files.
+Note that the server has **no checkout of this repo** — unlike cv-forge, whose `~/cv-forge` is both a git working copy and the compose directory, `~/wordlune/` holds only `docker-compose.yml` (itself untracked). The server pulls a finished image from GHCR and never needs the source. So the script has to be copied over rather than pulled: cloning the whole repository onto the server for the sake of two files buys nothing it does not already have.
 
 From the laptop:
 
 ```sh
-ssh martin@192.168.50.131 'mkdir -p ~/wordlune/scripts ~/backups/wordlune'
+ssh <user>@<server> 'mkdir -p ~/wordlune/scripts ~/backups/wordlune'
 scp supabase-ops/scripts/backup.sh supabase-ops/scripts/backup.env.example \
-    martin@192.168.50.131:~/wordlune/scripts/
+    <user>@<server>:~/wordlune/scripts/
 ```
 
 Then on the server:
